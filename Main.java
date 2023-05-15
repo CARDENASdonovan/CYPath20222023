@@ -1,9 +1,20 @@
-public class main{
-    public static void main(String args[]){}
+import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
-    public static void createurs(){
-        System.Out.Println("RUELLAN Baptiste\nCARDENAS Donovan\nJONHSON Alexandre\nGUENNEAU Romain\nMACHNIK Adrien");
-    }
+public class main extends Application{
+    public static void main(String args[]){
+        
+
+        Shape carre = new Shape(100,200,"red");
+        System.out.println(carre.toString());
+    } 
 }
 
 

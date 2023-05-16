@@ -1,4 +1,4 @@
-package testQuadriage;
+package testQuadriageVisuel;
 
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;

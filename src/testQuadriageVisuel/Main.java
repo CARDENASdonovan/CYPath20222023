@@ -101,14 +101,15 @@ public class Main extends Application {
 
         }
         
-        System.out.println(root.getChildren().get(0).getClass().getSimpleName());
         ((Shape) root.getChildren().get(16)).setFill(Color.RED);
         
+        String typeRectangle = root.getChildren().get(1).getClass().getSimpleName();
+        System.out.println(typeRectangle);
+        System.out.println(typeRectangle.equals("Rectangle"));
         
-        System.out.println(root.getChildren().size());
+        //System.out.println(root.getChildren().size());
         for(int i = 0; i < root.getChildren().size(); i++) {
-        	if(root.getChildren().get(i).getClass().getSimpleName() == "Text") {
-        		System.out.println(root.getChildren().get(i).getId());
+        	if(root.getChildren().get(i).getClass().getSimpleName().equals("Text")) {
         		System.out.println(root.getChildren().get(i));
         	}
         }

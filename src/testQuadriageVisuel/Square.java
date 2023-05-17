@@ -27,7 +27,6 @@ public class Square extends Region{
 	public void a() {
 		for(int i = 0; i<2; i++) {
 			Rectangle rect = new Rectangle(0,0,10,10);
-			rect.
 		}
 		
 	}

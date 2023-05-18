@@ -35,7 +35,7 @@ public class Tile extends Rectangle {
 	
 	// Methods
 	protected void addTileText(Tile tile, String textString, Pane pane) {
-		Text text = new Text(getX(), getY(), textString);
+		Text text = new Text(30 + getX(), 35 + getY(), textString);
 		pane.getChildren().add(text);
 	}
 

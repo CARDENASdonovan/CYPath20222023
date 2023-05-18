@@ -26,13 +26,17 @@ public class Main extends Application{
 		
 		for(Node child: conteneurGeneral.getChildrenUnmodifiable()) {
 			//System.out.println(child);
-			if(child.getId() != null){
+			if(child.getId().contains("Barrier")){
 				System.out.println(child);
 				System.out.println(child.getId());
 				child.setVisible(false);
 				System.out.println("unabled");
 			}
 		}
+		
+		//AnchorPane conteneurNode = (AnchorPane) conteneurGeneral.getChildrenUnmodifiable().get(10);
+		//System.out.println(conteneurNode.getId());
+		
 		
 		Player player1 = new Player(1,200,300,30,Color.BLUE);
 		player1.toFront();

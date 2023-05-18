@@ -1,7 +1,5 @@
 package testQuadriageLogique;
 
-import java.util.TreeMap;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -15,10 +13,20 @@ public class Main extends Application{
 		
 		AnchorPane root = new AnchorPane();
 		
-		Tile a = new Tile(1, 0, 0, Color.RED);
-		//a.getChildrenUnmodifiable().add(root);
+		Board board = new Board(9,9);
+		root.getChildren().add(board);
 		
-		Scene scene = new Scene(root, 650, 650);
+		System.out.println(board.getChildrenUnmodifiable());
+
+		Player player1 = new Player(1,200,300,30,Color.YELLOW);
+		player1.toFront();
+		
+		root.getChildren().add(player1);
+		
+		System.out.println(root.getChildren());
+		
+		
+		Scene scene = new Scene(root, 900, 750);
 		
         primaryStage.setScene(scene);
         primaryStage.show();

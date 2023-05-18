@@ -52,23 +52,12 @@ public class GameField extends Node{
         	for(int j = 0; j < 9; j++) {
         		if(i % 2 == 0) {
 
-        			/*
-    		        Rectangle cornerTopLeft = new Rectangle(debutX + (widthCorner + widthSquare) * acc2, debutY + (widthCorner + widthSquare) * acc1, widthCorner, heightCorner);
-    		        cornerTopLeft.setFill(Color.RED);
-    		        root.getChildren().add(cornerTopLeft);
-    		        */
-
     		        Rectangle borderTop = new Rectangle(debutX + widthCorner + (widthCorner + widthSquare) * acc2, debutY + (widthCorner + widthSquare) * acc1, widthBorder, heightBorder);
     		        borderTop.setFill(Color.GREY);
     		        borderTop.setId("BorderTop" + Integer.toString(accBorderTopId));
     		        accBorderTopId++;
     		        root.getChildren().add(borderTop);
 
-    		        /*
-    		        Rectangle cornerTopRight = new Rectangle(debutX + widthCorner + widthSquare + (widthCorner + widthSquare) * acc2, debutY + (widthCorner + widthSquare) * acc1, widthCorner, heightCorner);
-    		        cornerTopRight.setFill(Color.RED);
-    		        root.getChildren().add(cornerTopRight);	
-    		        */
     		        acc2++;
     		        
     			}
@@ -138,16 +127,10 @@ public class GameField extends Node{
         
         root.getChildren().add(button);
         
-
-
     }
 	
 	public AnchorPane getRoot() {
         return root;
     }
-
 }
-
-	}
-
 

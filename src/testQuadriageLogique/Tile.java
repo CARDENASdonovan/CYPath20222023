@@ -1,40 +1,54 @@
 package testQuadriageLogique;
 
-import java.util.TreeMap;
-
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
-public class Tile extends Region{
-	protected final int tileNumber;
-	
-	protected final int tileX;
-	protected final int tileY;
-	
-	protected final Color tileColor;
-	
-	protected final int TILE_WiDTH_HEIGHT = 50; 
+public class Tile extends Rectangle {
+	private final static int DEFAULT_NUMBER = 0;
+	private final static int DEFAULT_X = 0;
+	private final static int DEFAULT_Y = 0;
+	private final static int DEFAULT_WIDTH_HEIGHT = 50;
+	private final static Color DEFAULT_COLOR = Color.CHARTREUSE;
 	
 	
-	public Tile(int tileNumber, int tileX, int tileY, Color tileColor) {
-		this.tileNumber = tileNumber;
-		this.tileX = tileX;
-		this.tileY = tileY;
-		this.tileColor = tileColor;
-		Rectangle tile = new Rectangle(tileX, tileY, TILE_WiDTH_HEIGHT, TILE_WiDTH_HEIGHT);		
+	protected Tile(int number, int x, int y, int widthHeight, Color color) {
+		super(x, y, widthHeight, widthHeight);
+		super.setId("Tile" + Integer.toString(number));
+		super.setFill(color);
+	}
+
+	protected Tile() {
+		this(DEFAULT_NUMBER, DEFAULT_X, DEFAULT_Y, DEFAULT_WIDTH_HEIGHT, DEFAULT_COLOR);		
 	}
 	
-	public TreeMap<Integer,Tile> createBoardEmpty(AnchorPane root){
+	@Override
+	// Print a string with all the info of 
+	public String toString() {
+		return("Tile number: " + getId() + "\n" + "X: " + getX() + "\n" + "Y: " + getY() + "\n" + "Width / Height: " + getWidth() + "." + "\n");
+	}
+	
+	public boolean equals(Object obj) {
+		return false;
+	}
+	
+	// Methods
+	protected void addTileText(Tile tile, String textString, Pane pane) {
+		Text text = new Text(getX(), getY(), textString);
+		pane.getChildren().add(text);
+	}
+
+/*	
+	protected TreeMap<Integer,Tile> createBoardEmpty(AnchorPane root){
 		
 		final TreeMap<Integer,Tile> boardEmpty = new TreeMap<>();
 		
 		for(int i = 0; i < 5; i++) {
-			Tile tile = new Tile(i, 60*i, 60*i, Color.RED);
-			root.getChildren().add(tile);
+			Tile  = new Tile(i, 60*i, 60*i, Color.RED);
+			root.getChildren().add();
 		}
 		
 		return boardEmpty;
-	}
+	}*/
 }

@@ -23,7 +23,7 @@ public class Player extends Circle {
 	}
 	
 	// Methods	
-	protected void addTileText(Tile tile, String textString, AnchorPane pane) {
+	protected void addPlayerText(Tile tile, String textString, AnchorPane pane) {
 		Text text = new Text(getCenterX(), getCenterY(), textString);
 		pane.getChildren().add(text);
 	}

@@ -3,15 +3,16 @@ package testQuadriageLogique;
 import javafx.scene.paint.Color;
 
 public class BarrierHorizontal extends Barrier {
-	protected final static int DEFAULT_NUMBER = 0;
-	protected final static int DEFAULT_X = 0;
-	protected final static int DEFAULT_Y = 0;
-	protected final static int DEFAULT_WIDTH = 5;
-	protected final static int DEFAULT_HEIGHT = 5;
-	protected final static Color DEFAULT_COLOR = Color.CHARTREUSE;
+	private final static int DEFAULT_NUMBER = 0;
+	private final static int DEFAULT_X = 0;
+	private final static int DEFAULT_Y = 0;
+	private final static int DEFAULT_WIDTH = 5;
+	private final static int DEFAULT_HEIGHT = 5;
+	private final static Color DEFAULT_COLOR = Color.CHARTREUSE;
 	
 	protected BarrierHorizontal(int number, double x, double y, double width, double height, Color color) {	
 		super(number, x, y, width, height, color);
+		super.setId("Barrier" + " Horizontal " +Integer.toString(number));
 	}
 	
 	protected BarrierHorizontal() {

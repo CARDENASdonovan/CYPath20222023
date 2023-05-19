@@ -114,10 +114,10 @@ public class Board extends Region{
 			        
 			        if(columnNumber == columnTotalNumber - 1) {
 			        	AnchorPane lastBarrierPane = new AnchorPane();
-			        	lastBarrierPane.setId("BarrierPane" + Integer.toString(accBarrierHorizontal));
+			        	lastBarrierPane.setId("BarrierVPane" + Integer.toString(accBarrierHorizontal));
 			        	
 	        			BarrierVertical barrierVerticalLastColumn = new BarrierVertical(accBarrierVertical, barrierVerticalLastColumnX, barrierVerticalLastColumnY, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor);
-	        			barrierVPane.getChildren().add(barrierVerticalLastColumn);
+	        			lastBarrierPane.getChildren().add(barrierVerticalLastColumn);
 	        			
 	        			barrierVerticalLastColumn.addBarrierTextId("V" + Integer.toString(accBarrierVertical), Color.BLUE, -90, barrierVPane);
 	        			

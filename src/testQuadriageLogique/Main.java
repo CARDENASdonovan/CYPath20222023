@@ -16,20 +16,34 @@ public class Main extends Application{
 	@Override
     public void start(Stage primaryStage) {
 		
-		/*Adj L = new Adj();
-		L.addEdge("Tile22" , "H22");
-		L.addEdge("H22", "Tile13");
-		L.addEdge("V15", "Tile14");*/
+		Adj L = new Adj();
 		
 		
 		AnchorPane root = new AnchorPane();
 		
 		Board board = new Board(9,9);
+		
+		AnchorPane boardPane = (AnchorPane) board.getChildrenUnmodifiable().get(0);
+		
+		for(Node x : boardPane.getChildren()) {
+			if(x.getId().contains("Barrier")){//check for each barrier in board
+				System.out.println("test1");
+				System.out.println(x.getId());
+				Barrier barrierX =  (Barrier) ((AnchorPane) x).getChildren().get(0);//we do 2 lines at once to not use 2 variable 
+				if(!( barrierX.getIdTile1().equals("") || barrierX.getIdTile2().equals("") )){//if the barrier have both IdTiles not empty
+					System.out.println("test2");
+					L.addEdge(barrierX.getIdTile1(),barrierX.getIdTile2());//we add vertices to the edge matrice
+				}
+			}
+		}
+		
+		System.out.println(L);
+		
 		root.getChildren().add(board);		
 		//board.hideBarriers(false);
 
-		board.addPlayerTile(1, 15, Color.BEIGE, false);
-		board.addPlayerTile(50, 20, Color.BLUE, false);
+		//board.addPlayerTile(1, 15, Color.BEIGE, false);
+		//board.addPlayerTile(50, 20, Color.BLUE, false);
 		//board.movePlayerTile(50, 15, true);
 		
 		Scene scene = new Scene(root, 900, 750);

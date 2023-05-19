@@ -12,6 +12,7 @@ public class BarrierVertical extends Barrier {
 	
 	protected BarrierVertical(int number, double x, double y, double width, double height, Color color) {	
 		super(number, x, y, width, height, color);
+		super.setId("Barrier" + " Vertical " +Integer.toString(number));
 	}
 	
 	protected BarrierVertical() {

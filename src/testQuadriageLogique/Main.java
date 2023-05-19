@@ -29,10 +29,12 @@ public class Main extends Application{
 		//board.hideBarriers(false);
 		
 		System.out.println(board.getAdjList());
+		
+		System.out.println(board.checkAjdMoveLegal(12,5));
 
 		board.addPlayerTile(1, 15, Color.BEIGE, false);
 		board.addPlayerTile(50, 20, Color.BLUE, false);
-		board.movePlayerTile(49, 15, true);
+		board.movePlayerTile(49, 15);
 		
 		Scene scene = new Scene(root, 900, 750);
 		

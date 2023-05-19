@@ -255,10 +255,19 @@ public class Board extends Region{
 		return(false);
 	}
 	
-	private boolean checkAjdMoveLegal(int playerIdNumber,int newTileIdNumber) {
+	
+	
+	//Allow movement only on tiles whose are linked by the adjList
+	public boolean checkAjdMoveLegal(int newTileIdNumber,int playerIdNumber) {
+		//check if my current tile exist
 		if(hashAdj.containsKey("TilePane"+ Integer.toString(playerIdNumber))) {
-			System.out.println(hashAdj.get("TilePane"+ Integer.toString(playerIdNumber)));
+			//check if my element is on the list, where's list is my value from hashMap
+			if(hashAdj.get("TilePane"+ Integer.toString(playerIdNumber)).contains("TilePane"+ Integer.toString(newTileIdNumber))){
+				return true;
+			}
+			return false;	
 		}
+		return false;	
 	}
 	
 	protected boolean movePlayerTile(int newTileIdNumber, int playerIdNumber) {

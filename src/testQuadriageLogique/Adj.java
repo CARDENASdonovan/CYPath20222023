@@ -2,6 +2,8 @@ package testQuadriageLogique;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Stack;
 
 public class Adj {
 	//private HashMap<String, ArrayList<String>> listeAdj;
@@ -86,6 +88,59 @@ public class Adj {
 			System.out.println("Adjacency updated" + listeAdj);
 			System.out.println("\n");
 			return(true);
+		}
+	}
+	
+	protected void dfs(Adj adjacencyList) {
+		String startVertex = "0";
+		
+		Stack<String> stack = new Stack<>();
+		
+		LinkedList<String> visited = new LinkedList<>();
+		visited.add(startVertex);
+		
+		LinkedList<String> notVisited = new LinkedList<>();
+
+		ArrayList<String> vertexNeighborsNotVisited = new ArrayList<>() ;
+		
+		ArrayList<String> vertexNeighbors = adjacencyList.getAdjacencyList().get(startVertex);
+		System.out.println("vertexNeighbors: " + vertexNeighbors);
+		
+		for(String vertexName : vertexNeighbors) {
+			if(!visited.contains(vertexName) && !stack.contains(vertexName)) {
+				notVisited.add(vertexName);
+			}
+		}
+		System.out.println("\n");
+		System.out.println("visited START: " + visited);
+		System.out.println("stack START: " + stack);
+		stack.addAll(notVisited);
+	
+		
+		while(stack.size() > 0) {
+			System.out.println("\n");
+			System.out.println("DFS Start");
+			
+			String stackFirstElement = stack.get(0);
+			vertexNeighborsNotVisited.clear();
+			
+			if(!visited.contains(stackFirstElement)) {
+				visited.add(stackFirstElement);
+				System.out.println("visited: " + visited);
+				vertexNeighbors = adjacencyList.getAdjacencyList().get(stackFirstElement);
+				System.out.println("vertexNeighbors: " + vertexNeighbors);
+				
+				for(String vertex : vertexNeighbors) {
+					if(!visited.contains(vertex) && !stack.contains(vertex)) {
+						vertexNeighborsNotVisited.add(vertex);
+					}		
+				}
+				System.out.println("vertexNeighborsNotVisited: " + vertexNeighborsNotVisited);
+				stack.addAll(vertexNeighborsNotVisited);
+			}		
+			stack.remove(0);
+			System.out.println("visited FINAL: " + visited);
+			System.out.println("stack FINAL: " + stack);			
 		}
 	}
 }

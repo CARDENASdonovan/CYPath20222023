@@ -13,9 +13,9 @@ public class Barrier extends Rectangle {
 	private final static int DEFAULT_HEIGHT = 5;
 	private final static Color DEFAULT_COLOR = Color.CHARTREUSE;	
 	
-	protected Barrier(int number, int x, int y, int width, int height, Color color) {	
+	protected Barrier(int idNumber, double x, double y, double width, double height, Color color) {	
 		super(x, y, width, height);
-		super.setId("Barrier" + Integer.toString(number));
+		super.setId("Barrier" + Integer.toString(idNumber));
 		super.setFill(color);
 	}
 	
@@ -26,7 +26,7 @@ public class Barrier extends Rectangle {
 	@Override
 	// Print a string with all the info of 
 	public String toString() {
-		return("Barrier number: " + getId() + "\n" + "X: " + getX() + "\n" + "Y: " + getY() + "\n" + "Width: " + getWidth() + "\n" + "Height: " + getHeight() + "." + "\n");
+		return("Barrier number: " + getId() + "\n" + "X: " + getX() + "\n" + "Y: " + getY() + "\n" + "Width: " + getWidth() + "\n" + "Height: " + getHeight() + ".");
 	}
 	
 	public boolean equals(Object obj) {
@@ -34,8 +34,9 @@ public class Barrier extends Rectangle {
 	}
 	
 	// Methods
-	protected void addBarrierText(Barrier barrier, String textString, Color textColor, int angle, Pane pane) {
+	protected void addBarrierTextId(String textString, Color textColor, int angle, Pane pane) {
 		Text text = new Text(getX(), getY(), textString);
+		text.setId("Barrier" + textString + "Text");
 		text.setFill(textColor);
 		text.setRotate(angle);
 		pane.getChildren().add(text);

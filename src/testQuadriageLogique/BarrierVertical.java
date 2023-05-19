@@ -10,7 +10,7 @@ public class BarrierVertical extends Barrier {
 	private final static int DEFAULT_HEIGHT = 5;
 	private final static Color DEFAULT_COLOR = Color.CHARTREUSE;
 	
-	protected BarrierVertical(int number, int x, int y, int width, int height, Color color) {	
+	protected BarrierVertical(int number, double x, double y, double width, double height, Color color) {	
 		super(number, x, y, width, height, color);
 	}
 	

@@ -10,7 +10,7 @@ public class BarrierHorizontal extends Barrier {
 	protected final static int DEFAULT_HEIGHT = 5;
 	protected final static Color DEFAULT_COLOR = Color.CHARTREUSE;
 	
-	protected BarrierHorizontal(int number, int x, int y, int width, int height, Color color) {	
+	protected BarrierHorizontal(int number, double x, double y, double width, double height, Color color) {	
 		super(number, x, y, width, height, color);
 	}
 	

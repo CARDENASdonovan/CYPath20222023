@@ -19,30 +19,12 @@ public class Main extends Application{
 		AnchorPane root = new AnchorPane();
 		
 		Board board = new Board(9,9);
-		root.getChildren().add(board);
-		AnchorPane conteneurGeneral = (AnchorPane) board.getChildrenUnmodifiable().get(0);
-		
-		System.out.println(conteneurGeneral.getChildren());
-		
-		for(Node child: conteneurGeneral.getChildrenUnmodifiable()) {
-			//System.out.println(child);
-			if(child.getId().contains("Barrier")){
-				System.out.println(child);
-				System.out.println(child.getId());
-				child.setVisible(false);
-				System.out.println("unabled");
-			}
-		}
-		
-		//AnchorPane conteneurNode = (AnchorPane) conteneurGeneral.getChildrenUnmodifiable().get(10);
-		//System.out.println(conteneurNode.getId());
-		
-		
-		Player player1 = new Player(1,200,300,30,Color.BLUE);
-		player1.toFront();
-		
-		root.getChildren().add(player1);
+		root.getChildren().add(board);		
+		board.hideBarriers(false);
 
+		board.addPlayerTile(1, 15, Color.BEIGE, false);
+		board.addPlayerTile(50, 20, Color.BLUE, false);
+		board.movePlayerTile(50, 15, true);
 		
 		Scene scene = new Scene(root, 900, 750);
 		

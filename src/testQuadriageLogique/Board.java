@@ -168,6 +168,7 @@ public class Board extends Region{
 					System.out.println(tile);
 				}
 				System.out.println(player.getId() + " added.");
+				System.out.println("\n");
 				return(true);
 			}
 		}
@@ -188,6 +189,8 @@ public class Board extends Region{
 						tilePane.getChildren().remove(2);
 						tilePane.getChildren().remove(2);
 						System.out.println(child1);
+						System.out.println(child1.getId().equals("Player" + Integer.toString(playerIdNumber)) + "removed.");
+						System.out.println("\n");
 						return(true);
 					}	
 				}
@@ -200,11 +203,13 @@ public class Board extends Region{
 		if(addPlayerTile(newTileIdNumber, playerIdNumber, Color.BEIGE, false) == true) {
 			if(removePlayerTile(playerIdNumber, false) == true){
 				System.out.println("Player" + playerIdNumber + " moved to Tile" + Integer.toString(newTileIdNumber) + ".");
+				System.out.println("\n");
 				return(true);	
 			}		
 		}
 		else {
 			System.out.println("Cannot move there... Try again.");
+			System.out.println("\n");
 			return(false);
 		}
 		return(false);

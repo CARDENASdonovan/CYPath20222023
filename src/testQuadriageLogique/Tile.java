@@ -27,6 +27,7 @@ public class Tile extends Rectangle {
 	// Print a string with all the info of 
 	public String toString() {
 		return("Tile idNumber: " + getId() + "\n" + "X: " + getX() + "\n" + "Y: " + getY() + "\n" + "Width / Height: " + getWidth() + ".");
+		
 	}
 	
 	public boolean equals(Object obj) {

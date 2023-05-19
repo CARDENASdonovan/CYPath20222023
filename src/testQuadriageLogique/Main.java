@@ -16,11 +16,17 @@ public class Main extends Application{
 	@Override
     public void start(Stage primaryStage) {
 		
+		Adj L = new Adj();
+		L.addEdge("Tile22" , "H22");
+		L.addEdge("H22", "Tile13");
+		L.addEdge("V15", "Tile14");
+		
+		
 		AnchorPane root = new AnchorPane();
 		
 		Board board = new Board(9,9);
 		root.getChildren().add(board);		
-		board.hideBarriers(false);
+		//board.hideBarriers(false);
 
 		board.addPlayerTile(1, 15, Color.BEIGE, false);
 		board.addPlayerTile(50, 20, Color.BLUE, false);

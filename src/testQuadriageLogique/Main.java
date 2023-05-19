@@ -27,11 +27,9 @@ public class Main extends Application{
 		
 		for(Node x : boardPane.getChildren()) {
 			if(x.getId().contains("Barrier")){//check for each barrier in board
-				System.out.println("test1");
 				System.out.println(x.getId());
 				Barrier barrierX =  (Barrier) ((AnchorPane) x).getChildren().get(0);//we do 2 lines at once to not use 2 variable 
 				if(!( barrierX.getIdTile1().equals("") || barrierX.getIdTile2().equals("") )){//if the barrier have both IdTiles not empty
-					System.out.println("test2");
 					L.addEdge(barrierX.getIdTile1(),barrierX.getIdTile2());//we add vertices to the edge matrice
 				}
 			}

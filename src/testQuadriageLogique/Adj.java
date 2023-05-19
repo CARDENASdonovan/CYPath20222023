@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class Adj {
 	//private HashMap<String, ArrayList<String>> listeAdj;
 	private HashMap<String, ArrayList<String>> listeAdj;
-	protected Adj() {
+	public Adj() {
 		 //this.listeAdj = new HashMap<String, ArrayList<String>>();
 		this.listeAdj = new HashMap<String, ArrayList<String>>();
 	}

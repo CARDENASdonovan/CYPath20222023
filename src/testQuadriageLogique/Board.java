@@ -1,5 +1,8 @@
 package testQuadriageLogique;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
@@ -8,7 +11,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class Board extends Region{
-	public Board(int lineTotalNumber, int columnTotalNumber) {    
+	
+	 Adj adjList = new Adj();
+	 private HashMap<String,ArrayList<String>> hashAdj; 
+	
+	
+	
+	public Board(int lineTotalNumber, int columnTotalNumber) { 
+		
+		
 	    final int barrierHorizontalWidth = 70;
 	    final int barrierHorizontalHeight = 10;
 	    
@@ -29,6 +40,8 @@ public class Board extends Region{
 	    
 	    final int initialTileX = initialX + barrierHorizontalHeight;
 	    final int initialTileY = initialY + barrierHorizontalHeight;
+	    
+	   
 	    
 	    Color barrierHorizontalColor = Color.GREY;
 	    Color barrierVerticalColor = Color.GREY;
@@ -137,7 +150,29 @@ public class Board extends Region{
         	acc2 = 0;
         }
 		this.getChildren().add(boardPane);
+		
+		
+		Adj L = new Adj();
+		 
+			
+			for(Node x : boardPane.getChildren()) {
+				if(x.getId().contains("Barrier")){//check for each barrier in board
+					System.out.println(x.getId());
+					Barrier barrierX =  (Barrier) ((AnchorPane) x).getChildren().get(0);//we do 2 lines at once to not use 2 variable 
+					if(!( barrierX.getIdTile1().equals("") || barrierX.getIdTile2().equals("") )){//if the barrier have both IdTiles not empty
+						L.addEdge(barrierX.getIdTile1(),barrierX.getIdTile2());//we add vertices to the edge matrice
+					}
+				}
+			}
+			
+			this.adjList =  L;
+			this.hashAdj = L.getAdjacencyList();
 	}
+	
+	
+	//getter adjList
+	protected Adj getAdjList() { return this.adjList;};
+	
 	
 	protected void addChildren(Node node) {
 		this.getChildren().add(node);
@@ -159,6 +194,7 @@ public class Board extends Region{
 	}
 	
 	protected boolean addPlayerTile(int tileIdNumber, int playerIdNumber, Color color, boolean showCommandText) {
+		
 		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
 		
 		for(Node child: collectionBoardNodes.getChildrenUnmodifiable()) {
@@ -219,8 +255,17 @@ public class Board extends Region{
 		return(false);
 	}
 	
-	protected boolean movePlayerTile(int newTileIdNumber, int playerIdNumber, boolean showCommandText) {
+	private boolean checkAjdMoveLegal(int playerIdNumber,int newTileIdNumber) {
+		if(hashAdj.containsKey("TilePane"+ Integer.toString(playerIdNumber))) {
+			System.out.println(hashAdj.get("TilePane"+ Integer.toString(playerIdNumber)));
+		}
+	}
+	
+	protected boolean movePlayerTile(int newTileIdNumber, int playerIdNumber) {
+		
 		if(addPlayerTile(newTileIdNumber, playerIdNumber, Color.BEIGE, false) == true) {
+			//we're checking if we can move on the tile by looking at the adjList, in our hashmap, we got something like {key, value} where value is an arraylist, so we check key==playerIdNumber and then if value contain newtilenumber
+			//if(this.adjList.getAdjacencyList())
 			if(removePlayerTile(playerIdNumber, false) == true){
 				System.out.println("Player" + playerIdNumber + " moved to Tile" + Integer.toString(newTileIdNumber) + ".");
 				System.out.println("\n");

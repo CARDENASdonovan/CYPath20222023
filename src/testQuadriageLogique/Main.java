@@ -16,10 +16,10 @@ public class Main extends Application{
 	@Override
     public void start(Stage primaryStage) {
 		
-		Adj L = new Adj();
+		/*Adj L = new Adj();
 		L.addEdge("Tile22" , "H22");
 		L.addEdge("H22", "Tile13");
-		L.addEdge("V15", "Tile14");
+		L.addEdge("V15", "Tile14");*/
 		
 		
 		AnchorPane root = new AnchorPane();
@@ -30,7 +30,7 @@ public class Main extends Application{
 
 		board.addPlayerTile(1, 15, Color.BEIGE, false);
 		board.addPlayerTile(50, 20, Color.BLUE, false);
-		board.movePlayerTile(50, 15, true);
+		//board.movePlayerTile(50, 15, true);
 		
 		Scene scene = new Scene(root, 900, 750);
 		

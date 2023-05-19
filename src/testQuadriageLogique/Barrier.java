@@ -11,7 +11,25 @@ public class Barrier extends Rectangle {
 	private final static int DEFAULT_Y = 0;
 	private final static int DEFAULT_WIDTH = 5;
 	private final static int DEFAULT_HEIGHT = 5;
-	private final static Color DEFAULT_COLOR = Color.CHARTREUSE;	
+	private final static Color DEFAULT_COLOR = Color.CHARTREUSE;
+	private String IdTile1 = "";
+	private String IdTile2 = "";
+	
+	protected String getIdTile1() {
+		return this.IdTile1;
+	}
+
+	protected String getIdTile2() {
+		return this.IdTile2;
+	}
+	
+	protected void setIdTile1(String id) {
+		this.IdTile1 = id;
+	}
+	
+	protected void setIdTile2(String id) {
+		this.IdTile2 = id;
+	}
 	
 	protected Barrier(int idNumber, double x, double y, double width, double height, Color color) {	
 		super(x, y, width, height);

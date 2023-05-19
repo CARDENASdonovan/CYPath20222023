@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class Board extends Region{
 	public Board(int lineTotalNumber, int columnTotalNumber) {    
@@ -57,6 +58,16 @@ public class Board extends Region{
         			BarrierHorizontal barrierHorizontal = new BarrierHorizontal(accBarrierHorizontal, barrierHorizontalX, barrierHorizontalY, barrierHorizontalWidth, barrierHorizontalHeight, barrierHorizontalColor);
         			barrierHPane.getChildren().add(barrierHorizontal);
         			
+        			if(accBarrierHorizontal > 9 && accBarrierHorizontal < 82) {//if the barrier is IN the board, set adjacents tiles id for current barrier
+        				barrierHorizontal.setIdTile1("TilePane"+Integer.toString(accBarrierHorizontal-9));
+        				barrierHorizontal.setIdTile2("TilePane"+Integer.toString(accBarrierHorizontal));
+        			}
+        			/*verif
+        			System.out.println("Barrier Horizontal "+accBarrierHorizontal+" :");
+        			System.out.println("Id Tile 1 : "+barrierHorizontal.getIdTile1());
+        			System.out.println("Id Tile 2 : "+barrierHorizontal.getIdTile2()+"\n\n\n");*/
+        			
+        			
         			barrierHorizontal.addBarrierTextId("H" + Integer.toString(accBarrierHorizontal), Color.RED, 0, barrierHPane);
         			boardPane.getChildren().add(barrierHPane);
         			
@@ -70,7 +81,16 @@ public class Board extends Region{
     				barrierVPane.setId("BarrierVPane" + Integer.toString(accBarrierVertical));
     				
         			BarrierVertical barrierVertical = new BarrierVertical(accBarrierVertical, barrierVerticalX, barrierVerticalY, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor);
-        			barrierVPane.getChildren().add(barrierVertical);      			
+        			barrierVPane.getChildren().add(barrierVertical);     
+        			
+        			if(accBarrierVertical % 10 != 0  && (accBarrierVertical-1) % 10 != 0) {//if the barrier is IN the board, set adjacents tiles id for current barrier
+        				barrierVertical.setIdTile1("TilePane"+Integer.toString(accBarrierVertical-1-((int) accBarrierVertical/10)));
+        				barrierVertical.setIdTile2("TilePane"+Integer.toString(accBarrierVertical-((int) accBarrierVertical/10)));
+        			}
+        			/*verif
+        			System.out.println("Barrier Vertical "+accBarrierVertical+" :");
+        			System.out.println("Id Tile 1 : "+barrierVertical.getIdTile1());
+        			System.out.println("Id Tile 2 : "+barrierVertical.getIdTile2()+"\n\n\n");*/
         			
         			barrierVertical.addBarrierTextId("V" + Integer.toString(accBarrierVertical), Color.BLUE, -90, barrierVPane);
         			boardPane.getChildren().add(barrierVPane);

@@ -6,11 +6,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 public class Player extends Circle {
-	public Player(int idNumber, double x, double y, double radius, Color color) {
-		super(x,y, radius);
-		super.setId("Player" + Integer.toString(idNumber));
+	public Player(String playerName, double radius, Color color) {
+		super(-1000,-1000, radius);
+		super.setId(playerName);
 		super.setFill(color);
-		super.toFront();
 	}
 	
 	@Override
@@ -25,7 +24,7 @@ public class Player extends Circle {
 	
 	// Methods	
 	protected void addPlayerTextId(String textString, AnchorPane pane) {
-		Text text = new Text(getCenterX(), getCenterY(), textString);
+		Text text = new Text(getCenterX() - getRadius(), getCenterY(), textString);
 		text.setId("Player" + textString + "Text");
 		pane.getChildren().add(text);
 	}

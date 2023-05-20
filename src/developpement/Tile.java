@@ -40,17 +40,4 @@ public class Tile extends Rectangle {
 		text.setId("Tile" + textString + "Text");
 		pane.getChildren().add(text);
 	}
-
-/*	
-	protected TreeMap<Integer,Tile> createBoardEmpty(AnchorPane root){
-		
-		final TreeMap<Integer,Tile> boardEmpty = new TreeMap<>();
-		
-		for(int i = 0; i < 5; i++) {
-			Tile  = new Tile(i, 60*i, 60*i, Color.RED);
-			root.getChildren().add();
-		}
-		
-		return boardEmpty;
-	}*/
 }

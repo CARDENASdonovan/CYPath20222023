@@ -19,17 +19,18 @@ public class Main extends Application{
 	@Override
     public void start(Stage primaryStage) {	
 		AnchorPane root = new AnchorPane();	
+		root.setId("root");
 		
 		Board board = new Board(9,9);
 		root.getChildren().add(board);
 		
-		//HashMap<String, ArrayList<String>> adjacencyList = board.getAdjacencyList();
+		/*
 		board.show("BarrierHPane29");
 		board.show("BarrierHPane38");
 		board.show("BarrierVPane32");
 		board.show("BarrierVPane33");
 		board.updateAdjacencyList((AnchorPane) board.getChildrenUnmodifiable().get(0));
-		/*
+		
 		AnchorPane collectionBoard = (AnchorPane) board.getChildrenUnmodifiable().get(0);
 		
 		System.out.println(collectionBoard.getChildren());
@@ -40,20 +41,18 @@ public class Main extends Application{
 		System.out.println(anchorPane1.isVisible());
 		board.show("BarrierHPane29");
 		
-		 
-		
-		
-		
 		System.out.println("TilePane1 is adjacent to: " + adjHashMap.get("TilePane1"));
 		LinkedList<String> resultDfs = board.dfs("TilePane1");
 		System.out.println("There is a path between: " + resultDfs);
 		System.out.println("Number of tiles in this path = " + resultDfs.size());
 		board.areConnected(board.getAdjacencyList(), "TilePane1", "TilePane81", true);
-		
-		board.addPlayerTile(1, 15, Color.BEIGE);
-		board.addPlayerTile(50, 20, Color.BLUE);
-		board.movePlayerTile(49, 15);
 		*/
+		
+		Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
+		
+		board.addPlayerTile(9, adrien, true);
+		board.movePlayerTile(20, adrien);
+		
 		Scene scene = new Scene(root, 900, 750);
 		
         primaryStage.setScene(scene);

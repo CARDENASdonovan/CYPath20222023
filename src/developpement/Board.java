@@ -221,70 +221,67 @@ public class Board extends Region{
 		}
 	}
 	
-	protected boolean addPlayerTile(int tileIdNumber, int playerIdNumber, Color color) {
+	// Methods: Add, remove, move Player.
+	protected boolean addPlayerTile(int tileIdNumber, Player player) {
 		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
 		
-		for(Node child: collectionBoardNodes.getChildrenUnmodifiable()) {
-			if(child.getId().equals("TilePane" + Integer.toString(tileIdNumber))){
-				AnchorPane anchorPaneTile = (AnchorPane) child;
+		for(Node node: collectionBoardNodes.getChildrenUnmodifiable()) {
+			if(node.getId().equals("TilePane" + Integer.toString(tileIdNumber))){
+				AnchorPane tilePanePlayer = (AnchorPane) node;
 				
-				for(Node child1: anchorPaneTile.getChildrenUnmodifiable()) {
-					if(child1 instanceof Player) {
+				for(Node child: tilePanePlayer.getChildrenUnmodifiable()) {
+					if(child instanceof Player) {
 						return(false);
 					}
 				}			
-				Tile tile = (Tile) anchorPaneTile.getChildren().get(0);
-				
+				Tile tile = (Tile) tilePanePlayer.getChildren().get(0);
 				final int centerX = (int) (tile.getX() + tile.getWidth()/2);
 				final int centerY = (int) (tile.getY() + tile.getWidth()/2);
-				final int radius = (int) (tile.getWidth()/2 - 10);
-				Player player = new Player(playerIdNumber, centerX, centerY, radius, color);
-				anchorPaneTile.getChildren().add(player);
 				
-				player.addPlayerTextId(Integer.toString(playerIdNumber), anchorPaneTile);
-
+				player.setCenterX(centerX);
+				player.setCenterY(centerY);
+				
+				tilePanePlayer.getChildren().add(player);
+				
+				player.addPlayerTextId(player.getId(), tilePanePlayer);
+				
 				return(true);
 			}
 		}
-		// Case there are no TilePane in board collection.
+		// Case: there are no TilePane in board collection.
 		return(false);
 	}
 	
-	
-	// Methods: Add, remove, move Player.
-	protected boolean addPlayerTile(int tileIdNumber, int playerIdNumber, Color color, boolean showConsoleText) {
+	protected boolean addPlayerTile(int tileIdNumber, Player player, boolean showConsoleText) {
 		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
 		
-		for(Node child: collectionBoardNodes.getChildrenUnmodifiable()) {
-			if(child.getId().equals("TilePane" + Integer.toString(tileIdNumber))){
-				AnchorPane anchorPaneTile = (AnchorPane) child;
+		for(Node node: collectionBoardNodes.getChildrenUnmodifiable()) {
+			if(node.getId().equals("TilePane" + Integer.toString(tileIdNumber))){
+				AnchorPane tilePanePlayer = (AnchorPane) node;
 				
-				for(Node child1: anchorPaneTile.getChildrenUnmodifiable()) {
-					if(child1 instanceof Player) {
-						if(showConsoleText) {
-							System.out.println(child1.getId() + " is already there !");
-						}
+				for(Node child: tilePanePlayer.getChildrenUnmodifiable()) {
+					if(child instanceof Player) {
 						return(false);
 					}
-				}
-				
-				Tile tile = (Tile) anchorPaneTile.getChildren().get(0);
-				
+				}			
+				Tile tile = (Tile) tilePanePlayer.getChildren().get(0); 
 				final int centerX = (int) (tile.getX() + tile.getWidth()/2);
 				final int centerY = (int) (tile.getY() + tile.getWidth()/2);
-				final int radius = (int) (tile.getWidth()/2 - 10);
-				Player player = new Player(playerIdNumber, centerX, centerY, radius, color);
-				anchorPaneTile.getChildren().add(player);
 				
-				player.addPlayerTextId(Integer.toString(playerIdNumber), anchorPaneTile);
+				player.setCenterX(centerX);
+				player.setCenterY(centerY);
+				
+				tilePanePlayer.getChildren().add(player);
+				
+				//String panePlayerId = player.getParent().getId();
+				
+				player.addPlayerTextId(player.getId(), tilePanePlayer);
 				
 				if(showConsoleText == true) {
-					System.out.println(child);
-					System.out.println(child.getId());
-					System.out.println(tile);
-					System.out.println(player.getId() + " added.");
-					System.out.println("\n");
+					System.out.println(node.getId() + player.getId() + " added.");
+					System.out.println();
 				}
+				
 				return(true);
 			}
 		}
@@ -292,16 +289,18 @@ public class Board extends Region{
 		return(false);
 	}
 	
-	protected boolean removePlayerTile(int playerIdNumber) {
-		AnchorPane collectionBoard = (AnchorPane) this.getChildrenUnmodifiable().get(0);
+	protected boolean removePlayerTile(Player player) {
+		String playerId = player.getId();
+		AnchorPane boardPane = (AnchorPane) this.getChildrenUnmodifiable().get(0);
 		
-		for(Node child: collectionBoard.getChildrenUnmodifiable()) {
+		for(Node boardPaneNode: boardPane.getChildrenUnmodifiable()) {
 			
-			if(child.getId().contains("TilePane")){
-				AnchorPane tilePane = (AnchorPane) child;
+			if(boardPaneNode.getId().contains("TilePane")){
+				AnchorPane tilePane = (AnchorPane) boardPaneNode;
 				
-				for(Node child1: tilePane.getChildren()) {
-					if(child1.getId().equals("Player" + Integer.toString(playerIdNumber))) {
+				for(Node node: tilePane.getChildren()) {
+					
+					if(node.getId().equals(playerId)) {
 						tilePane.getChildren().remove(2);
 						tilePane.getChildren().remove(2);
 						return(true);
@@ -312,22 +311,25 @@ public class Board extends Region{
 		return(false);
 	}
 	
-	protected boolean removePlayerTile(int playerIdNumber, boolean showConsoleText) {
-		AnchorPane collectionBoard = (AnchorPane) this.getChildrenUnmodifiable().get(0);
+	protected boolean removePlayerTile(Player player, boolean showConsoleText) {
+		String playerId = player.getId();
+		String tilePlayerId = player.getParent().getId();
 		
-		for(Node child: collectionBoard.getChildrenUnmodifiable()) {
+		AnchorPane boardPane = (AnchorPane) this.getChildrenUnmodifiable().get(0);
+		
+		for(Node boardPaneNode: boardPane.getChildrenUnmodifiable()) {
 			
-			if(child.getId().contains("TilePane")){
-				AnchorPane tilePane = (AnchorPane) child;
+			if(boardPaneNode.getId().contains("TilePane")){
+				AnchorPane tilePane = (AnchorPane) boardPaneNode;
 				
-				for(Node child1: tilePane.getChildren()) {
-					if(child1.getId().equals("Player" + Integer.toString(playerIdNumber))) {
+				for(Node node: tilePane.getChildren()) {
+					
+					if(node.getId().equals(playerId)) {
 						tilePane.getChildren().remove(2);
 						tilePane.getChildren().remove(2);
 						if(showConsoleText) {
-							System.out.println(child1);
-							System.out.println(child1.getId().equals("Player" + Integer.toString(playerIdNumber)) + "removed.");
-							System.out.println("\n");
+							System.out.println(tilePlayerId + " removed.");
+							System.out.println();
 						}
 						return(true);
 					}	
@@ -337,9 +339,9 @@ public class Board extends Region{
 		return(false);
 	}
 	
-	protected boolean movePlayerTile(int newTileIdNumber, int playerIdNumber) {
-		if(addPlayerTile(newTileIdNumber, playerIdNumber, Color.BEIGE, false) == true) {
-			if(removePlayerTile(playerIdNumber, false) == true){
+	protected boolean movePlayerTile(int newTileIdNumber, Player player) {
+		if(addPlayerTile(newTileIdNumber, player, false) == true) {
+			if(removePlayerTile(player, false) == true){
 				return(true);	
 			}		
 		}
@@ -349,11 +351,11 @@ public class Board extends Region{
 		return(false);
 	}
 	
-	protected boolean movePlayerTile(int newTileIdNumber, int playerIdNumber, boolean showConsoleText) {
-		if(addPlayerTile(newTileIdNumber, playerIdNumber, Color.BEIGE, false) == true) {
-			if(removePlayerTile(playerIdNumber, false) == true){
+	protected boolean movePlayerTile(int newTileIdNumber, Player player, boolean showConsoleText) {
+		if(addPlayerTile(newTileIdNumber, player) == true) {
+			if(removePlayerTile(player) == true){
 				if(showConsoleText) {
-					System.out.println("Player" + playerIdNumber + " moved to Tile" + Integer.toString(newTileIdNumber) + ".");
+					System.out.println("Player" + player.getId() + " moved to Tile" + Integer.toString(newTileIdNumber) + ".");
 					System.out.println("\n");
 				}
 				return(true);	

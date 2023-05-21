@@ -2,20 +2,33 @@ package developpement;
 
 import javafx.scene.paint.Color;
 
+/**
+ * The BarrierHorizontal class is a sub class of the Barrier class and inherit of all its methods and attributes.
+ * @author Cardenas D, Ruellan B, Machnik A, Johnson A, Guenneau R
+ *
+ */
 public class BarrierHorizontal extends Barrier {
-	private final static int DEFAULT_NUMBER = 0;
-	private final static int DEFAULT_X = 0;
-	private final static int DEFAULT_Y = 0;
-	private final static int DEFAULT_WIDTH = 5;
-	private final static int DEFAULT_HEIGHT = 5;
-	private final static Color DEFAULT_COLOR = Color.CHARTREUSE;
-	
-	protected BarrierHorizontal(int number, double x, double y, double width, double height, Color color) {	
-		super(number, x, y, width, height, color);
-		super.setId("Barrier" + " Horizontal " +Integer.toString(number));
+
+	/**
+	 * This method is the constructor of the BarrierHorizontal class using parameters, it uses the counterpart constructor of the Barrier class.
+	 * @param number
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @param color
+	 * @param idTile1
+	 * @param idTile2
+	 */
+	protected BarrierHorizontal(int number, double x, double y, double width, double height, Color color, String idTile1, String idTile2) {	
+		super(number, x, y, width, height, color, idTile1, idTile2);
+		super.setId("Barrier Horizontal " +Integer.toString(number));
 	}
 	
+	/**
+	 * This method is the constructor of the BarrierHorizontal class with default values for attributes, it uses the counterpart constructor of the Barrier class.
+	 */
 	protected BarrierHorizontal() {
-		this(DEFAULT_NUMBER, DEFAULT_X, DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_COLOR);		
+		super();		
 	}
 }

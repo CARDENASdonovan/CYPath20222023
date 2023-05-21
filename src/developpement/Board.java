@@ -12,8 +12,151 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * The Board class represents the game board with everything on it : the tiles, the barriers and players. It also has methods to to change the visibility of every part, to move a player on the board, to place barriers and to check if a path to win exists for each player.
+ * An adjacency list is added as an attribute to the class in order to be used in the method that search for a path.
+ * @author Cardenas D, Ruellan B, Machnik A, Johnson A, Guenneau R
+ */
+
 public class Board extends Region{
 	private HashMap<String, ArrayList<String>> adjacencyList = new HashMap<>();
+	
+	/**
+	 * Constructs an 9x9 Object (Node) using JavaFX library.
+	 */
+	
+	public Board() {
+		int lineTotalNumber = 9;
+		int columnTotalNumber = 9;
+	    final int barrierHorizontalWidth = 70;
+	    final int barrierHorizontalHeight = 10;
+	    
+	    final int barrierVerticalWidth = barrierHorizontalHeight;
+	    final int barrierVerticalHeight = barrierHorizontalWidth;
+	    
+	    final int tileWidth = barrierHorizontalWidth;
+	    
+	    int acc1 = 0;
+	    int acc2 = 0;
+	    int acc3 = 0;
+	    int accTileId = 1;
+	    int accBarrierHorizontal = 1;
+	    int accBarrierVertical = 1;
+	    
+	    final int initialX = 10;
+	    final int initialY = 10;
+	    
+	    final int initialTileX = initialX + barrierHorizontalHeight;
+	    final int initialTileY = initialY + barrierHorizontalHeight;
+	    
+	    Color barrierHorizontalColor = Color.GREY;
+	    Color barrierVerticalColor = Color.GREY;
+	    Color tileColor = Color.LIGHTCORAL;
+	    
+	    AnchorPane boardPane = new AnchorPane();
+	    boardPane.setId("BoardPane");
+	    
+		for(int lineNumber = 0; lineNumber < lineTotalNumber*2 + 1; lineNumber++) {
+        	for(int columnNumber = 0; columnNumber < columnTotalNumber; columnNumber++) {
+        		int tileX = initialTileX + (tileWidth + barrierHorizontalHeight) * acc2;
+        	    int tileY = initialTileY + (tileWidth + barrierHorizontalHeight) * acc3;
+        		
+        		int barrierHorizontalX = initialX + barrierHorizontalHeight + (barrierHorizontalHeight + tileWidth) * acc2;
+        	    int barrierHorizontalY = initialY + (barrierHorizontalHeight + tileWidth) * acc1;
+        	    
+        	    int barrierVerticalX = initialX + (barrierHorizontalHeight + tileWidth) * acc2;
+        	    int barrierVerticalY = initialY + barrierHorizontalHeight + (tileWidth + barrierHorizontalHeight) * acc3;
+        	    
+        	    int barrierVerticalLastColumnX = initialX + barrierHorizontalHeight + tileWidth + (tileWidth + barrierHorizontalHeight) * acc2;
+        	    int barrierVerticalLastColumnY = initialY + barrierHorizontalHeight + (tileWidth + barrierHorizontalHeight) * acc3;
+        	    
+        		if(lineNumber % 2 == 0) {
+        			AnchorPane barrierHPane = new AnchorPane();
+        			barrierHPane.setId("BarrierHPane" + Integer.toString(accBarrierHorizontal));
+        			
+        			BarrierHorizontal barrierHorizontal = new BarrierHorizontal(accBarrierHorizontal, barrierHorizontalX, barrierHorizontalY, barrierHorizontalWidth, barrierHorizontalHeight, barrierHorizontalColor,"","");
+        			barrierHPane.getChildren().add(barrierHorizontal);
+        			
+        			if(accBarrierHorizontal > 9 && accBarrierHorizontal < 82) {//if the barrier is IN the board, set adjacent tiles id for current barrier
+        				barrierHorizontal.setIdTile1("TilePane"+Integer.toString(accBarrierHorizontal-9));
+        				barrierHorizontal.setIdTile2("TilePane"+Integer.toString(accBarrierHorizontal));
+        			}
+        			
+        			barrierHorizontal.addBarrierTextId("H" + Integer.toString(accBarrierHorizontal), Color.RED, 0, barrierHPane);
+        			boardPane.getChildren().add(barrierHPane);
+        			
+        			accBarrierHorizontal++;
+
+    		        acc2++;
+    			}
+        		
+    			else {
+    				AnchorPane barrierVPane = new AnchorPane();
+    				barrierVPane.setId("BarrierVPane" + Integer.toString(accBarrierVertical));
+    				
+        			BarrierVertical barrierVertical = new BarrierVertical(accBarrierVertical, barrierVerticalX, barrierVerticalY, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
+        			barrierVPane.getChildren().add(barrierVertical);     
+        			
+        			if(accBarrierVertical % 10 != 0  && (accBarrierVertical-1) % 10 != 0) {//if the barrier is IN the board, set adjacent tiles id for current barrier
+        				barrierVertical.setIdTile1("TilePane"+Integer.toString(accBarrierVertical-1-((int) accBarrierVertical/10)));
+        				barrierVertical.setIdTile2("TilePane"+Integer.toString(accBarrierVertical-((int) accBarrierVertical/10)));
+        			}
+
+        			barrierVertical.addBarrierTextId("V" + Integer.toString(accBarrierVertical), Color.BLUE, -90, barrierVPane);
+        			boardPane.getChildren().add(barrierVPane);
+        			
+        			accBarrierVertical++;
+        			
+        			AnchorPane tilePane = new AnchorPane();
+        			tilePane.setId("TilePane" + Integer.toString(accTileId));
+        			
+    		        Tile tile = new Tile(accTileId, tileX, tileY, tileWidth, tileColor);
+    		        tile.toBack();
+    		        tilePane.getChildren().add(tile);
+    		        
+    		        tile.addTileTextId(Integer.toString(accTileId), tilePane);
+    		        
+    		        boardPane.getChildren().add(tilePane);
+			        
+			        accTileId++;
+			        	
+			        acc2++;
+			        
+			        
+			        if(columnNumber == columnTotalNumber - 1) {
+			        	AnchorPane lastBarrierPane = new AnchorPane();
+			        	lastBarrierPane.setId("BarrierVPane" + Integer.toString(accBarrierHorizontal));
+			        	
+	        			BarrierVertical barrierVerticalLastColumn = new BarrierVertical(accBarrierVertical, barrierVerticalLastColumnX, barrierVerticalLastColumnY, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
+	        			lastBarrierPane.getChildren().add(barrierVerticalLastColumn);
+	        			
+	        			barrierVerticalLastColumn.addBarrierTextId("V" + Integer.toString(accBarrierVertical), Color.BLUE, -90, barrierVPane);
+	        			
+	        			boardPane.getChildren().add(lastBarrierPane);
+	        			accBarrierVertical++;
+	        		}
+			    }
+        	}
+        	
+        	if(lineNumber % 2 != 0) {
+        		acc3++;
+        	}
+        	
+        	if(lineNumber % 2 == 0) {
+        		acc1++;
+        	}        	
+        	acc2 = 0;
+        }
+		this.getChildren().add(boardPane);
+		hideAllBarrier();	
+		updateAdjacencyList(boardPane);
+	}	
+	
+	/**
+	 * Constructs an (int lineTotalNumber) x (int columnTotalNumber) Object (Node) using JavaFX library.
+	 * @param int lineTotalNumber
+	 * @param int columnTotalNumber
+	 */
 	
 	public Board(int lineTotalNumber, int columnTotalNumber) { 
 	    final int barrierHorizontalWidth = 70;
@@ -64,18 +207,13 @@ public class Board extends Region{
         			AnchorPane barrierHPane = new AnchorPane();
         			barrierHPane.setId("BarrierHPane" + Integer.toString(accBarrierHorizontal));
         			
-        			BarrierHorizontal barrierHorizontal = new BarrierHorizontal(accBarrierHorizontal, barrierHorizontalX, barrierHorizontalY, barrierHorizontalWidth, barrierHorizontalHeight, barrierHorizontalColor);
+        			BarrierHorizontal barrierHorizontal = new BarrierHorizontal(accBarrierHorizontal, barrierHorizontalX, barrierHorizontalY, barrierHorizontalWidth, barrierHorizontalHeight, barrierHorizontalColor,"","");
         			barrierHPane.getChildren().add(barrierHorizontal);
         			
-        			if(accBarrierHorizontal > 9 && accBarrierHorizontal < 82) {//if the barrier is IN the board, set adjacents tiles id for current barrier
+        			if(accBarrierHorizontal > 9 && accBarrierHorizontal < 82) {//if the barrier is IN the board, set adjacent tiles id for current barrier
         				barrierHorizontal.setIdTile1("TilePane"+Integer.toString(accBarrierHorizontal-9));
         				barrierHorizontal.setIdTile2("TilePane"+Integer.toString(accBarrierHorizontal));
         			}
-        			/*verif
-        			System.out.println("Barrier Horizontal "+accBarrierHorizontal+" :");
-        			System.out.println("Id Tile 1 : "+barrierHorizontal.getIdTile1());
-        			System.out.println("Id Tile 2 : "+barrierHorizontal.getIdTile2()+"\n\n\n");*/
-        			
         			
         			barrierHorizontal.addBarrierTextId("H" + Integer.toString(accBarrierHorizontal), Color.RED, 0, barrierHPane);
         			boardPane.getChildren().add(barrierHPane);
@@ -89,18 +227,14 @@ public class Board extends Region{
     				AnchorPane barrierVPane = new AnchorPane();
     				barrierVPane.setId("BarrierVPane" + Integer.toString(accBarrierVertical));
     				
-        			BarrierVertical barrierVertical = new BarrierVertical(accBarrierVertical, barrierVerticalX, barrierVerticalY, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor);
+        			BarrierVertical barrierVertical = new BarrierVertical(accBarrierVertical, barrierVerticalX, barrierVerticalY, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
         			barrierVPane.getChildren().add(barrierVertical);     
         			
-        			if(accBarrierVertical % 10 != 0  && (accBarrierVertical-1) % 10 != 0) {//if the barrier is IN the board, set adjacents tiles id for current barrier
+        			if(accBarrierVertical % 10 != 0  && (accBarrierVertical-1) % 10 != 0) {//if the barrier is IN the board, set adjacent tiles id for current barrier
         				barrierVertical.setIdTile1("TilePane"+Integer.toString(accBarrierVertical-1-((int) accBarrierVertical/10)));
         				barrierVertical.setIdTile2("TilePane"+Integer.toString(accBarrierVertical-((int) accBarrierVertical/10)));
         			}
-        			/*verif
-        			System.out.println("Barrier Vertical "+accBarrierVertical+" :");
-        			System.out.println("Id Tile 1 : "+barrierVertical.getIdTile1());
-        			System.out.println("Id Tile 2 : "+barrierVertical.getIdTile2()+"\n\n\n");*/
-        			
+
         			barrierVertical.addBarrierTextId("V" + Integer.toString(accBarrierVertical), Color.BLUE, -90, barrierVPane);
         			boardPane.getChildren().add(barrierVPane);
         			
@@ -121,11 +255,12 @@ public class Board extends Region{
 			        	
 			        acc2++;
 			        
+			        
 			        if(columnNumber == columnTotalNumber - 1) {
 			        	AnchorPane lastBarrierPane = new AnchorPane();
 			        	lastBarrierPane.setId("BarrierVPane" + Integer.toString(accBarrierHorizontal));
 			        	
-	        			BarrierVertical barrierVerticalLastColumn = new BarrierVertical(accBarrierVertical, barrierVerticalLastColumnX, barrierVerticalLastColumnY, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor);
+	        			BarrierVertical barrierVerticalLastColumn = new BarrierVertical(accBarrierVertical, barrierVerticalLastColumnX, barrierVerticalLastColumnY, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
 	        			lastBarrierPane.getChildren().add(barrierVerticalLastColumn);
 	        			
 	        			barrierVerticalLastColumn.addBarrierTextId("V" + Integer.toString(accBarrierVertical), Color.BLUE, -90, barrierVPane);
@@ -150,8 +285,11 @@ public class Board extends Region{
 		updateAdjacencyList(boardPane);
 	}	
 	
+	/**
+	 * This method is used to change the visibility of any elements with an id on the board to visible.
+	 * @param idPane, id of the element that needs to be shown
+	 */
 	
-	// Methods: Change Pane visibility.
 	protected void show(String idPane) {
 		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -161,6 +299,12 @@ public class Board extends Region{
 			}
 		}
 	}
+	
+	/**
+	 * This method is used to change the visibility of any elements with an id on the board to visible and to return the result in the console or not.
+	 * @param idPane, id of the element that needs to be shown
+	 * @param showCommandText, boolean used to know if the methods has to show the result in the console
+	 */
 	
 	protected void show(String idPane, boolean showCommandText) {
 		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
@@ -175,6 +319,11 @@ public class Board extends Region{
 		}
 	}
 	
+	/**
+	 * This method is used to change the visibility of any elements with an id on the board to hide.
+	 * @param idPane, id of the element that needs to be hidden
+	 */
+	
 	protected void hide(String idPane) {
 		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -184,6 +333,12 @@ public class Board extends Region{
 			}
 		}
 	}
+	
+	/**
+ 	* This method is used to change the visibility of any elements with an id on the board to hide and to return the result in the console or not.
+ 	* @param idPane, id of the element that needs to be hidden
+	 *@param showCommandText, boolean used to know if the methods has to show the result in the console
+ 	*/
 	
 	protected void hide(String idPane, boolean showCommandText) {
 		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
@@ -198,6 +353,9 @@ public class Board extends Region{
 		}
 	}
 	
+	/**
+	 * This method is used to hide every barrier on the board.
+	 */
 	protected void hideAllBarrier() {
 		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -207,7 +365,11 @@ public class Board extends Region{
 			}
 		}
 	}
-	
+
+	/**
+	 * This method is used to hide every barrier on the board as its counterpart method but needs a boolean to know if the methods has to show in the console the result.
+	 * @param showCommandText, boolean used to know if the methods has to show the result in the console
+	 */
 	protected void hideAllBarrier(boolean showCommandText) {
 		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -222,6 +384,14 @@ public class Board extends Region{
 	}
 	
 	// Methods: Add, remove, move Player.
+	
+	/**
+	 * This methods is used to add a player on a tile.
+	 * @param tileIdNumber, id of the tile on which you add the player
+	 * @param player, object of Player class to put on the tile
+	 * @return a boolean that indicates if the operation went successful or not
+	 */
+	
 	protected boolean addPlayerTile(int tileIdNumber, Player player) {
 		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -252,6 +422,13 @@ public class Board extends Region{
 		return(false);
 	}
 	
+	/**
+	 * This methods is used to add a player on a tile as its counterpart method but needs a boolean to know if the methods has to show in the console the result.
+	 * @param tileIdNumber, id of the tile on which you add the player
+	 * @param player, object of Player class to put on the tile
+	 * @param showCommandText, boolean used to know if the methods has to show the result in the console
+	 * @return a boolean that indicates if the operation went successful or not
+	 */
 	protected boolean addPlayerTile(int tileIdNumber, Player player, boolean showConsoleText) {
 		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -571,6 +748,12 @@ public class Board extends Region{
 		return(visited);
 	}
 	
+	/**
+	 * This method is a Depth-First Search algorithm that applies on the adjacency list in order to find a path from the start vertex (on which you can have a player) to the finish line.
+	 * @param startVertex, the vertex which the dfs has to start from
+	 * @param showConsoleText, boolean used to know if the methods has to show in the console the result
+	 * @return the linked list of the vertices that describes the path found by the algorithm
+	 */
 	protected LinkedList<String> dfs(String startVertex, boolean showConsoleText) {
 		HashMap<String, ArrayList<String>> adjacencyList = getAdjacencyList();
 		

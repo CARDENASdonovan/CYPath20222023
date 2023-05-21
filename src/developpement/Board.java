@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
- * The Board class represents the game board with everything on it : tiles, barriers and players. It also has methods to to change the visibility of every part, to move a player on the board, to place barriers and to check if a path to win exists for each player.
+ * The Board class represents the game board with everything on it : the tiles, the barriers and players. It also has methods to to change the visibility of every part, to move a player on the board, to place barriers and to check if a path to win exists for each player.
  * An adjacency list is added as an attribute to the class in order to be used in the method that search for a path.
  * @author Cardenas D, Ruellan B, Machnik A, Johnson A, Guenneau R
  */
@@ -26,16 +26,21 @@ public class Board extends Region{
 	 */
 	
 	public Board() {
+		// Initialization of this instance attributes.
 		int lineTotalNumber = 9;
 		int columnTotalNumber = 9;
+		
+		// Dimensions of the barriers to build. 
 	    final int barrierHorizontalWidth = 70;
 	    final int barrierHorizontalHeight = 10;
 	    
 	    final int barrierVerticalWidth = barrierHorizontalHeight;
 	    final int barrierVerticalHeight = barrierHorizontalWidth;
 	    
+	    // Dimensions of the tiles to build.
 	    final int tileWidth = barrierHorizontalWidth;
 	    
+	    // Useful accumulators for names or loops.
 	    int acc1 = 0;
 	    int acc2 = 0;
 	    int acc3 = 0;
@@ -43,33 +48,44 @@ public class Board extends Region{
 	    int accBarrierHorizontal = 1;
 	    int accBarrierVertical = 1;
 	    
+	    // Position of the top-left corner of the Board.
 	    final int initialX = 10;
 	    final int initialY = 10;
 	    
+	    // Initial position of the top-left corner of the first tile created.
 	    final int initialTileX = initialX + barrierHorizontalHeight;
 	    final int initialTileY = initialY + barrierHorizontalHeight;
 	    
+		// Useful variables to change the color of all the elements at once.
 	    Color barrierHorizontalColor = Color.GREY;
 	    Color barrierVerticalColor = Color.GREY;
 	    Color tileColor = Color.LIGHTCORAL;
 	    
+	    // Initialization of the Anchor variables to change the color of all the elements at once.
 	    AnchorPane boardPane = new AnchorPane();
 	    boardPane.setId("BoardPane");
 	    
 		for(int lineNumber = 0; lineNumber < lineTotalNumber*2 + 1; lineNumber++) {
         	for(int columnNumber = 0; columnNumber < columnTotalNumber; columnNumber++) {
+        		
+        		// Position of the top-left corner of each tile depending the line and column.
         		int tileX = initialTileX + (tileWidth + barrierHorizontalHeight) * acc2;
         	    int tileY = initialTileY + (tileWidth + barrierHorizontalHeight) * acc3;
         		
+        	    // Position of the top-left corner of each horizontal barrier depending the line and column.
         		int barrierHorizontalX = initialX + barrierHorizontalHeight + (barrierHorizontalHeight + tileWidth) * acc2;
         	    int barrierHorizontalY = initialY + (barrierHorizontalHeight + tileWidth) * acc1;
         	    
+        	    
+        	    // Position of the top-left corner of each vertical barrier depending the line and column.
         	    int barrierVerticalX = initialX + (barrierHorizontalHeight + tileWidth) * acc2;
         	    int barrierVerticalY = initialY + barrierHorizontalHeight + (tileWidth + barrierHorizontalHeight) * acc3;
         	    
+        	    // Position of the top-left corner of each vertical barrier at the last column.
         	    int barrierVerticalLastColumnX = initialX + barrierHorizontalHeight + tileWidth + (tileWidth + barrierHorizontalHeight) * acc2;
         	    int barrierVerticalLastColumnY = initialY + barrierHorizontalHeight + (tileWidth + barrierHorizontalHeight) * acc3;
         	    
+        	    // Creation of the lines with horizontal barriers.
         		if(lineNumber % 2 == 0) {
         			AnchorPane barrierHPane = new AnchorPane();
         			barrierHPane.setId("BarrierHPane" + Integer.toString(accBarrierHorizontal));

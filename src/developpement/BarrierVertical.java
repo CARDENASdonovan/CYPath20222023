@@ -12,14 +12,14 @@ public class BarrierVertical extends Barrier {
 
 	/**
 	 * This method is the constructor of the BarrierVertical class using parameters, it uses the counterpart constructor of the Barrier class.
-	 * @param number
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
-	 * @param color
-	 * @param idTile1
-	 * @param idTile2
+	 * @param int number
+	 * @param double x
+	 * @param double y
+	 * @param double width
+	 * @param double height
+	 * @param Color color
+	 * @param String idTile1
+	 * @param String idTile2
 	 */
 	protected BarrierVertical(int number, double x, double y, double width, double height, Color color, String idTile1, String idTile2) {	
 		super(number, x, y, width, height, color, idTile1, idTile2);
@@ -27,7 +27,7 @@ public class BarrierVertical extends Barrier {
 	}
 	
 	/**
-	 * This method is the constructor of the BarrierHorizontal class with default values for attributes, it uses the counterpart constructor of the Barrier class.
+	 * This method is the constructor of the BarrierVertical class with default values for attributes, it uses the counterpart constructor of the Barrier class.
 	 */
 	protected BarrierVertical() {
 		super();		

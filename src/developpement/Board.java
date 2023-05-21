@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
- * The Board class represents the game board with everything on it : the tiles, the barriers and players. It also has methods to to change the visibility of every part, to move a player on the board, to place barriers and to check if a path to win exists for each player.
+ * The Board class represents the game board with everything on it : tiles, barriers and players. It also has methods to to change the visibility of every part, to move a player on the board, to place barriers and to check if a path to win exists for each player.
  * An adjacency list is added as an attribute to the class in order to be used in the method that search for a path.
  * @author Cardenas D, Ruellan B, Machnik A, Johnson A, Guenneau R
  */

@@ -3,6 +3,7 @@ package developpement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Stack;
 
 import javafx.collections.ObservableList;
@@ -10,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.input.ClipboardContent;
@@ -17,12 +19,14 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
@@ -73,10 +77,10 @@ public class Board extends Region {
 	    
 		// Useful variables to change the color of each elements type at once.
 	    Color cornerColor = Color.RED;
-	    Color barrierHorizontalColor = Color.GREY;
-	    Color barrierVerticalColor = Color.GREY;
+	    Color barrierHorizontalColor = Color.RED;
+	    Color barrierVerticalColor = Color.RED;
 	    Color textColor = Color.BLACK;
-	    Color tileColor = Color.FUCHSIA;
+	    Color tileColor = Color.LIGHTGRAY;
 	    
 	// Initialization of the board grid.
 	    // Creation of the Pane.
@@ -86,7 +90,7 @@ public class Board extends Region {
 	    boardGrid.setId("boardGrid");
 	    
         // Set background color of the board and show grid borders.
-	    boardGrid.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
+	    //boardGrid.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
 	    
 	    // Align elements in the center of the grid.
 	    boardGrid.setAlignment(Pos.CENTER);
@@ -170,17 +174,33 @@ public class Board extends Region {
         				// Create Barrier "barrierHorizontal" with the right dimensions.
 	        			BarrierHorizontal barrierHorizontal = new BarrierHorizontal(accBarrierHorizontalId,barrierHorizontalWidth,barrierHorizontalHeight,barrierHorizontalColor,"","");   			
 	        			
-	    		        // Set an event when the tile is clicked.    		
+	        		// Add actions on events for barrierHorizontal.
+	        			// If barrier hover is true :
+	        			barrierHorizontal.hoverProperty().addListener((observable, oldValue, hoverBoolean) -> {
+	        				if(barrierHorizontal.getOpacity() == 0) {
+		        				if(hoverBoolean) {
+		        					barrierHorizontal.setOpacity(1);
+		        					barrierHorizontal.setFill(Color.GRAY);
+		        				}
+	        				}
+	        				else {
+	        					if(!hoverBoolean && barrierHorizontal.getFill() != barrierHorizontalColor) {
+		        					barrierHorizontal.setOpacity(0);
+		        				}
+	        				}
+	        			});
+	        			
+	    		        // Set an event when the barrier is clicked.    		
 	    	            barrierHorizontal.setOnMouseClicked(new EventHandler<MouseEvent>()
 	    	            {
 	    	                @Override
 	    	                // Set the action(s) to do.
 	    	                public void handle(MouseEvent event) {
-	    	                    if(barrierHorizontal.getOpacity() == 1) {
-	    	                    	barrierHorizontal.setOpacity(0);
+	    	                    if(barrierHorizontal.getFill() != barrierHorizontalColor) {
+	    	                    	barrierHorizontal.setFill(barrierHorizontalColor);
 	    	                    }
 	    	                    else {
-	    	                    	barrierHorizontal.setOpacity(1);
+	    	                    	barrierHorizontal.setOpacity(0);
 	    	                    }
 	    	                }
 	    	            });
@@ -213,8 +233,8 @@ public class Board extends Region {
 	        			// If the barrier is adjacent to 2 tiles :
 	        			if(accBarrierHorizontalId > 9  && accBarrierHorizontalId < 82) {
 	        				// Set id of the adjacent tiles in current barrier attributes.
-	        				barrierHorizontal.setIdTile1("Tile"+Integer.toString(accBarrierHorizontalId-9));
-	        				barrierHorizontal.setIdTile2("Tile"+Integer.toString(accBarrierHorizontalId));
+	        				barrierHorizontal.setIdTile1("Tile "+Integer.toString(accBarrierHorizontalId-9));
+	        				barrierHorizontal.setIdTile2("Tile "+Integer.toString(accBarrierHorizontalId));
 	        			}
 	        			
 	        			// Increment accumulator to the next barrier number.
@@ -229,17 +249,33 @@ public class Board extends Region {
     					// Create Barrier "barrierVertical" with the right dimensions.
 	        			BarrierVertical barrierVertical = new BarrierVertical(accBarrierVerticalId, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
 	        			
-	    		        // Set an event when the tile is clicked.    		
+		        	// Add actions on events for barrierVertical.
+	        			// If barrier hover is true :
+	        			barrierVertical.hoverProperty().addListener((observable, oldValue, hoverBoolean) -> {
+	        				if(barrierVertical.getOpacity() == 0) {
+		        				if(hoverBoolean) {
+		        					barrierVertical.setOpacity(1);
+		        					barrierVertical.setFill(Color.GRAY);
+		        				}
+	        				}
+	        				else {
+	        					if(!hoverBoolean && barrierVertical.getFill() != barrierHorizontalColor) {
+		        					barrierVertical.setOpacity(0);
+		        				}
+	        				}
+	        			});
+	        			
+	    		        // Set an event when the barrier is clicked.    		
 	    	            barrierVertical.setOnMouseClicked(new EventHandler<MouseEvent>()
 	    	            {
 	    	                @Override
 	    	                // Set the action(s) to do.
 	    	                public void handle(MouseEvent event) {
-	    	                    if(barrierVertical.getOpacity() == 1) {
-	    	                    	barrierVertical.setOpacity(0);
+	    	                    if(barrierVertical.getFill() != barrierHorizontalColor) {
+	    	                    	barrierVertical.setFill(barrierHorizontalColor);
 	    	                    }
 	    	                    else {
-	    	                    	barrierVertical.setOpacity(1);
+	    	                    	barrierVertical.setOpacity(0);
 	    	                    }
 	    	                }
 	    	            });
@@ -274,9 +310,9 @@ public class Board extends Region {
 	        			// Rotate the text.
 	        			text.setRotate(90);
 	        			
-	        			// If the barrier is not in the border of the board :
+	        			// If the barrier is adjacent to 2 tiles :
 	        			if(accBarrierVerticalId % 10 != 0  && (accBarrierVerticalId-1) % 10 != 0) {
-	        				// Set id of the adjacent tiles of current barrier.
+	        				// Set id of the adjacent tiles in current barrier attributes.
 	        				barrierVertical.setIdTile1("Tile"+Integer.toString(accBarrierVerticalId-1-((int) accBarrierVerticalId/10)));
 	        				barrierVertical.setIdTile2("Tile"+Integer.toString(accBarrierVerticalId-((int) accBarrierVerticalId/10)));
 	        			}
@@ -295,11 +331,10 @@ public class Board extends Region {
 	    	                @Override
 	    	                // Set the action(s) to do.
 	    	                public void handle(MouseEvent event) {
-	    	                    if(tile.getFill() != Color.RED) {
-	    	                    	tile.setFill(Color.RED);
+	    	                    if(tile.getFill() != Color.GREEN) {
+	    	                    	tile.setFill(Color.GREEN);
 	    	                    }
 	    	                    else {
-	    	                    	tile.setOpacity(1);
 	    	                    	tile.setFill(Color.BLUE);
 	    	                    }
 	    	                }
@@ -309,7 +344,7 @@ public class Board extends Region {
 	        			boardGrid.add(tile, columnNumber, rowNumber);
 	        			
 		        		// Create text on the tile.
-	        			Label text = new Label("Tile" + Integer.toString(accTileId));
+	        			Label text = new Label("Tile " + Integer.toString(accTileId));
 
 	        			// Set Id of the tile.
 	        			text.setId("Text " + tile.getId());
@@ -374,17 +409,13 @@ public class Board extends Region {
 	    int accBarrierHorizontalId = 1;
 	    int accBarrierVerticalId = 1;
 	    int accTileId = 1;
-	    /*
-	    // Position of the top-left corner of the Board.
-	    final int initialX = 10;
-	    final int initialY = 10;
-	    */
+
 		// Useful variables to change the color of each elements type at once.
 	    Color cornerColor = Color.RED;
-	    Color barrierHorizontalColor = Color.GREY;
-	    Color barrierVerticalColor = Color.GREY;
-	    Color textColor = Color.BLACK;
-	    Color tileColor = Color.FUCHSIA;
+        Color barrierHorizontalColor = Color.RED;
+        Color barrierVerticalColor = Color.RED;       
+        Color textColor = Color.BLACK;
+        Color tileColor = Color.LIGHTGRAY;
 	    
 	// Initialization of the board grid.
 	    // Creation of the Pane.
@@ -394,7 +425,7 @@ public class Board extends Region {
 	    boardGrid.setId("boardGrid");
 	    
         // Set background color of the board and show grid borders.
-	    boardGrid.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
+	    //boardGrid.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
 	    
 	    // Align elements in the center of the grid.
 	    boardGrid.setAlignment(Pos.CENTER);
@@ -478,20 +509,37 @@ public class Board extends Region {
         				// Create Barrier "barrierHorizontal" with the right dimensions.
 	        			BarrierHorizontal barrierHorizontal = new BarrierHorizontal(accBarrierHorizontalId,barrierHorizontalWidth,barrierHorizontalHeight,barrierHorizontalColor,"","");   			
 	        			
-	    		        // Set an event when the tile is clicked.    		
+		        	// Add actions on events for barrierHorizontal.
+	        			// If barrier hover is true :
+	        			barrierHorizontal.hoverProperty().addListener((observable, oldValue, hoverBoolean) -> {
+	        				if(barrierHorizontal.getOpacity() == 0) {
+		        				if(hoverBoolean) {
+		        					barrierHorizontal.setOpacity(1);
+		        					barrierHorizontal.setFill(Color.GRAY);
+		        				}
+	        				}
+	        				else {
+	        					if(!hoverBoolean && barrierHorizontal.getFill() != barrierHorizontalColor) {
+		        					barrierHorizontal.setOpacity(0);
+		        				}
+	        				}
+	        			});
+	        			
+	    		        // Set an event when the barrier is clicked.    		
 	    	            barrierHorizontal.setOnMouseClicked(new EventHandler<MouseEvent>()
 	    	            {
 	    	                @Override
 	    	                // Set the action(s) to do.
 	    	                public void handle(MouseEvent event) {
-	    	                    if(barrierHorizontal.getOpacity() == 1) {
-	    	                    	barrierHorizontal.setOpacity(0);
+	    	                    if(barrierHorizontal.getFill() != barrierHorizontalColor) {
+	    	                    	barrierHorizontal.setFill(barrierHorizontalColor);
 	    	                    }
 	    	                    else {
-	    	                    	barrierHorizontal.setOpacity(1);
+	    	                    	barrierHorizontal.setOpacity(0);
 	    	                    }
 	    	                }
 	    	            });
+
 	    	            
 	        			// Add the barrierHorizontal to the right span.
 	        			boardGrid.add(barrierHorizontal, columnNumber, rowNumber);
@@ -537,17 +585,33 @@ public class Board extends Region {
     					// Create Barrier "barrierVertical" with the right dimensions.
 	        			BarrierVertical barrierVertical = new BarrierVertical(accBarrierVerticalId, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
 	        			
-	    		        // Set an event when the tile is clicked.    		
+	        		// Add actions on events for barrierVertical.
+	        			// If barrier hover is true :
+	        			barrierVertical.hoverProperty().addListener((observable, oldValue, hoverBoolean) -> {
+	        				if(barrierVertical.getOpacity() == 0) {
+		        				if(hoverBoolean) {
+		        					barrierVertical.setOpacity(1);
+		        					barrierVertical.setFill(Color.GRAY);
+		        				}
+	        				}
+	        				else {
+	        					if(!hoverBoolean && barrierVertical.getFill() != barrierHorizontalColor) {
+		        					barrierVertical.setOpacity(0);
+		        				}
+	        				}
+	        			});
+	        			
+	    		        // Set an event when the barrier is clicked.    		
 	    	            barrierVertical.setOnMouseClicked(new EventHandler<MouseEvent>()
 	    	            {
 	    	                @Override
 	    	                // Set the action(s) to do.
 	    	                public void handle(MouseEvent event) {
-	    	                    if(barrierVertical.getOpacity() == 1) {
-	    	                    	barrierVertical.setOpacity(0);
+	    	                    if(barrierVertical.getFill() != barrierHorizontalColor) {
+	    	                    	barrierVertical.setFill(barrierHorizontalColor);
 	    	                    }
 	    	                    else {
-	    	                    	barrierVertical.setOpacity(1);
+	    	                    	barrierVertical.setOpacity(0);
 	    	                    }
 	    	                }
 	    	            });
@@ -603,16 +667,15 @@ public class Board extends Region {
 	    	                @Override
 	    	                // Set the action(s) to do.
 	    	                public void handle(MouseEvent event) {
-	    	                    if(tile.getFill() != Color.RED) {
-	    	                    	tile.setFill(Color.RED);
+	    	                    if(tile.getFill() != Color.GREEN) {
+	    	                    	tile.setFill(Color.GREEN);
 	    	                    }
 	    	                    else {
-	    	                    	tile.setOpacity(1);
 	    	                    	tile.setFill(Color.BLUE);
 	    	                    }
 	    	                }
 	    	            });
-	    		        
+	        			
 	    		        // Add the tile to the right span.
 	        			boardGrid.add(tile, columnNumber, rowNumber);
 	        			
@@ -637,7 +700,7 @@ public class Board extends Region {
 	        			// Center the text in the span
 	        			GridPane.setHalignment(text, HPos.CENTER);
 	        			GridPane.setValignment(text, VPos.CENTER);
-
+	        			
 	        			// Increment accumulator to the next barrier number.
 	        			accTileId++;
     				}
@@ -663,17 +726,17 @@ public class Board extends Region {
 		// Get board grid.
 		GridPane boardGrid = (GridPane) this.getChildren().get(0);
 		
-		// Get board grid.
-		ObservableList<Node> childrens = boardGrid.getChildren();
-		
 		// Create ArrayList "result" where we will add the nodes to return. 
 		ArrayList<Node> result = new ArrayList<Node>();
 		
 		// 
-	    for (Node node : childrens) {
-	        if(GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
-	            result.add(node);
-	        }
+	    for (Node node : boardGrid.getChildrenUnmodifiable()) {
+	    	
+	    	if(GridPane.getRowIndex(node) != null && GridPane.getColumnIndex(node) != null) {
+		        if(GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
+		            result.add(node);
+		        }
+	    	}
 	    }
 	    return result;
 	}
@@ -792,23 +855,23 @@ public class Board extends Region {
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		String wantedTileId = "Tile" + wantedTileNumber;
 		
+	// Find wanted tile attributes.
 		// For every row in the board :
 		for(int numberRow = 0; numberRow < 9; numberRow++) {
 			// For every column in the board :
 			for(int numberColumn = 0; numberColumn < 9; numberColumn++) {
 				// For every node in that grid span :
 				for(Node node: boardGrid.getChildrenUnmodifiable()) {
-					System.out.println(node.getId());
 					// If node is wanted tile :
 					if(node.getId().equals(wantedTileId)) {
 						// Get tile span coordinates.
 						int wantedTileColumn = GridPane.getColumnIndex(node);
 						int wantedTileRow = GridPane.getRowIndex(node);
 						
+					// Check if the span contains a Player instance :
 						// Get the list of nodes in the same span.
 						ArrayList<Node> nodeList = getNodeListColumnRow(wantedTileColumn, wantedTileRow);
 						
-					// Check if the span contains a Player instance :
 						// For every Node in nodeList :
 						for(int i = 0; i < nodeList.size(); i++) {
 							
@@ -823,54 +886,6 @@ public class Board extends Region {
 					// If the span does not contain any player :
 						// Add player in the tile span :
 						boardGrid.add(player, wantedTileColumn, wantedTileRow);
-						
-	    		        // Set an event when the tile is clicked.    		
-	    	            player.setOnMouseClicked(new EventHandler<MouseEvent>()
-	    	            {
-	    	                @Override
-	    	                // Set the action(s) to do.
-	    	                public void handle(MouseEvent event) {
-	    	                    if(player.getOpacity() == 1) {
-	    	                    	player.setOpacity(0);
-	    	                    }
-	    	                    else {
-	    	                    	player.setOpacity(1);
-	    	                    }
-	    	                }
-	    	            });
-	    	            
-	    	            player.setOnDragDetected(new EventHandler<MouseEvent>() {
-	    	                public void handle(MouseEvent event) {
-	    	                    /* drag was detected, start a drag-and-drop gesture*/
-	    	                    /* allow any transfer mode */
-	    	                    Dragboard db = player.startDragAndDrop(TransferMode.ANY);
-	    	                    
-	    	                    /* Put a string on a dragboard */
-	    	                    ClipboardContent content = new ClipboardContent();
-	    	                    content.putString("sus");
-	    	                    db.setContent(content);
-	    	                    System.out.println(player.getId());
-	    	                    movePlayerTile(1, player, true);
-	    	                    
-	    	                    event.consume();
-	    	                }
-	    	            });
-	    	            
-	    	            player.setOnDragOver(new EventHandler<DragEvent>() {
-	    	                public void handle(DragEvent event) {
-	    	                    /* data is dragged over the target */
-	    	                    /* accept it only if it is not dragged from the same node 
-	    	                     * and if it has a string data */
-	    	                    if (event.getGestureSource() != player &&
-	    	                            event.getDragboard().hasString()) {
-	    	                        /* allow for both copying and moving, whatever user chooses */
-	    	                    	System.out.println("Fini");
-	    	                        movePlayerTile(1, player);
-	    	                    }
-	    	                    
-	    	                    event.consume();
-	    	                }
-	    	            });
 	    	            
 	        			// Center the player in the span
 	        			GridPane.setHalignment(player, HPos.CENTER);
@@ -898,6 +913,33 @@ public class Board extends Region {
 	        			// Add the text to the right span.
 	        			boardGrid.add(text, wantedTileColumn, wantedTileRow);
 	        			
+	    		        // Set an event when the tile is clicked.    		
+	    	            player.setOnMouseClicked(new EventHandler<MouseEvent>()
+	    	            {
+	    	                @Override
+	    	                // Set the action(s) to do.
+	    	                public void handle(MouseEvent event) {
+
+	    	                }
+	    	            });
+	    	            
+	    	            player.setOnDragDetected(new EventHandler<MouseEvent>() {
+	    	                public void handle(MouseEvent event) {
+	    	                    /* drag was detected, start a drag-and-drop gesture*/
+	    	                    /* allow any transfer mode */
+	    	                    Dragboard db = player.startDragAndDrop(TransferMode.ANY);
+	    	                    
+	    	                    /* Put a string on a dragboard */
+	    	                    ClipboardContent content = new ClipboardContent();
+	    	                    content.putString("s");
+	    	                    db.setContent(content);
+	    	                    
+
+	    	                    event.consume();
+	    	                }
+	    	            });
+	    	           
+					
 						// Player added successfully.
 						return(true);
 					}
@@ -1017,7 +1059,7 @@ public class Board extends Region {
 		String playerTextId = "Text " + player.getId();
 		
 		// For every node in the grid :
-		for(Node node: boardPane.getChildrenUnmodifiable()) {
+		for(Node node: boardPane.getChildrenUnmodifiable()) {			
 			// If node is the wanted player or wanted player text : 
 			if(node.getId().equals(playerTextId)){
 				// Delete the text.
@@ -1086,8 +1128,17 @@ public class Board extends Region {
 	 * @param Player player, player that must be moved.
 	 */	
 	protected boolean movePlayerTile(int newTileNumber, Player player) {
+		// Get and save player attributes for later.
+		String playerName = player.getPlayerName();
+		Circle playerShape = (Circle) player;
+		Color playerColor = (Color) playerShape.getFill();
+		double playerRadius = player.getRadius();
+		
 		// Remove player from the board.
 		if(removePlayerTile(player) == true) {
+			// player instance was deleted so we have to construct it again... 
+			player = new Player(playerName, playerRadius, playerColor);
+			
 			// Add player on the new tile.
 			if(addPlayerTile(newTileNumber, player) == true){
 				// Player removed successfully.
@@ -1111,8 +1162,17 @@ public class Board extends Region {
 	 * @param boolean showConsoleText, show useful text.
 	 */	
 	protected boolean movePlayerTile(int newTileNumber, Player player, boolean showConsoleText) {
+		// Get and save player attributes for later.
+		String playerName = player.getPlayerName();
+		Circle playerShape = (Circle) player;
+		Color playerColor = (Color) playerShape.getFill();
+		double playerRadius = player.getRadius();
+		
 		// Remove player from the board.
 		if(removePlayerTile(player) == true) {
+			// Player instance was deleted so we have to construct it again...
+			player = new Player(playerName, playerRadius, playerColor);
+
 			// Add player on the new tile.
 			if(addPlayerTile(newTileNumber, player) == true){
 				if(showConsoleText) {

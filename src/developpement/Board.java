@@ -12,8 +12,11 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
@@ -207,6 +210,13 @@ public class Board extends Region {
 	        			GridPane.setHalignment(text, HPos.CENTER);
 	        			GridPane.setValignment(text, VPos.CENTER);
 	        			
+	        			// If the barrier is adjacent to 2 tiles :
+	        			if(accBarrierHorizontalId > 9  && accBarrierHorizontalId < 82) {
+	        				// Set id of the adjacent tiles in current barrier attributes.
+	        				barrierHorizontal.setIdTile1("Tile"+Integer.toString(accBarrierHorizontalId-9));
+	        				barrierHorizontal.setIdTile2("Tile"+Integer.toString(accBarrierHorizontalId));
+	        			}
+	        			
 	        			// Increment accumulator to the next barrier number.
 	        			accBarrierHorizontalId++;
         			}
@@ -267,8 +277,8 @@ public class Board extends Region {
 	        			// If the barrier is not in the border of the board :
 	        			if(accBarrierVerticalId % 10 != 0  && (accBarrierVerticalId-1) % 10 != 0) {
 	        				// Set id of the adjacent tiles of current barrier.
-	        				barrierVertical.setIdTile1("TilePane"+Integer.toString(accBarrierVerticalId-1-((int) accBarrierVerticalId/10)));
-	        				barrierVertical.setIdTile2("TilePane"+Integer.toString(accBarrierVerticalId-((int) accBarrierVerticalId/10)));
+	        				barrierVertical.setIdTile1("Tile"+Integer.toString(accBarrierVerticalId-1-((int) accBarrierVerticalId/10)));
+	        				barrierVertical.setIdTile2("Tile"+Integer.toString(accBarrierVerticalId-((int) accBarrierVerticalId/10)));
 	        			}
 	        			
 	        			// Increment accumulator to the next barrier number.
@@ -333,11 +343,11 @@ public class Board extends Region {
 		hideAllBarrier();
 		
 		// Set HashMap<String, ArrayList<String>> "adjacencyList".
-		// updateAdjacencyList(boardGrid);
+		updateAdjacencyList(boardGrid);
 	}
 	
 	/**
-	 * Constructs an (int rowTotalNumber) x (int columnTotalNumber) Object (Node) using JavaFX library.
+	 * Constructs a (int rowTotalNumber) x (int columnTotalNumber) Object (Node) using JavaFX library.
 	 * @param int initialX
 	 * @param int initialX
 	 * @param int rowTotalNumber
@@ -508,6 +518,13 @@ public class Board extends Region {
 	        			GridPane.setHalignment(text, HPos.CENTER);
 	        			GridPane.setValignment(text, VPos.CENTER);
 	        			
+	        			// If the barrier is adjacent to 2 tiles :
+	        			if(accBarrierHorizontalId > 9  && accBarrierHorizontalId < 82) {
+	        				// Set id of the adjacent tiles in current barrier attributes.
+	        				barrierHorizontal.setIdTile1("Tile"+Integer.toString(accBarrierHorizontalId-9));
+	        				barrierHorizontal.setIdTile2("Tile"+Integer.toString(accBarrierHorizontalId));
+	        			}
+	        			
 	        			// Increment accumulator to the next barrier number.
 	        			accBarrierHorizontalId++;
         			}
@@ -565,9 +582,9 @@ public class Board extends Region {
 	        			// Rotate the text.
 	        			text.setRotate(90);
 	        			
-	        			// If the barrier is not in the border of the board :
+	        			// If the barrier is adjacent to 2 tiles :
 	        			if(accBarrierVerticalId % 10 != 0  && (accBarrierVerticalId-1) % 10 != 0) {
-	        				// Set id of the adjacent tiles of current barrier.
+	        				// Set id of the adjacent tiles in current barrier attributes.
 	        				barrierVertical.setIdTile1("Tile "+Integer.toString(accBarrierVerticalId-1-((int) accBarrierVerticalId/10)));
 	        				barrierVertical.setIdTile2("Tile "+Integer.toString(accBarrierVerticalId-((int) accBarrierVerticalId/10)));
 	        			}
@@ -634,7 +651,7 @@ public class Board extends Region {
 		hideAllBarrier();
 		
 		// Set HashMap<String, ArrayList<String>> "adjacencyList".
-		// updateAdjacencyList(boardGrid);
+		updateAdjacencyList(boardGrid);
 	}	
 
 	/**
@@ -701,7 +718,25 @@ public class Board extends Region {
 			}
 		}
 	}
+	
+	/**
+ 	* Changes the visibility of any element on the board via id search.
+ 	* @param String idNode, id of the element to hide.
+ 	*/
+	protected void show(String idNode) {
+		// Get the board grid.
+		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
+		// For every node in the board :
+		for(Node node: boardGrid.getChildrenUnmodifiable()) {
+			// If the node with the id passed match :
+			if(node.getId().equals(idNode)){
+				// Hide the barrier.
+				node.setOpacity(1);
+			}
+		}
+	}
+	
 	/**
  	* Changes the visibility of any element on the board via id search.
  	* @param String idNode, id of the element to hide.
@@ -763,6 +798,7 @@ public class Board extends Region {
 			for(int numberColumn = 0; numberColumn < 9; numberColumn++) {
 				// For every node in that grid span :
 				for(Node node: boardGrid.getChildrenUnmodifiable()) {
+					System.out.println(node.getId());
 					// If node is wanted tile :
 					if(node.getId().equals(wantedTileId)) {
 						// Get tile span coordinates.
@@ -788,6 +824,54 @@ public class Board extends Region {
 						// Add player in the tile span :
 						boardGrid.add(player, wantedTileColumn, wantedTileRow);
 						
+	    		        // Set an event when the tile is clicked.    		
+	    	            player.setOnMouseClicked(new EventHandler<MouseEvent>()
+	    	            {
+	    	                @Override
+	    	                // Set the action(s) to do.
+	    	                public void handle(MouseEvent event) {
+	    	                    if(player.getOpacity() == 1) {
+	    	                    	player.setOpacity(0);
+	    	                    }
+	    	                    else {
+	    	                    	player.setOpacity(1);
+	    	                    }
+	    	                }
+	    	            });
+	    	            
+	    	            player.setOnDragDetected(new EventHandler<MouseEvent>() {
+	    	                public void handle(MouseEvent event) {
+	    	                    /* drag was detected, start a drag-and-drop gesture*/
+	    	                    /* allow any transfer mode */
+	    	                    Dragboard db = player.startDragAndDrop(TransferMode.ANY);
+	    	                    
+	    	                    /* Put a string on a dragboard */
+	    	                    ClipboardContent content = new ClipboardContent();
+	    	                    content.putString("sus");
+	    	                    db.setContent(content);
+	    	                    System.out.println(player.getId());
+	    	                    movePlayerTile(1, player, true);
+	    	                    
+	    	                    event.consume();
+	    	                }
+	    	            });
+	    	            
+	    	            player.setOnDragOver(new EventHandler<DragEvent>() {
+	    	                public void handle(DragEvent event) {
+	    	                    /* data is dragged over the target */
+	    	                    /* accept it only if it is not dragged from the same node 
+	    	                     * and if it has a string data */
+	    	                    if (event.getGestureSource() != player &&
+	    	                            event.getDragboard().hasString()) {
+	    	                        /* allow for both copying and moving, whatever user chooses */
+	    	                    	System.out.println("Fini");
+	    	                        movePlayerTile(1, player);
+	    	                    }
+	    	                    
+	    	                    event.consume();
+	    	                }
+	    	            });
+	    	            
 	        			// Center the player in the span
 	        			GridPane.setHalignment(player, HPos.CENTER);
 	        			GridPane.setValignment(player, VPos.CENTER);
@@ -1073,11 +1157,13 @@ public class Board extends Region {
 	 */	
 	protected HashMap<String, ArrayList<String>> createAdjacencyList(GridPane boardGrid){
 		HashMap<String, ArrayList<String>> newAdjacencyList = new HashMap<>();
-		for(Node paneNode : boardGrid.getChildren()) {
-			if(paneNode.getId().contains("Barrier")){//check for each barrier in board
-				Barrier barrierX =  (Barrier) ((AnchorPane) paneNode).getChildren().get(0);//we do 2 lines at once to not use 2 variable
-				if(!((barrierX.getIdTile1().equals("") || barrierX.getIdTile2().equals(""))) && !paneNode.isVisible() ){//if the barrier have both IdTiles not empty
-					addEdge(newAdjacencyList, barrierX.getIdTile1(),barrierX.getIdTile2());//we add vertices to the edge matrix
+		for(Node node : boardGrid.getChildren()) {
+			if(node.getId().contains("Barrier") && !node.getId().contains("Text")){//check for each barrier in board
+				Barrier barrier =  (Barrier) node;
+				// If the barriers id are both not empty.
+				if(!((barrier.getIdTile1().equals("") || barrier.getIdTile2().equals(""))) && node.getOpacity() == 0) {
+					// Add vertices to the edge matrix.
+					addEdge(newAdjacencyList, barrier.getIdTile1(),barrier.getIdTile2());
 				}
 			}
 		}
@@ -1091,7 +1177,20 @@ public class Board extends Region {
 	 */	
 	protected void updateAdjacencyList(GridPane boardGrid){
 		setAdjacencyList(createAdjacencyList(boardGrid));
-		System.out.println(getAdjacencyList());	
+	}
+	
+	/**
+	 * Updates adjacency list initializing a new one and overwriting the existent one.
+	 * @param GridPane boardGrid, GridPane containing all the node of the board. 
+	 * @param boolean showConsoleText, show useful text.
+	 */	
+	protected void updateAdjacencyList(GridPane boardGrid, boolean showConsoleText){
+		setAdjacencyList(createAdjacencyList(boardGrid));
+		if(showConsoleText) {
+			System.out.println("Adjacency List Updated :");
+			System.out.println(getAdjacencyList());
+			System.out.println();
+		}
 	}
 	
 	protected boolean addEdge(HashMap<String, ArrayList<String>> adjacencyList, String idEdge1, String idEdge2) {
@@ -1273,9 +1372,16 @@ public class Board extends Region {
 	protected boolean areConnected(HashMap<String, ArrayList<String>> adjacencyList, String verticeA, String verticeB, boolean showConsoleText) {
 		if(dfs(verticeA).contains(verticeB)){
 			if(showConsoleText) {
-				System.out.println(verticeA + " is connected to " + verticeB); 
+				System.out.println(verticeA + " is connected to " + verticeB + ".");
+				System.out.println();
 			}
 			return(true);
+		}
+		else {
+			if(showConsoleText) {
+				System.out.println(verticeA + " is NOT connected to " + verticeB + ".");
+				System.out.println();
+			}
 		}
 		return(false);
 	}

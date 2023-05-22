@@ -3,7 +3,7 @@ package developpement;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Main extends Application{
@@ -15,32 +15,16 @@ public class Main extends Application{
 		
 		Board board = new Board();
 		root.getChildren().add(board);
-		Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
-		board.addPlayerTile(81, adrien);
 		
-		/*
-		board.show("BarrierHPane29");
-		board.show("BarrierHPane38");
-		board.show("BarrierVPane32");
-		board.show("BarrierVPane33");
-		board.updateAdjacencyList((AnchorPane) board.getChildrenUnmodifiable().get(0));
+		GridPane boardGrid = (GridPane) board.getChildrenUnmodifiable().get(0);
+		board.show("Barrier Horizontal 47");
+		board.show("Barrier Horizontal 56");
+		board.show("Barrier Vertical 52");
+		board.show("Barrier Vertical 53");
 		
-		AnchorPane collectionBoard = (AnchorPane) board.getChildrenUnmodifiable().get(0);
+		board.updateAdjacencyList(boardGrid, true);
 		
-		System.out.println(collectionBoard.getChildren());
-		System.out.println(board.getAdjacencyList());
-		
-		AnchorPane anchorPane1 = (AnchorPane) collectionBoard.getChildren().get(0);
-		System.out.println(anchorPane1);
-		System.out.println(anchorPane1.isVisible());
-		board.show("BarrierHPane29");
-		
-		System.out.println("TilePane1 is adjacent to: " + adjHashMap.get("TilePane1"));
-		LinkedList<String> resultDfs = board.dfs("TilePane1");
-		System.out.println("There is a path between: " + resultDfs);
-		System.out.println("Number of tiles in this path = " + resultDfs.size());
-		board.areConnected(board.getAdjacencyList(), "TilePane1", "TilePane81", true);
-		*/
+		board.areConnected(board.getAdjacencyList(), "Tile1", "Tile47", true);
 		
 		Scene scene = new Scene(root, 900, 750);
 		

@@ -16,6 +16,7 @@ import javafx.scene.text.Text;
 public class Player extends Circle {
 	private String playerName;
 	private int playerNumber;
+	public boolean winner = false;
 	private ArrayList<String> idWinningTiles;
 	public String tileId;
 	private String idStartTiles;

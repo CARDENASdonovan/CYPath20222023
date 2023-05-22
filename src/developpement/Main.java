@@ -1,5 +1,7 @@
 package developpement;
 
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -16,6 +18,7 @@ public class Main extends Application{
 		
 		Board board = new Board(50, 10, 9, 9);
 		root.getChildren().add(board);
+		
 		/*
 		Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
 		board.addPlayerTile(5, adrien);

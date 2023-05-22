@@ -41,6 +41,8 @@ public class Board extends Region {
 	private HashMap<String, ArrayList<String>> adjacencyList;
 	public String hoverTileid = "";
 	public Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
+	public ArrayList<String> winnerTiles = new ArrayList<String>();
+	
 	/**
 	 * Constructs an (int rowTotalNumber) x (int columnTotalNumber) Object (Node) using JavaFX library.
 	 * @param int rowTotalNumber
@@ -419,6 +421,9 @@ public class Board extends Region {
 	 */
 	
 	public Board(int initialX, int initialY, int tileRowsQuantity, int tileColumnsQuantity) {
+		for(int i=73; i<82; i++) {
+			winnerTiles.add("Tile " + i);
+		}
 	// Initialization of this instance attributes.
 		// We need in total (tileColumnsQuantity*2 + 1) columns and (tileRowsQuantity*2 + 1) rows to fit the barriers.
 		final int columnsTotalQuantity = tileColumnsQuantity*2 + 1;
@@ -760,6 +765,22 @@ public class Board extends Region {
 			    	                		adrien.tileId = hoverTileid;
 			    	                		addPlayerTile(tileNumber, adrien, true);
 			    	                		adrien.tileId = hoverTileid;
+			    	                		for(String winnerTileId: winnerTiles) {
+			    	                			System.out.println(winnerTileId);
+			    	                			if(adrien.tileId.equals(winnerTileId)) {
+			    	                				adrien.winner = true;
+			    	                				System.out.println();
+			    	                				System.out.println("WINNER");
+			    	                				System.out.println("WINNER");
+			    	                				System.out.println("WINNER");
+			    	                				System.out.println("WINNER");
+			    	                				System.out.println("WINNER");
+			    	                				System.out.println();
+			    	                			}
+			    	                			else {
+			    	                				adrien.winner = false;
+			    	                			}
+			    	                		}
 			    	                		System.out.println("Player is in " + adrien.tileId);
 			    	                		System.out.println("WAITING ANOTHER CLICK...");
 			    	                		System.out.println();

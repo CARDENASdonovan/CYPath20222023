@@ -562,9 +562,11 @@ public class Board extends Region {
 	    	                public void handle(MouseEvent event) {
 	    	                    if(barrierHorizontal.getFill() != barrierHorizontalColor) {
 	    	                    	barrierHorizontal.setFill(barrierHorizontalColor);
+	    	                    	updateAdjacencyList(boardGrid);
 	    	                    }
 	    	                    else {
 	    	                    	barrierHorizontal.setOpacity(0);
+	    	                    	updateAdjacencyList(boardGrid);
 	    	                    }
 	    	                }
 	    	            });
@@ -638,9 +640,11 @@ public class Board extends Region {
 	    	                public void handle(MouseEvent event) {
 	    	                    if(barrierVertical.getFill() != barrierHorizontalColor) {
 	    	                    	barrierVertical.setFill(barrierHorizontalColor);
+	    	                    	updateAdjacencyList(boardGrid);
 	    	                    }
 	    	                    else {
 	    	                    	barrierVertical.setOpacity(0);
+	    	                    	updateAdjacencyList(boardGrid);
 	    	                    }
 	    	                }
 	    	            });
@@ -716,7 +720,7 @@ public class Board extends Region {
 	    	                	int tileNumber;
 
 	    	                	// Get hovered tile id and number.
-	    	                	if(hoverTileid.length() == 5) {
+	    	                	if(hoverTileid.length() == 6) {
 	    	                		tileNumberString = hoverTileid.substring(hoverTileid.length()-1);
 	    	                		tileNumber = Integer.parseInt(tileNumberString);
 	    	                	}

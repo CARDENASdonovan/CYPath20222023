@@ -35,22 +35,22 @@ public class Player extends Circle {
 		switch(playerNumber) {
 		case 1 : for (int i=1; i<=9; i++) {
 			idWinningTiles.add(t+(72+i));
-			setIdStartTiles("Tile5");
+			setIdStartTiles("Tile 5");
 		}
 		
 		case 2 : for(int i=1; i<=9; i++) {
 			idWinningTiles.add(t+i);
-			setIdStartTiles("Tile77");
+			setIdStartTiles("Tile 77");
 		}
 		
 		case 3 : for (int i=0; i<=8; i++) {
 			idWinningTiles.add(t+(1+i*9));
-			setIdStartTiles("Tile45");
+			setIdStartTiles("Tile 45");
 		}
 		
 		case 4 : for (int i=1; i<=9; i++) {
 			idWinningTiles.add(t+(i*9));
-			setIdStartTiles("Tile37");
+			setIdStartTiles("Tile 37");
 		}
 		
 		}
@@ -138,7 +138,7 @@ public class Player extends Circle {
 	 * @return a String to print
 	 */
 	public String toString() {
-		return("Player idNumber: " + getId() + "\n" + "centerX: " + getCenterX() + "\n" + "centerY: " + getCenterY() + "\n" + "Radius: " + getRadius() + "." + "\n");
+		return("Player idNumber: " + getId() + "\n" + "centerX: " + getCenterX() + "\n" + "centerY: " + getCenterY() + "\n" + "Radius: " + getRadius() + ".");
 	}
 	
 	@Override

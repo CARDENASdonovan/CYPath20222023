@@ -1,7 +1,6 @@
 package developpement;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;

@@ -1,16 +1,8 @@
 package developpement;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import javafx.application.Application;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -26,9 +18,6 @@ public class Main extends Application{
 		Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
 		board.addPlayerTile(81, adrien);
 		
-		board.movePlayerTile(20, adrien, true);
-		Player baat = new Player("Baat", 20, Color.CHARTREUSE);
-		//board.addPlayerTile(11, baat);
 		/*
 		board.show("BarrierHPane29");
 		board.show("BarrierHPane38");

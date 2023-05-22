@@ -1,10 +1,7 @@
 package developpement;
 
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 
 /**
  * The Barrier class represents the separation between every tile of the game board. This class inherit from the Rectangle class from javafx with all its attributes and methods.
@@ -15,8 +12,6 @@ import javafx.scene.text.Text;
  */
 public class Barrier extends Rectangle {
 	private final static int DEFAULT_NUMBER = 0;
-	private final static int DEFAULT_X = 0;
-	private final static int DEFAULT_Y = 0;
 	private final static int DEFAULT_WIDTH = 5;
 	private final static int DEFAULT_HEIGHT = 5;
 	private final static Color DEFAULT_COLOR = Color.CHARTREUSE;

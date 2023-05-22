@@ -12,8 +12,6 @@ import javafx.scene.text.Text;
  */
 public class Tile extends Rectangle {
 	private final static int DEFAULT_idNumber = 0;
-	private final static int DEFAULT_X = 0;
-	private final static int DEFAULT_Y = 0;
 	private final static int DEFAULT_WIDTH_HEIGHT = 50;
 	private final static Color DEFAULT_COLOR = Color.CHARTREUSE;
 	

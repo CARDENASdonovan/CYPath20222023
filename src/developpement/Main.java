@@ -14,13 +14,13 @@ public class Main extends Application{
 		AnchorPane root = new AnchorPane();	
 		root.setId("root");
 		
-		Board board = new Board(75,10,9,9);
+		Board board = new Board(50, 10, 9, 9);
 		root.getChildren().add(board);
-		
+		/*
 		Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
 		board.addPlayerTile(5, adrien);
 		board.movePlayerTile(10, adrien);
-		
+		*/
 		
 		// Demo show and impact adjacency list  
 		GridPane boardGrid = (GridPane) board.getChildrenUnmodifiable().get(0);

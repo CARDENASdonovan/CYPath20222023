@@ -17,6 +17,7 @@ public class Player extends Circle {
 	private String playerName;
 	private int playerNumber;
 	private ArrayList<String> idWinningTiles;
+	public String tileId;
 	private String idStartTiles;
 	
 	/**

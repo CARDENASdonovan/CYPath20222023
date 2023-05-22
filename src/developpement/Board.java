@@ -39,7 +39,8 @@ import javafx.scene.text.Font;
 
 public class Board extends Region {	
 	private HashMap<String, ArrayList<String>> adjacencyList;
-	
+	public String hoverTileid = "";
+	public Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
 	/**
 	 * Constructs an (int rowTotalNumber) x (int columnTotalNumber) Object (Node) using JavaFX library.
 	 * @param int rowTotalNumber
@@ -325,12 +326,40 @@ public class Board extends Region {
     					// Create Tile "tile" with the right dimensions.
 	    		        Tile tile = new Tile(accTileId, tileWidth, tileColor);
 	    		        
+		        	// Add actions on events for tile.
+	        			// If barrier hover is true :
+	        			tile.hoverProperty().addListener((observable, oldValue, hoverBoolean) -> {
+	        				hoverTileid = tile.getId();
+	        				System.out.println(this.hoverTileid);
+	        				if(hoverBoolean) {
+	        					tile.setOpacity(1);
+	        					tile.setFill(Color.CHOCOLATE);
+	        				}
+        				
+        					if(!hoverBoolean && tile.getFill() != barrierHorizontalColor) {
+        						tile.setFill(tileColor);
+        					}
+	        			});
+
 	    		        // Set an event when the tile is clicked.    		
 	    	            tile.setOnMouseClicked(new EventHandler<MouseEvent>()
-	    	            {
+	    	            {	
+
 	    	                @Override
 	    	                // Set the action(s) to do.
 	    	                public void handle(MouseEvent event) {
+	    	                	int sizeHoverTileid = hoverTileid.length();
+	    	                	String tileNumber = "";
+	    	                	if(sizeHoverTileid == 5) {
+	    	                		tileNumber = hoverTileid.substring(sizeHoverTileid-1);
+	    	                	}
+	    	                	else {
+	    	                		tileNumber = hoverTileid.substring(sizeHoverTileid-2);
+	    	                	}
+	        	            	Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
+	        	            	removePlayerTile(adrien,true);
+	    	                	addPlayerTile(Integer.parseInt(tileNumber), adrien, true);
+	    	                	//movePlayerTile(Integer.parseInt(tileNumber), adrien, true);
 	    	                    if(tile.getFill() != Color.GREEN) {
 	    	                    	tile.setFill(Color.GREEN);
 	    	                    }
@@ -569,8 +598,8 @@ public class Board extends Region {
 	        			// If the barrier is adjacent to 2 tiles :
 	        			if(accBarrierHorizontalId > 9  && accBarrierHorizontalId < 82) {
 	        				// Set id of the adjacent tiles in current barrier attributes.
-	        				barrierHorizontal.setIdTile1("Tile"+Integer.toString(accBarrierHorizontalId-9));
-	        				barrierHorizontal.setIdTile2("Tile"+Integer.toString(accBarrierHorizontalId));
+	        				barrierHorizontal.setIdTile1("Tile "+Integer.toString(accBarrierHorizontalId-9));
+	        				barrierHorizontal.setIdTile2("Tile "+Integer.toString(accBarrierHorizontalId));
 	        			}
 	        			
 	        			// Increment accumulator to the next barrier number.
@@ -661,18 +690,90 @@ public class Board extends Region {
     					// Create Tile "tile" with the right dimensions.
 	    		        Tile tile = new Tile(accTileId, tileWidth, tileColor);
 	    		        
+	    		     // Add actions on events for tile.
+	        			// If barrier hover is true :
+	        			tile.hoverProperty().addListener((observable, oldValue, hoverBoolean) -> {
+	        				hoverTileid = tile.getId();
+	        				System.out.println(this.hoverTileid);
+	        				if(hoverBoolean) {
+	        					tile.setOpacity(1);
+	        					tile.setFill(Color.CHOCOLATE);
+	        				}
+        				
+        					if(!hoverBoolean && tile.getFill() != barrierHorizontalColor) {
+        						tile.setFill(tileColor);
+        					}
+	        			});
+
 	    		        // Set an event when the tile is clicked.    		
 	    	            tile.setOnMouseClicked(new EventHandler<MouseEvent>()
-	    	            {
+	    	            {	
+
 	    	                @Override
 	    	                // Set the action(s) to do.
 	    	                public void handle(MouseEvent event) {
+	    	                	String tileNumberString;
+	    	                	int tileNumber;
+
+	    	                	// Get hovered tile id and number.
+	    	                	if(hoverTileid.length() == 5) {
+	    	                		tileNumberString = hoverTileid.substring(hoverTileid.length()-1);
+	    	                		tileNumber = Integer.parseInt(tileNumberString);
+	    	                	}
+	    	                	else {
+	    	                		tileNumberString = hoverTileid.substring(hoverTileid.length()-2);
+	    	                		tileNumber = Integer.parseInt(tileNumberString);
+	    	                	}
+	    	                	      	
+	    	                	// If remove is failed it means player was not exists in board.
+	    	                		
+	    	                		// Add to update position.
+		    	                	System.out.println("Initial: " + getAdjacencyList());
+			                		System.out.println();
+	    	                	
+	    	                		System.out.println("Player " + adrien.tileId);
+	    	                		System.out.println();
+	    	                		
+	    	                		if(adrien.tileId == null) {
+	    	                			removePlayerTile(adrien, true);
+		    	                		adrien.tileId = hoverTileid;
+		    	                		addPlayerTile(tileNumber, adrien, true);
+		    	                		adrien.tileId = hoverTileid;
+		    	                		System.out.println("Player is in " + adrien.tileId);
+		    	                		System.out.println("Now: " + getAdjacencyList());
+		    	                		System.out.println("WAITING ANOTHER CLICK...");
+		    	                		System.out.println();
+	    	                		}
+	    	                	
+		    	                	else {
+		    	                		System.out.println(adrien.tileId);
+	    	                			System.out.println("Yay");
+			    	                	System.out.println(getAdjacencyList());
+	    	                			System.out.println(areConnected(adjacencyList, hoverTileid, adrien.tileId, true));
+	    	                			System.out.println();
+	    	                			if(areConnected(adjacencyList, hoverTileid, adrien.tileId)){
+		    	                			removePlayerTile(adrien, true);
+			    	                		adrien.tileId = hoverTileid;
+			    	                		addPlayerTile(tileNumber, adrien, true);
+			    	                		adrien.tileId = hoverTileid;
+			    	                		System.out.println("Player is in " + adrien.tileId);
+			    	                		System.out.println("WAITING ANOTHER CLICK...");
+			    	                		System.out.println();
+	    	                			}
+	    	                			else {
+	    	                				System.out.println("NOPE");
+	    	                				System.out.println("WAITING ANOTHER CLICK...");
+	    	                				System.out.println();
+	    	                			}
+		    	                	}
+	    	                	
+	    	                	/*
 	    	                    if(tile.getFill() != Color.GREEN) {
 	    	                    	tile.setFill(Color.GREEN);
 	    	                    }
 	    	                    else {
 	    	                    	tile.setFill(Color.BLUE);
-	    	                    }
+	    	                    }*/
 	    	                }
 	    	            });
 	        			
@@ -875,7 +976,7 @@ public class Board extends Region {
 	protected boolean addPlayerTile(int wantedTileNumber, Player player) {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
-		String wantedTileId = "Tile" + wantedTileNumber;
+		String wantedTileId = "Tile " + wantedTileNumber;
 		
 	// Find wanted tile attributes.
 		// For every row in the board :
@@ -984,7 +1085,7 @@ public class Board extends Region {
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
 		// Set wanted tile id.
-		String wantedTileId = "Tile" + wantedTileNumber;
+		String wantedTileId = "Tile " + wantedTileNumber;
 		
 		// For every row in the board :
 		for(int numberRow = 0; numberRow < 9; numberRow++) {
@@ -1443,6 +1544,10 @@ public class Board extends Region {
 		ArrayList<String> vertexNeighborsNotVisited = new ArrayList<>() ;
 		
 		ArrayList<String> vertexNeighbors = adjacencyList.get(startVertex);
+		if(vertexNeighbors == null) {
+			LinkedList<String> debug = new LinkedList<>();
+			return(debug);
+		}
 	
 		for(String vertexName : vertexNeighbors) {
 			if(!visited.contains(vertexName) && !stack.contains(vertexName)) {

@@ -25,7 +25,7 @@ public class Tile extends Rectangle {
 	 */
 	protected Tile(int idNumber, double widthHeight, Color color) {
 		super(0, 0, widthHeight, widthHeight);
-		super.setId("Tile" + Integer.toString(idNumber));
+		super.setId("Tile " + Integer.toString(idNumber));
 		super.setFill(color);
 	}
 	

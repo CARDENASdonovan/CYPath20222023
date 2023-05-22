@@ -804,6 +804,28 @@ public class Board extends Region {
  	* Changes the visibility of any element on the board via id search.
  	* @param String idNode, id of the element to hide.
  	*/
+	protected void show(String idNode, boolean showConsoleText) {
+		// Get the board grid.
+		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
+		
+		// For every node in the board :
+		for(Node node: boardGrid.getChildrenUnmodifiable()) {
+			// If the node with the id passed match :
+			if(node.getId().equals(idNode)){
+				// Hide the barrier.
+				node.setOpacity(1);
+				if(showConsoleText) {
+					System.out.println(node.getId() + " now visible.");
+					System.out.println();
+				}
+			}
+		}
+	}
+	
+	/**
+ 	* Changes the visibility of any element on the board via id search.
+ 	* @param String idNode, id of the element to hide.
+ 	*/
 	protected void hide(String idNode) {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
@@ -976,10 +998,10 @@ public class Board extends Region {
 						int wantedTileColumn = GridPane.getColumnIndex(node);
 						int wantedTileRow = GridPane.getRowIndex(node);
 						
+					// Check if the span contains a Player instance :
 						// Get the list of nodes in the same span.
 						ArrayList<Node> nodeList = getNodeListColumnRow(wantedTileColumn, wantedTileRow);
 						
-					// Check if the span contains a Player instance :
 						// For every Node in nodeList :
 						for(int i = 0; i < nodeList.size(); i++) {
 							// If the span already contains a Player.
@@ -1025,7 +1047,31 @@ public class Board extends Region {
 	        			
 	        			// Add the text to the right span.
 	        			boardGrid.add(text, wantedTileColumn, wantedTileRow);
-
+	        			
+                        // Set an event when the tile is clicked.                    
+	                    player.setOnMouseClicked(new EventHandler<MouseEvent>()
+	                    {
+	                        @Override
+	                        // Set the action(s) to do.
+	                        public void handle(MouseEvent event) {
+	                        }
+	                    });
+	                    
+	                    player.setOnDragDetected(new EventHandler<MouseEvent>() {
+	                        public void handle(MouseEvent event) {
+	                            /* drag was detected, start a drag-and-drop gesture*/
+	                            /* allow any transfer mode */
+	                            Dragboard db = player.startDragAndDrop(TransferMode.ANY);
+	                            
+	                            /* Put a string on a dragboard */
+	                            ClipboardContent content = new ClipboardContent();
+	                            content.putString("s");
+	                            db.setContent(content);
+	                            
+	                            event.consume();
+	                        }
+	                    });
+                    
 	        			// Print useful text.
 	        			if(showConsoleText) {
 	        				System.out.println(player.getPlayerName() + " added in " + nodeList.get(0).getId() + ".");
@@ -1057,7 +1103,7 @@ public class Board extends Region {
 		
 		// Get name of the player to remove.
 		String playerTextId = "Text " + player.getId();
-		
+	// Find wanted tile attributes.
 		// For every node in the grid :
 		for(Node node: boardPane.getChildrenUnmodifiable()) {			
 			// If node is the wanted player or wanted player text : 

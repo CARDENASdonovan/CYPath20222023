@@ -1,5 +1,8 @@
 package developpement;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -12,17 +15,94 @@ import javafx.scene.text.Text;
  */
 
 public class Player extends Circle {
+	private int playerNumber;
+	private ArrayList<String> idWinningTiles;
+	private String idStartTiles;
 	/**
-	 * This method is the constructor of the Player class.
+	 * This method is the constructor of the Player class. It assigns a start tile and a list of winning tiles to the player depending on the player number.
+	 * @param int playerNumber
 	 * @param String playerName
 	 * @param double radius
 	 * @param Color color
 	 */
-	public Player(String playerName, double radius, Color color) {
+	public Player(int playerNumber, String playerName, double radius, Color color) {
 		super(-1000,-1000, radius);
+		this.setPlayerNumber(playerNumber);
+		String t = "Tile";
+		switch(playerNumber) {
+		case 1 : for (int i=1; i<=9; i++) {
+			idWinningTiles.add(t+(72+i));
+			setIdStartTiles("Tile5");
+		}
+		
+		case 2 : for(int i=1; i<=9; i++) {
+			idWinningTiles.add(t+i);
+			setIdStartTiles("Tile77");
+		}
+		
+		case 3 : for (int i=0; i<=8; i++) {
+			idWinningTiles.add(t+(1+i*9));
+			setIdStartTiles("Tile45");
+		}
+		
+		case 4 : for (int i=1; i<=9; i++) {
+			idWinningTiles.add(t+(i*9));
+			setIdStartTiles("Tile37");
+		}
+		
+		}
 		super.setId(playerName);
 		super.setFill(color);
 	}
+	
+	/**
+	 * This method is used to get the number of a player.
+	 * @return the player number (int)
+	 */
+	public int getPlayerNumber() {
+		return this.playerNumber;
+	}
+	
+	/**
+	 * This method is used to set the number of a player.
+	 * @param int playerNumber
+	 */
+	public void setPlayerNumber(int playerNumber) {
+		this.playerNumber = playerNumber;
+	}
+	
+	/**
+	 * This method is used to get the list of winning tiles for a player.
+	 * @return a list of winning tiles
+	 */
+	public ArrayList<String> getIdWinningTiles(){
+		return this.idWinningTiles;
+	}
+	
+	/**
+	 * this method is used to set the list of winning tiles for a player.
+	 * @param ArrayList(String) idWinningTiles
+	 */
+	public void setIdWinningTiles(ArrayList<String> idWinningTiles) {
+		this.idWinningTiles = idWinningTiles;
+	}
+	
+	/**
+	 * This method is used to get the id of the starting tile of a player.
+	 * @return the id of the starting tile of the player (String)
+	 */
+	public String getIdStartTiles() {
+		return idStartTiles;
+	}
+
+	/**
+	 * This method is used to set the id of the starting tile of a player.
+	 * @param String idStartTiles
+	 */
+	public void setIdStartTiles(String idStartTiles) {
+		this.idStartTiles = idStartTiles;
+	}
+	
 	
 	@Override
 	/**
@@ -57,4 +137,8 @@ public class Player extends Circle {
 		text.setId("Player" + textString + "Text");
 		pane.getChildren().add(text);
 	}
+
+
+
+	
 }

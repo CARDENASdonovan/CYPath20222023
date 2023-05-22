@@ -5,578 +5,1073 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Stack;
 
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+
 import javafx.scene.layout.Region;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+
 
 /**
- * The Board class represents the game board with everything on it : the tiles, the barriers and players. It also has methods to to change the visibility of every part, to move a player on the board, to place barriers and to check if a path to win exists for each player.
- * An adjacency list is added as an attribute to the class in order to be used in the method that search for a path.
+ * The Board class represents the game board with everything on it : tiles, barriers and players. It also has methods to to change the visibility of every object, to move a player on the board, to place barriers and to check if a path to win exists for each player.
+ * An adjacency list is added as an attribute to the class in order to be used in the methods that search for a path.
  * @author Cardenas D, Ruellan B, Machnik A, Johnson A, Guenneau R
  */
 
-public class Board extends Region{
-	private HashMap<String, ArrayList<String>> adjacencyList = new HashMap<>();
+public class Board extends Region {	
+	private HashMap<String, ArrayList<String>> adjacencyList;
 	
 	/**
-	 * Constructs an 9x9 Object (Node) using JavaFX library.
-	 */
-	
-	public Board() {
-		// Initialization of this instance attributes.
-		int lineTotalNumber = 9;
-		int columnTotalNumber = 9;
-		
-		// Dimensions of the barriers to build. 
-	    final int barrierHorizontalWidth = 70;
-	    final int barrierHorizontalHeight = 10;
-	    
-	    final int barrierVerticalWidth = barrierHorizontalHeight;
-	    final int barrierVerticalHeight = barrierHorizontalWidth;
-	    
-	    // Dimensions of the tiles to build.
-	    final int tileWidth = barrierHorizontalWidth;
-	    
-	    // Useful accumulators for names or loops.
-	    int acc1 = 0;
-	    int acc2 = 0;
-	    int acc3 = 0;
-	    int accTileId = 1;
-	    int accBarrierHorizontal = 1;
-	    int accBarrierVertical = 1;
-	    
-	    // Position of the top-left corner of the Board.
-	    final int initialX = 10;
-	    final int initialY = 10;
-	    
-	    // Initial position of the top-left corner of the first tile created.
-	    final int initialTileX = initialX + barrierHorizontalHeight;
-	    final int initialTileY = initialY + barrierHorizontalHeight;
-	    
-		// Useful variables to change the color of all the elements at once.
-	    Color barrierHorizontalColor = Color.GREY;
-	    Color barrierVerticalColor = Color.GREY;
-	    Color tileColor = Color.LIGHTCORAL;
-	    
-	    // Initialization of the Anchor variables to change the color of all the elements at once.
-	    AnchorPane boardPane = new AnchorPane();
-	    boardPane.setId("BoardPane");
-	    
-		for(int lineNumber = 0; lineNumber < lineTotalNumber*2 + 1; lineNumber++) {
-        	for(int columnNumber = 0; columnNumber < columnTotalNumber; columnNumber++) {
-        		
-        		// Position of the top-left corner of each tile depending the line and column.
-        		int tileX = initialTileX + (tileWidth + barrierHorizontalHeight) * acc2;
-        	    int tileY = initialTileY + (tileWidth + barrierHorizontalHeight) * acc3;
-        		
-        	    // Position of the top-left corner of each horizontal barrier depending the line and column.
-        		int barrierHorizontalX = initialX + barrierHorizontalHeight + (barrierHorizontalHeight + tileWidth) * acc2;
-        	    int barrierHorizontalY = initialY + (barrierHorizontalHeight + tileWidth) * acc1;
-        	    
-        	    
-        	    // Position of the top-left corner of each vertical barrier depending the line and column.
-        	    int barrierVerticalX = initialX + (barrierHorizontalHeight + tileWidth) * acc2;
-        	    int barrierVerticalY = initialY + barrierHorizontalHeight + (tileWidth + barrierHorizontalHeight) * acc3;
-        	    
-        	    // Position of the top-left corner of each vertical barrier at the last column.
-        	    int barrierVerticalLastColumnX = initialX + barrierHorizontalHeight + tileWidth + (tileWidth + barrierHorizontalHeight) * acc2;
-        	    int barrierVerticalLastColumnY = initialY + barrierHorizontalHeight + (tileWidth + barrierHorizontalHeight) * acc3;
-        	    
-        	    // Creation of the lines with horizontal barriers.
-        		if(lineNumber % 2 == 0) {
-        			AnchorPane barrierHPane = new AnchorPane();
-        			barrierHPane.setId("BarrierHPane" + Integer.toString(accBarrierHorizontal));
-        			
-        			BarrierHorizontal barrierHorizontal = new BarrierHorizontal(accBarrierHorizontal, barrierHorizontalX, barrierHorizontalY, barrierHorizontalWidth, barrierHorizontalHeight, barrierHorizontalColor,"","");
-        			barrierHPane.getChildren().add(barrierHorizontal);
-        			
-        			if(accBarrierHorizontal > 9 && accBarrierHorizontal < 82) {//if the barrier is IN the board, set adjacent tiles id for current barrier
-        				barrierHorizontal.setIdTile1("TilePane"+Integer.toString(accBarrierHorizontal-9));
-        				barrierHorizontal.setIdTile2("TilePane"+Integer.toString(accBarrierHorizontal));
-        			}
-        			
-        			barrierHorizontal.addBarrierTextId("H" + Integer.toString(accBarrierHorizontal), Color.RED, 0, barrierHPane);
-        			boardPane.getChildren().add(barrierHPane);
-        			
-        			accBarrierHorizontal++;
-
-    		        acc2++;
-    			}
-        		
-    			else {
-    				AnchorPane barrierVPane = new AnchorPane();
-    				barrierVPane.setId("BarrierVPane" + Integer.toString(accBarrierVertical));
-    				
-        			BarrierVertical barrierVertical = new BarrierVertical(accBarrierVertical, barrierVerticalX, barrierVerticalY, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
-        			barrierVPane.getChildren().add(barrierVertical);     
-        			
-        			if(accBarrierVertical % 10 != 0  && (accBarrierVertical-1) % 10 != 0) {//if the barrier is IN the board, set adjacent tiles id for current barrier
-        				barrierVertical.setIdTile1("TilePane"+Integer.toString(accBarrierVertical-1-((int) accBarrierVertical/10)));
-        				barrierVertical.setIdTile2("TilePane"+Integer.toString(accBarrierVertical-((int) accBarrierVertical/10)));
-        			}
-
-        			barrierVertical.addBarrierTextId("V" + Integer.toString(accBarrierVertical), Color.BLUE, -90, barrierVPane);
-        			boardPane.getChildren().add(barrierVPane);
-        			
-        			accBarrierVertical++;
-        			
-        			AnchorPane tilePane = new AnchorPane();
-        			tilePane.setId("TilePane" + Integer.toString(accTileId));
-        			
-    		        Tile tile = new Tile(accTileId, tileX, tileY, tileWidth, tileColor);
-    		        tile.toBack();
-    		        tilePane.getChildren().add(tile);
-    		        
-    		        tile.addTileTextId(Integer.toString(accTileId), tilePane);
-    		        
-    		        boardPane.getChildren().add(tilePane);
-			        
-			        accTileId++;
-			        	
-			        acc2++;
-			        
-			        
-			        if(columnNumber == columnTotalNumber - 1) {
-			        	AnchorPane lastBarrierPane = new AnchorPane();
-			        	lastBarrierPane.setId("BarrierVPane" + Integer.toString(accBarrierHorizontal));
-			        	
-	        			BarrierVertical barrierVerticalLastColumn = new BarrierVertical(accBarrierVertical, barrierVerticalLastColumnX, barrierVerticalLastColumnY, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
-	        			lastBarrierPane.getChildren().add(barrierVerticalLastColumn);
-	        			
-	        			barrierVerticalLastColumn.addBarrierTextId("V" + Integer.toString(accBarrierVertical), Color.BLUE, -90, barrierVPane);
-	        			
-	        			boardPane.getChildren().add(lastBarrierPane);
-	        			accBarrierVertical++;
-	        		}
-			    }
-        	}
-        	
-        	if(lineNumber % 2 != 0) {
-        		acc3++;
-        	}
-        	
-        	if(lineNumber % 2 == 0) {
-        		acc1++;
-        	}        	
-        	acc2 = 0;
-        }
-		this.getChildren().add(boardPane);
-		hideAllBarrier();	
-		updateAdjacencyList(boardPane);
-	}	
-	
-	/**
-	 * Constructs an (int lineTotalNumber) x (int columnTotalNumber) Object (Node) using JavaFX library.
-	 * @param int lineTotalNumber
+	 * Constructs an (int rowTotalNumber) x (int columnTotalNumber) Object (Node) using JavaFX library.
+	 * @param int rowTotalNumber
 	 * @param int columnTotalNumber
 	 */
 	
-	public Board(int lineTotalNumber, int columnTotalNumber) { 
-	    final int barrierHorizontalWidth = 70;
-	    final int barrierHorizontalHeight = 10;
+	public Board() {
+	// Initialization of this instance attributes.
+		// Initialization of the number of tiles columns and rows we want.
+		final int tileColumnsQuantity = 9;
+		final int tileRowsQuantity = 9;
+		
+		// We need in total (tileColumnsQuantity*2 + 1) columns and (tileRowsQuantity*2 + 1) rows to fit the barriers.
+		final int columnsTotalQuantity = tileColumnsQuantity*2 + 1;
+		final int rowsTotalQuantity = tileRowsQuantity*2 + 1;
+		
+		// Dimensions of the barriers to build.
+	    final double barrierHorizontalWidth = 70;
+	    final double barrierHorizontalHeight = 10;
 	    
-	    final int barrierVerticalWidth = barrierHorizontalHeight;
-	    final int barrierVerticalHeight = barrierHorizontalWidth;
+	    final double barrierVerticalWidth = barrierHorizontalHeight;
+	    final double barrierVerticalHeight = barrierHorizontalWidth;
 	    
-	    final int tileWidth = barrierHorizontalWidth;
+		// Dimensions of the tiles to build.
+	    final double tileWidth = barrierHorizontalWidth;
 	    
-	    int acc1 = 0;
-	    int acc2 = 0;
-	    int acc3 = 0;
+	    // Useful accumulators for names or loops.
+	    int accBarrierHorizontalId = 1;
+	    int accBarrierVerticalId = 1;
 	    int accTileId = 1;
-	    int accBarrierHorizontal = 1;
-	    int accBarrierVertical = 1;
 	    
-	    final int initialX = 10;
-	    final int initialY = 10;
+	    // Position of the top-left corner of the Board.
+	    final int initialX = 0;
+	    final int initialY = 0;
 	    
-	    final int initialTileX = initialX + barrierHorizontalHeight;
-	    final int initialTileY = initialY + barrierHorizontalHeight;
-	    
-	   
-	    
+		// Useful variables to change the color of each elements type at once.
+	    Color cornerColor = Color.RED;
 	    Color barrierHorizontalColor = Color.GREY;
 	    Color barrierVerticalColor = Color.GREY;
-	    Color tileColor = Color.LIGHTCORAL;
+	    Color textColor = Color.BLACK;
+	    Color tileColor = Color.FUCHSIA;
 	    
-	    AnchorPane boardPane = new AnchorPane();
-	    boardPane.setId("BoardPane");
+	// Initialization of the board grid.
+	    // Creation of the Pane.
+	    GridPane boardGrid = new GridPane();
 	    
-		for(int lineNumber = 0; lineNumber < lineTotalNumber*2 + 1; lineNumber++) {
-        	for(int columnNumber = 0; columnNumber < columnTotalNumber; columnNumber++) {
-        		int tileX = initialTileX + (tileWidth + barrierHorizontalHeight) * acc2;
-        	    int tileY = initialTileY + (tileWidth + barrierHorizontalHeight) * acc3;
+	    // Set Id of boardPane.
+	    boardGrid.setId("boardGrid");
+	    
+        // Set background color of the board and show grid borders.
+	    boardGrid.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
+	    
+	    // Align elements in the center of the grid.
+	    boardGrid.setAlignment(Pos.CENTER);
+	    
+	    // Set the position of the top-left corner of the board grid.
+	    boardGrid.setLayoutX(initialX);
+	    boardGrid.setLayoutY(initialY);
+        
+	// Set the columns of the grid.
+	    // Create all the columns needed.
+	    for(int columnNumber = 0; columnNumber < columnsTotalQuantity; columnNumber++) {
+	    	// If even column :
+	    	if(columnNumber % 2 == 0) {
+	    		// Create a column and make it fit the width of vertical barriers.
+        		ColumnConstraints column = new ColumnConstraints(barrierVerticalWidth);
         		
-        		int barrierHorizontalX = initialX + barrierHorizontalHeight + (barrierHorizontalHeight + tileWidth) * acc2;
-        	    int barrierHorizontalY = initialY + (barrierHorizontalHeight + tileWidth) * acc1;
-        	    
-        	    int barrierVerticalX = initialX + (barrierHorizontalHeight + tileWidth) * acc2;
-        	    int barrierVerticalY = initialY + barrierHorizontalHeight + (tileWidth + barrierHorizontalHeight) * acc3;
-        	    
-        	    int barrierVerticalLastColumnX = initialX + barrierHorizontalHeight + tileWidth + (tileWidth + barrierHorizontalHeight) * acc2;
-        	    int barrierVerticalLastColumnY = initialY + barrierHorizontalHeight + (tileWidth + barrierHorizontalHeight) * acc3;
-        	    
-        		if(lineNumber % 2 == 0) {
-        			AnchorPane barrierHPane = new AnchorPane();
-        			barrierHPane.setId("BarrierHPane" + Integer.toString(accBarrierHorizontal));
-        			
-        			BarrierHorizontal barrierHorizontal = new BarrierHorizontal(accBarrierHorizontal, barrierHorizontalX, barrierHorizontalY, barrierHorizontalWidth, barrierHorizontalHeight, barrierHorizontalColor,"","");
-        			barrierHPane.getChildren().add(barrierHorizontal);
-        			
-        			if(accBarrierHorizontal > 9 && accBarrierHorizontal < 82) {//if the barrier is IN the board, set adjacent tiles id for current barrier
-        				barrierHorizontal.setIdTile1("TilePane"+Integer.toString(accBarrierHorizontal-9));
-        				barrierHorizontal.setIdTile2("TilePane"+Integer.toString(accBarrierHorizontal));
-        			}
-        			
-        			barrierHorizontal.addBarrierTextId("H" + Integer.toString(accBarrierHorizontal), Color.RED, 0, barrierHPane);
-        			boardPane.getChildren().add(barrierHPane);
-        			
-        			accBarrierHorizontal++;
+        		// Add the column to the grid.
+        		boardGrid.getColumnConstraints().add(column);
+        	}
+	    	
+	    	// If odd column :
+        	else {
+        		// Create a column and make it fit the width of horizontal barriers.
+        		ColumnConstraints column = new ColumnConstraints(barrierHorizontalWidth);
+        		
+        		// Add the column to the grid.
+        		boardGrid.getColumnConstraints().add(column);
+        	}
+        }
+	    
+	// Set the rows of the grid.
+	    // Create all the rows needed.
+        for(int rowNumber = 0; rowNumber < rowsTotalQuantity; rowNumber++) {
+        	// If even row :
+        	if(rowNumber%2 == 0) {
+        		// Create a row and make it fit the height of horizontal barriers.
+        		RowConstraints row = new RowConstraints(barrierHorizontalHeight);
+        		
+        		// Add the row to the grid.
+        		boardGrid.getRowConstraints().add(row);
+        	}
+        	// If odd row :
+        	else {
+        		// Create a row and make it fit the height of vertical barriers.
+        		RowConstraints row = new RowConstraints(barrierVerticalHeight);
+        		
+        		// Add the column to the grid.
+        		boardGrid.getRowConstraints().add(row);
+        	}
+        }
+        
+	// Initialization and addition of barriers, corners and tiles.
+        // We have to fill every row of the grid :
+		for(int rowNumber = 0; rowNumber < rowsTotalQuantity; rowNumber++) {
 
-    		        acc2++;
+			// We have to fill every column of the grid :
+        	for(int columnNumber = 0; columnNumber < columnsTotalQuantity; columnNumber++) {
+        		
+        		// If even row :
+        		if(rowNumber % 2 == 0) {
+        		    
+        			// If even column :
+        			if(columnNumber % 2 == 0) {
+        			// Set a corner.
+        				// Create Rectangle "corner" which width is barrierVerticalWidth and height is barrierHorizontalHeight.
+	        			Rectangle corner = new Rectangle(0,0,barrierVerticalWidth,barrierHorizontalHeight);
+	        			
+	        			// Set Id of the corner.
+	        			corner.setId("Corner" + columnNumber + rowNumber);
+	        			
+	        			// Set corner color
+	     		        corner.setFill(cornerColor);
+	     		        
+	     		        // Add the corner to the grid.
+	     		        boardGrid.add(corner, columnNumber, rowNumber);
+	     		    }
+    			
+        			// If odd column :
+        			else {
+        			// Set a horizontal barrier.
+        				// Create Barrier "barrierHorizontal" with the right dimensions.
+	        			BarrierHorizontal barrierHorizontal = new BarrierHorizontal(accBarrierHorizontalId,barrierHorizontalWidth,barrierHorizontalHeight,barrierHorizontalColor,"","");   			
+	        			
+	    		        // Set an event when the tile is clicked.    		
+	    	            barrierHorizontal.setOnMouseClicked(new EventHandler<MouseEvent>()
+	    	            {
+	    	                @Override
+	    	                // Set the action(s) to do.
+	    	                public void handle(MouseEvent event) {
+	    	                    if(barrierHorizontal.getOpacity() == 1) {
+	    	                    	barrierHorizontal.setOpacity(0);
+	    	                    }
+	    	                    else {
+	    	                    	barrierHorizontal.setOpacity(1);
+	    	                    }
+	    	                }
+	    	            });
+	    	            
+	        			// Add the barrierHorizontal to the right span.
+	        			boardGrid.add(barrierHorizontal, columnNumber, rowNumber);
+	        			
+		        		// Create text on the barrierHorizontal.
+	        			Label text = new Label("H" + Integer.toString(accBarrierHorizontalId));
+	        			
+	        			// Set Id of the text for barrierHorizontal.
+	        			text.setId("Text " + barrierHorizontal.getId());
+	        			
+	        			// Set quick access to text's respective barrier.
+	        			text.setLabelFor(barrierHorizontal);
+	        			
+	        			// Set text color.
+	        			text.setTextFill(textColor);
+	        			
+	        			// Make mouse clicks pass through the text.
+	        			text.setMouseTransparent(true);
+	        			
+	        			// Add the text to the right span.
+	        			boardGrid.add(text, columnNumber, rowNumber);
+	        			
+	        			// Center the text in the span
+	        			GridPane.setHalignment(text, HPos.CENTER);
+	        			GridPane.setValignment(text, VPos.CENTER);
+	        			
+	        			// Increment accumulator to the next barrier number.
+	        			accBarrierHorizontalId++;
+        			}
     			}
         		
+        		// If odd row :
     			else {
-    				AnchorPane barrierVPane = new AnchorPane();
-    				barrierVPane.setId("BarrierVPane" + Integer.toString(accBarrierVertical));
-    				
-        			BarrierVertical barrierVertical = new BarrierVertical(accBarrierVertical, barrierVerticalX, barrierVerticalY, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
-        			barrierVPane.getChildren().add(barrierVertical);     
-        			
-        			if(accBarrierVertical % 10 != 0  && (accBarrierVertical-1) % 10 != 0) {//if the barrier is IN the board, set adjacent tiles id for current barrier
-        				barrierVertical.setIdTile1("TilePane"+Integer.toString(accBarrierVertical-1-((int) accBarrierVertical/10)));
-        				barrierVertical.setIdTile2("TilePane"+Integer.toString(accBarrierVertical-((int) accBarrierVertical/10)));
-        			}
+    				if(columnNumber % 2 == 0) {
+    				// Set a vertical barrier.
+    					// Create Barrier "barrierVertical" with the right dimensions.
+	        			BarrierVertical barrierVertical = new BarrierVertical(accBarrierVerticalId, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
+	        			
+	    		        // Set an event when the tile is clicked.    		
+	    	            barrierVertical.setOnMouseClicked(new EventHandler<MouseEvent>()
+	    	            {
+	    	                @Override
+	    	                // Set the action(s) to do.
+	    	                public void handle(MouseEvent event) {
+	    	                    if(barrierVertical.getOpacity() == 1) {
+	    	                    	barrierVertical.setOpacity(0);
+	    	                    }
+	    	                    else {
+	    	                    	barrierVertical.setOpacity(1);
+	    	                    }
+	    	                }
+	    	            });
+	    	            
+	        			// Add the barrierVertical to the right span.
+	        			boardGrid.add(barrierVertical, columnNumber, rowNumber);
+	        			
+		        		// Create text on the barrierHorizontal.
+	        			Label text = new Label("V" + Integer.toString(accBarrierVerticalId));
 
-        			barrierVertical.addBarrierTextId("V" + Integer.toString(accBarrierVertical), Color.BLUE, -90, barrierVPane);
-        			boardPane.getChildren().add(barrierVPane);
-        			
-        			accBarrierVertical++;
-        			
-        			AnchorPane tilePane = new AnchorPane();
-        			tilePane.setId("TilePane" + Integer.toString(accTileId));
-        			
-    		        Tile tile = new Tile(accTileId, tileX, tileY, tileWidth, tileColor);
-    		        tile.toBack();
-    		        tilePane.getChildren().add(tile);
-    		        
-    		        tile.addTileTextId(Integer.toString(accTileId), tilePane);
-    		        
-    		        boardPane.getChildren().add(tilePane);
-			        
-			        accTileId++;
-			        	
-			        acc2++;
-			        
-			        
-			        if(columnNumber == columnTotalNumber - 1) {
-			        	AnchorPane lastBarrierPane = new AnchorPane();
-			        	lastBarrierPane.setId("BarrierVPane" + Integer.toString(accBarrierHorizontal));
-			        	
-	        			BarrierVertical barrierVerticalLastColumn = new BarrierVertical(accBarrierVertical, barrierVerticalLastColumnX, barrierVerticalLastColumnY, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
-	        			lastBarrierPane.getChildren().add(barrierVerticalLastColumn);
+	        			// Set Id for the text of barrierVertical.
+	        			text.setId("Text " + barrierVertical.getId());
 	        			
-	        			barrierVerticalLastColumn.addBarrierTextId("V" + Integer.toString(accBarrierVertical), Color.BLUE, -90, barrierVPane);
+	        			// Set quick access to text's respective barrier.
+	        			text.setLabelFor(barrierVertical);
 	        			
-	        			boardPane.getChildren().add(lastBarrierPane);
-	        			accBarrierVertical++;
-	        		}
-			    }
-        	}
-        	
-        	if(lineNumber % 2 != 0) {
-        		acc3++;
-        	}
-        	
-        	if(lineNumber % 2 == 0) {
-        		acc1++;
-        	}        	
-        	acc2 = 0;
+	        			// Set text color.
+	        			text.setTextFill(textColor);
+	        			
+	        			// Make mouse clicks pass through the text.
+	        			text.setMouseTransparent(true);
+	        			
+	        			// Add the text to the right span.
+	        			boardGrid.add(text, columnNumber, rowNumber);
+	        			
+	        			// Center the text in the span
+	        			GridPane.setHalignment(text, HPos.CENTER);
+	        			GridPane.setValignment(text, VPos.CENTER);
+	        			
+	        			text.setFont(new Font(barrierHorizontalHeight-4));
+	        			
+	        			// Rotate the text.
+	        			text.setRotate(90);
+	        			
+	        			// If the barrier is not in the border of the board :
+	        			if(accBarrierVerticalId % 10 != 0  && (accBarrierVerticalId-1) % 10 != 0) {
+	        				// Set id of the adjacent tiles of current barrier.
+	        				barrierVertical.setIdTile1("TilePane"+Integer.toString(accBarrierVerticalId-1-((int) accBarrierVerticalId/10)));
+	        				barrierVertical.setIdTile2("TilePane"+Integer.toString(accBarrierVerticalId-((int) accBarrierVerticalId/10)));
+	        			}
+	        			
+	        			// Increment accumulator to the next barrier number.
+	        			accBarrierVerticalId++;
+    				}
+    				else {
+        			// Set a tile.
+    					// Create Tile "tile" with the right dimensions.
+	    		        Tile tile = new Tile(accTileId, tileWidth, tileColor);
+	    		        
+	    		        // Set an event when the tile is clicked.    		
+	    	            tile.setOnMouseClicked(new EventHandler<MouseEvent>()
+	    	            {
+	    	                @Override
+	    	                // Set the action(s) to do.
+	    	                public void handle(MouseEvent event) {
+	    	                    if(tile.getFill() != Color.RED) {
+	    	                    	tile.setFill(Color.RED);
+	    	                    }
+	    	                    else {
+	    	                    	tile.setOpacity(1);
+	    	                    	tile.setFill(Color.BLUE);
+	    	                    }
+	    	                }
+	    	            });
+	    		        
+	    		        // Add the tile to the right span.
+	        			boardGrid.add(tile, columnNumber, rowNumber);
+	        			
+		        		// Create text on the tile.
+	        			Label text = new Label("Tile" + Integer.toString(accTileId));
+
+	        			// Set Id of the tile.
+	        			text.setId("Text " + tile.getId());
+	        			
+	        			// Set quick access to text's respective barrier.
+	        			text.setLabelFor(tile);
+	        			
+	        			// Set text color.
+	        			text.setTextFill(textColor);
+	        			
+	        			// Make mouse clicks pass through the text.
+	        			text.setMouseTransparent(true);
+	        			
+	        			// Add the text to the right span.
+	        			boardGrid.add(text, columnNumber, rowNumber);
+	        			
+	        			// Center the text in the span
+	        			GridPane.setHalignment(text, HPos.CENTER);
+	        			GridPane.setValignment(text, VPos.CENTER);
+
+	        			// Increment accumulator to the next barrier number.
+	        			accTileId++;
+    				}
+	    		}  
+			}
         }
-		this.getChildren().add(boardPane);
-		hideAllBarrier();	
-		updateAdjacencyList(boardPane);
+		// Add boardGrid to Region.
+		this.getChildren().add(boardGrid);
+		
+		// Set barriers visibility as false.
+		hideAllBarrier();
+		
+		// Set HashMap<String, ArrayList<String>> "adjacencyList".
+		// updateAdjacencyList(boardGrid);
+	}
+	
+	/**
+	 * Constructs an (int rowTotalNumber) x (int columnTotalNumber) Object (Node) using JavaFX library.
+	 * @param int initialX
+	 * @param int initialX
+	 * @param int rowTotalNumber
+	 * @param int columnTotalNumber
+	 */
+	
+	public Board(int initialX, int initialY, int tileRowsQuantity, int tileColumnsQuantity) {
+	// Initialization of this instance attributes.
+		// We need in total (tileColumnsQuantity*2 + 1) columns and (tileRowsQuantity*2 + 1) rows to fit the barriers.
+		final int columnsTotalQuantity = tileColumnsQuantity*2 + 1;
+		final int rowsTotalQuantity = tileRowsQuantity*2 + 1;
+		
+		// Dimensions of the barriers to build.
+	    final double barrierHorizontalWidth = 70;
+	    final double barrierHorizontalHeight = 10;
+	    
+	    final double barrierVerticalWidth = barrierHorizontalHeight;
+	    final double barrierVerticalHeight = barrierHorizontalWidth;
+	    
+		// Dimensions of the tiles to build.
+	    final double tileWidth = barrierHorizontalWidth;
+	    
+	    // Useful accumulators for names or loops.
+	    int accBarrierHorizontalId = 1;
+	    int accBarrierVerticalId = 1;
+	    int accTileId = 1;
+	    /*
+	    // Position of the top-left corner of the Board.
+	    final int initialX = 10;
+	    final int initialY = 10;
+	    */
+		// Useful variables to change the color of each elements type at once.
+	    Color cornerColor = Color.RED;
+	    Color barrierHorizontalColor = Color.GREY;
+	    Color barrierVerticalColor = Color.GREY;
+	    Color textColor = Color.BLACK;
+	    Color tileColor = Color.FUCHSIA;
+	    
+	// Initialization of the board grid.
+	    // Creation of the Pane.
+	    GridPane boardGrid = new GridPane();
+	    
+	    // Set Id of boardPane.
+	    boardGrid.setId("boardGrid");
+	    
+        // Set background color of the board and show grid borders.
+	    boardGrid.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
+	    
+	    // Align elements in the center of the grid.
+	    boardGrid.setAlignment(Pos.CENTER);
+	    
+	    // Set the position of the top-left corner of the board grid.
+	    boardGrid.setLayoutX(initialX);
+	    boardGrid.setLayoutY(initialY);
+        
+	// Set the columns of the grid.
+	    // Create all the columns needed.
+	    for(int columnNumber = 0; columnNumber < columnsTotalQuantity; columnNumber++) {
+	    	// If even column :
+	    	if(columnNumber % 2 == 0) {
+	    		// Create a column and make it fit the width of vertical barriers.
+        		ColumnConstraints column = new ColumnConstraints(barrierVerticalWidth);
+        		
+        		// Add the column to the grid.
+        		boardGrid.getColumnConstraints().add(column);
+        	}
+	    	
+	    	// If odd column :
+        	else {
+        		// Create a column and make it fit the width of horizontal barriers.
+        		ColumnConstraints column = new ColumnConstraints(barrierHorizontalWidth);
+        		
+        		// Add the column to the grid.
+        		boardGrid.getColumnConstraints().add(column);
+        	}
+        }
+	    
+	// Set the rows of the grid.
+	    // Create all the rows needed.
+        for(int rowNumber = 0; rowNumber < rowsTotalQuantity; rowNumber++) {
+        	// If even row :
+        	if(rowNumber%2 == 0) {
+        		// Create a row and make it fit the height of horizontal barriers.
+        		RowConstraints row = new RowConstraints(barrierHorizontalHeight);
+        		
+        		// Add the row to the grid.
+        		boardGrid.getRowConstraints().add(row);
+        	}
+        	// If odd row :
+        	else {
+        		// Create a row and make it fit the height of vertical barriers.
+        		RowConstraints row = new RowConstraints(barrierVerticalHeight);
+        		
+        		// Add the column to the grid.
+        		boardGrid.getRowConstraints().add(row);
+        	}
+        }
+        
+	// Initialization and addition of barriers, corners and tiles.
+        // We have to fill every row of the grid :
+		for(int rowNumber = 0; rowNumber < rowsTotalQuantity; rowNumber++) {
+
+			// We have to fill every column of the grid :
+        	for(int columnNumber = 0; columnNumber < columnsTotalQuantity; columnNumber++) {
+        		
+        		// If even row :
+        		if(rowNumber % 2 == 0) {
+        		    
+        			// If even column :
+        			if(columnNumber % 2 == 0) {
+        			// Set a corner.
+        				// Create Rectangle "corner" which width is barrierVerticalWidth and height is barrierHorizontalHeight.
+	        			Rectangle corner = new Rectangle(0,0,barrierVerticalWidth,barrierHorizontalHeight);
+	        			
+	        			// Set Id of the corner.
+	        			corner.setId("Corner" + columnNumber + rowNumber);
+	        			
+	        			// Set corner color
+	     		        corner.setFill(cornerColor);
+	     		        
+	     		        // Add the corner to the grid.
+	     		        boardGrid.add(corner, columnNumber, rowNumber);
+	     		    }
+    			
+        			// If odd column :
+        			else {
+        			// Set a horizontal barrier.
+        				// Create Barrier "barrierHorizontal" with the right dimensions.
+	        			BarrierHorizontal barrierHorizontal = new BarrierHorizontal(accBarrierHorizontalId,barrierHorizontalWidth,barrierHorizontalHeight,barrierHorizontalColor,"","");   			
+	        			
+	    		        // Set an event when the tile is clicked.    		
+	    	            barrierHorizontal.setOnMouseClicked(new EventHandler<MouseEvent>()
+	    	            {
+	    	                @Override
+	    	                // Set the action(s) to do.
+	    	                public void handle(MouseEvent event) {
+	    	                    if(barrierHorizontal.getOpacity() == 1) {
+	    	                    	barrierHorizontal.setOpacity(0);
+	    	                    }
+	    	                    else {
+	    	                    	barrierHorizontal.setOpacity(1);
+	    	                    }
+	    	                }
+	    	            });
+	    	            
+	        			// Add the barrierHorizontal to the right span.
+	        			boardGrid.add(barrierHorizontal, columnNumber, rowNumber);
+	        			
+		        		// Create text on the barrierHorizontal.
+	        			Label text = new Label("H" + Integer.toString(accBarrierHorizontalId));
+	        			
+	        			// Set Id of the text for barrierHorizontal.
+	        			text.setId("Text " + barrierHorizontal.getId());
+	        			
+	        			// Set quick access to text's respective barrier.
+	        			text.setLabelFor(barrierHorizontal);
+	        			
+	        			// Set text color.
+	        			text.setTextFill(textColor);
+	        			
+	        			// Make mouse clicks pass through the text.
+	        			text.setMouseTransparent(true);
+	        			
+	        			// Add the text to the right span.
+	        			boardGrid.add(text, columnNumber, rowNumber);
+	        			
+	        			// Center the text in the span
+	        			GridPane.setHalignment(text, HPos.CENTER);
+	        			GridPane.setValignment(text, VPos.CENTER);
+	        			
+	        			// Increment accumulator to the next barrier number.
+	        			accBarrierHorizontalId++;
+        			}
+    			}
+        		
+        		// If odd row :
+    			else {
+    				if(columnNumber % 2 == 0) {
+    				// Set a vertical barrier.
+    					// Create Barrier "barrierVertical" with the right dimensions.
+	        			BarrierVertical barrierVertical = new BarrierVertical(accBarrierVerticalId, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
+	        			
+	    		        // Set an event when the tile is clicked.    		
+	    	            barrierVertical.setOnMouseClicked(new EventHandler<MouseEvent>()
+	    	            {
+	    	                @Override
+	    	                // Set the action(s) to do.
+	    	                public void handle(MouseEvent event) {
+	    	                    if(barrierVertical.getOpacity() == 1) {
+	    	                    	barrierVertical.setOpacity(0);
+	    	                    }
+	    	                    else {
+	    	                    	barrierVertical.setOpacity(1);
+	    	                    }
+	    	                }
+	    	            });
+	    	            
+	        			// Add the barrierVertical to the right span.
+	        			boardGrid.add(barrierVertical, columnNumber, rowNumber);
+	        			
+		        		// Create text on the barrierHorizontal.
+	        			Label text = new Label("V" + Integer.toString(accBarrierVerticalId));
+
+	        			// Set Id for the text of barrierVertical.
+	        			text.setId("Text " + barrierVertical.getId());
+	        			
+	        			// Set quick access to text's respective barrier.
+	        			text.setLabelFor(barrierVertical);
+	        			
+	        			// Set text color.
+	        			text.setTextFill(textColor);
+	        			
+	        			// Make mouse clicks pass through the text.
+	        			text.setMouseTransparent(true);
+	        			
+	        			// Add the text to the right span.
+	        			boardGrid.add(text, columnNumber, rowNumber);
+	        			
+	        			// Center the text in the span
+	        			GridPane.setHalignment(text, HPos.CENTER);
+	        			GridPane.setValignment(text, VPos.CENTER);
+	        			
+	        			text.setFont(new Font(barrierHorizontalHeight-4));
+	        			
+	        			// Rotate the text.
+	        			text.setRotate(90);
+	        			
+	        			// If the barrier is not in the border of the board :
+	        			if(accBarrierVerticalId % 10 != 0  && (accBarrierVerticalId-1) % 10 != 0) {
+	        				// Set id of the adjacent tiles of current barrier.
+	        				barrierVertical.setIdTile1("Tile "+Integer.toString(accBarrierVerticalId-1-((int) accBarrierVerticalId/10)));
+	        				barrierVertical.setIdTile2("Tile "+Integer.toString(accBarrierVerticalId-((int) accBarrierVerticalId/10)));
+	        			}
+	        			
+	        			// Increment accumulator to the next barrier number.
+	        			accBarrierVerticalId++;
+    				}
+    				else {
+        			// Set a tile.
+    					// Create Tile "tile" with the right dimensions.
+	    		        Tile tile = new Tile(accTileId, tileWidth, tileColor);
+	    		        
+	    		        // Set an event when the tile is clicked.    		
+	    	            tile.setOnMouseClicked(new EventHandler<MouseEvent>()
+	    	            {
+	    	                @Override
+	    	                // Set the action(s) to do.
+	    	                public void handle(MouseEvent event) {
+	    	                    if(tile.getFill() != Color.RED) {
+	    	                    	tile.setFill(Color.RED);
+	    	                    }
+	    	                    else {
+	    	                    	tile.setOpacity(1);
+	    	                    	tile.setFill(Color.BLUE);
+	    	                    }
+	    	                }
+	    	            });
+	    		        
+	    		        // Add the tile to the right span.
+	        			boardGrid.add(tile, columnNumber, rowNumber);
+	        			
+		        		// Create text on the tile.
+	        			Label text = new Label("Tile " + Integer.toString(accTileId));
+
+	        			// Set Id of the tile.
+	        			text.setId("Text " + tile.getId());
+	        			
+	        			// Set quick access to text's respective barrier.
+	        			text.setLabelFor(tile);
+	        			
+	        			// Set text color.
+	        			text.setTextFill(textColor);
+	        			
+	        			// Make mouse clicks pass through the text.
+	        			text.setMouseTransparent(true);
+	        			
+	        			// Add the text to the right span.
+	        			boardGrid.add(text, columnNumber, rowNumber);
+	        			
+	        			// Center the text in the span
+	        			GridPane.setHalignment(text, HPos.CENTER);
+	        			GridPane.setValignment(text, VPos.CENTER);
+
+	        			// Increment accumulator to the next barrier number.
+	        			accTileId++;
+    				}
+	    		}  
+			}
+        }
+		// Add boardGrid to Region.
+		this.getChildren().add(boardGrid);
+		
+		// Set barriers visibility as false.
+		hideAllBarrier();
+		
+		// Set HashMap<String, ArrayList<String>> "adjacencyList".
+		// updateAdjacencyList(boardGrid);
 	}	
-	
+
 	/**
-	 * This method is used to change the visibility of any elements with an id on the board to visible.
-	 * @param idPane, id of the element that needs to be shown
+	 * Return node list in particular coordinates.
+	 * @param int column
+	 * @param int row
 	 */
-	
-	protected void show(String idPane) {
-		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
+	public ArrayList<Node> getNodeListColumnRow (int column, int row) {
+		// Get board grid.
+		GridPane boardGrid = (GridPane) this.getChildren().get(0);
 		
-		for(Node pane: collectionBoardNodes.getChildrenUnmodifiable()) {
-			if(pane.getId().equals(idPane)){
-				pane.setVisible(true);
-			}
-		}
+		// Get board grid.
+		ObservableList<Node> childrens = boardGrid.getChildren();
+		
+		// Create ArrayList "result" where we will add the nodes to return. 
+		ArrayList<Node> result = new ArrayList<Node>();
+		
+		// 
+	    for (Node node : childrens) {
+	        if(GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column) {
+	            result.add(node);
+	        }
+	    }
+	    return result;
 	}
 	
 	/**
-	 * This method is used to change the visibility of any elements with an id on the board to visible and to return the result in the console or not.
-	 * @param idPane, id of the element that needs to be shown
-	 * @param showCommandText, boolean used to know if the methods has to show the result in the console
-	 */
-	
-	protected void show(String idPane, boolean showCommandText) {
-		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
-		
-		for(Node pane: collectionBoardNodes.getChildrenUnmodifiable()) {
-			if(pane.getId().equals(idPane)){
-				pane.setVisible(true);
-				if(showCommandText == true) {
-					System.out.println(pane + pane.getId() + " now visible.");
-				}
-			}
-		}
-	}
-	
-	/**
-	 * This method is used to change the visibility of any elements with an id on the board to hide.
-	 * @param idPane, id of the element that needs to be hidden
-	 */
-	
-	protected void hide(String idPane) {
-		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
-		
-		for(Node pane: collectionBoardNodes.getChildrenUnmodifiable()) {
-			if(pane.getId().equals(idPane)){
-				pane.setVisible(false);
-			}
-		}
-	}
-	
-	/**
- 	* This method is used to change the visibility of any elements with an id on the board to hide and to return the result in the console or not.
- 	* @param idPane, id of the element that needs to be hidden
-	 *@param showCommandText, boolean used to know if the methods has to show the result in the console
- 	*/
-	
-	protected void hide(String idPane, boolean showCommandText) {
-		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
-		
-		for(Node pane: collectionBoardNodes.getChildrenUnmodifiable()) {
-			if(pane.getId().equals(idPane)){
-				pane.setVisible(false);
-				if(showCommandText) {
-					System.out.println(pane + pane.getId() + " now hidden.");
-				}
-			}
-		}
-	}
-	
-	/**
-	 * This method is used to hide every barrier on the board.
+	 * Sets barrier's opacity to 0 to hide every barrier on the board.
 	 */
 	protected void hideAllBarrier() {
-		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
+		// Get the board grid.
+		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
-		for(Node pane: collectionBoardNodes.getChildrenUnmodifiable()) {
-			if(pane.getId().contains("Barrier")){
-				pane.setVisible(false);
+		// For every node in the board :
+		for(Node node: boardGrid.getChildrenUnmodifiable()) {
+			// If the node is a barrier :
+			if(node.getId().contains("Barrier") && !node.getId().contains("Text")){
+				// Hide the barrier.
+				node.setOpacity(0);
 			}
 		}
 	}
 
 	/**
-	 * This method is used to hide every barrier on the board as its counterpart method but needs a boolean to know if the methods has to show in the console the result.
-	 * @param showCommandText, boolean used to know if the methods has to show the result in the console
+	 * While printing helpful text in the console, sets barrier's opacity to 0 to hide every barrier on the board.
+	 * @param boolean showConsoleText, show useful text. 
 	 */
-	protected void hideAllBarrier(boolean showCommandText) {
-		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
+	protected void hideAllBarrier(boolean showConsoleText) {
+		// Get the board grid.
+		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
-		for(Node pane: collectionBoardNodes.getChildrenUnmodifiable()) {
-			if(pane.getId().contains("Barrier")){
-				pane.setVisible(false);
-				if(showCommandText == true) {
-					System.out.println(pane + pane.getId() + " now hidden.");
+		// For every node in the board :
+		for(Node node: boardGrid.getChildrenUnmodifiable()) {
+			// If the node is a barrier :
+			if(node.getId().contains("Barrier") && !node.getId().contains("Text")){
+				// Hide the barrier.
+				node.setOpacity(0);
+				
+				// Print useful text.
+				if(showConsoleText) {
+					System.out.println(node.getId() + " now hidden.");
+					System.out.println();
+				}
+			}
+		}
+	}
+		
+	/**
+ 	* Changes the visibility of any element on the board via id search.
+ 	* @param String idNode, id of the element to hide.
+ 	*/
+	protected void hide(String idNode) {
+		// Get the board grid.
+		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
+		
+		// For every node in the board :
+		for(Node node: boardGrid.getChildrenUnmodifiable()) {
+			// If the node with the id passed match :
+			if(node.getId().equals(idNode)){
+				// Hide the barrier.
+				node.setOpacity(0);
+			}
+		}
+	}
+	
+	/**
+ 	* While printing helpful text in the console, change the visibility of any element on the board via id search.
+ 	* @param String idNode, id of the element to hide.
+	* @param boolean showConsoleText, show useful text.
+ 	*/
+	protected void hide(String idNode, boolean showConsoleText) {
+		// Get the board grid.
+		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
+		
+		// For every node in the board :
+		for(Node node: boardGrid.getChildrenUnmodifiable()) {
+			// If the node with the id passed match :
+			if(node.getId().equals(idNode)){
+				// Hide the barrier.
+				node.setOpacity(0);
+				
+				// Print useful text.
+				if(showConsoleText) {
+					System.out.println(node.getId() + " now hidden.");
+					System.out.println();
 				}
 			}
 		}
 	}
 	
-	// Methods: Add, remove, move Player.
+// Methods: Add, remove, move Player.
 	
 	/**
-	 * This methods is used to add a player on a tile.
-	 * @param tileIdNumber, id of the tile on which you add the player
-	 * @param player, object of Player class to put on the tile
-	 * @return a boolean that indicates if the operation went successful or not
-	 */
-	
-	protected boolean addPlayerTile(int tileIdNumber, Player player) {
-		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
+	 * Adds a player on a tile.
+	 * @param int wantedTileNumber, Number tile on which you add the player.
+	 * @param Player player, object of Player class to put on the tile.
+	 */	
+	protected boolean addPlayerTile(int wantedTileNumber, Player player) {
+		// Get the board grid.
+		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
+		String wantedTileId = "Tile" + wantedTileNumber;
 		
-		for(Node node: collectionBoardNodes.getChildrenUnmodifiable()) {
-			if(node.getId().equals("TilePane" + Integer.toString(tileIdNumber))){
-				AnchorPane tilePanePlayer = (AnchorPane) node;
-				
-				for(Node child: tilePanePlayer.getChildrenUnmodifiable()) {
-					if(child instanceof Player) {
-						return(false);
+		// For every row in the board :
+		for(int numberRow = 0; numberRow < 9; numberRow++) {
+			// For every column in the board :
+			for(int numberColumn = 0; numberColumn < 9; numberColumn++) {
+				// For every node in that grid span :
+				for(Node node: boardGrid.getChildrenUnmodifiable()) {
+					// If node is wanted tile :
+					if(node.getId().equals(wantedTileId)) {
+						// Get tile span coordinates.
+						int wantedTileColumn = GridPane.getColumnIndex(node);
+						int wantedTileRow = GridPane.getRowIndex(node);
+						
+						// Get the list of nodes in the same span.
+						ArrayList<Node> nodeList = getNodeListColumnRow(wantedTileColumn, wantedTileRow);
+						
+					// Check if the span contains a Player instance :
+						// For every Node in nodeList :
+						for(int i = 0; i < nodeList.size(); i++) {
+							
+							// If the span already contains a Player.
+							if(nodeList.get(i) instanceof Player) {
+								// Player cannot be added here.
+								
+								// Player could not be added.
+								return(false);
+							}
+						}
+					// If the span does not contain any player :
+						// Add player in the tile span :
+						boardGrid.add(player, wantedTileColumn, wantedTileRow);
+						
+	        			// Center the player in the span
+	        			GridPane.setHalignment(player, HPos.CENTER);
+	        			GridPane.setValignment(player, VPos.CENTER);
+	        			
+		        		// Create text on the barrierHorizontal.
+	        			Label text = new Label(player.getPlayerName());
+
+	        			// Set Id for the text of barrierVertical.
+	        			text.setId("Text " + player.getId());
+	        			
+	        			// Center the text in the span
+	        			GridPane.setHalignment(text, HPos.CENTER);
+	        			GridPane.setValignment(text, VPos.CENTER);
+	        			
+	        			// Set quick access to text's respective barrier.
+	        			text.setLabelFor(player);
+	        			
+	        			// Set text color.
+	        			text.setTextFill(Color.BLACK);
+	        			
+	        			// Make mouse clicks pass through the text.
+	        			text.setMouseTransparent(true);
+	        			
+	        			// Add the text to the right span.
+	        			boardGrid.add(text, wantedTileColumn, wantedTileRow);
+	        			
+						// Player added successfully.
+						return(true);
 					}
-				}			
-				Tile tile = (Tile) tilePanePlayer.getChildren().get(0);
-				final int centerX = (int) (tile.getX() + tile.getWidth()/2);
-				final int centerY = (int) (tile.getY() + tile.getWidth()/2);
-				
-				player.setCenterX(centerX);
-				player.setCenterY(centerY);
-				
-				tilePanePlayer.getChildren().add(player);
-				
-				player.addPlayerTextId(player.getId(), tilePanePlayer);
-				
-				return(true);
+				}
 			}
 		}
-		// Case: there are no TilePane in board collection.
+		// Case: there is no tile in the board grid which is omega sus.
+		// Player could not be added.
 		return(false);
 	}
 	
 	/**
-	 * This methods is used to add a player on a tile as its counterpart method but needs a boolean to know if the methods has to show in the console the result.
-	 * @param tileIdNumber, id of the tile on which you add the player
-	 * @param player, object of Player class to put on the tile
-	 * @param showCommandText, boolean used to know if the methods has to show the result in the console
-	 * @return a boolean that indicates if the operation went successful or not
-	 */
-	protected boolean addPlayerTile(int tileIdNumber, Player player, boolean showConsoleText) {
-		AnchorPane collectionBoardNodes = (AnchorPane) this.getChildrenUnmodifiable().get(0);
+	 * While printing helpful text in the console, add a player on a tile.
+	 * @param int wantedTileNumber, Number tile on which you add the player.
+	 * @param Player player, object of Player class to put on the tile.
+	 * @param boolean showConsoleText, show useful text.
+	 */	
+	protected boolean addPlayerTile(int wantedTileNumber, Player player, boolean showConsoleText) {
+		// Get the board grid.
+		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
-		for(Node node: collectionBoardNodes.getChildrenUnmodifiable()) {
-			if(node.getId().equals("TilePane" + Integer.toString(tileIdNumber))){
-				AnchorPane tilePanePlayer = (AnchorPane) node;
-				
-				for(Node child: tilePanePlayer.getChildrenUnmodifiable()) {
-					if(child instanceof Player) {
-						return(false);
+		// Set wanted tile id.
+		String wantedTileId = "Tile" + wantedTileNumber;
+		
+		// For every row in the board :
+		for(int numberRow = 0; numberRow < 9; numberRow++) {
+			// For every column in the board :
+			for(int numberColumn = 0; numberColumn < 9; numberColumn++) {
+				// For every node in that grid span :
+				for(Node node: boardGrid.getChildrenUnmodifiable()) {
+					// If node is wanted tile :
+					if(node.getId().equals(wantedTileId)) {
+						// Get tile span coordinates.
+						int wantedTileColumn = GridPane.getColumnIndex(node);
+						int wantedTileRow = GridPane.getRowIndex(node);
+						
+						// Get the list of nodes in the same span.
+						ArrayList<Node> nodeList = getNodeListColumnRow(wantedTileColumn, wantedTileRow);
+						
+					// Check if the span contains a Player instance :
+						// For every Node in nodeList :
+						for(int i = 0; i < nodeList.size(); i++) {
+							// If the span already contains a Player.
+							if(nodeList.get(i) instanceof Player) {
+							// Player cannot be added here.
+								
+			        			// Print useful text.
+			        			if(showConsoleText) {
+			        				System.out.println(player.getPlayerName() + " cannot be added in " + nodeList.get(0).getId() + ".\nThere is already someone..." );
+			        				System.out.println();
+			        			}
+			        			
+			        			// Player could not be added.
+								return(false);
+							}
+						}
+					// If the span does not contain any player :
+						// Add player in the tile span :
+						boardGrid.add(player, wantedTileColumn, wantedTileRow);
+						
+	        			// Center the player in the span
+	        			GridPane.setHalignment(player, HPos.CENTER);
+	        			GridPane.setValignment(player, VPos.CENTER);
+	        			
+		        		// Create text on the barrierHorizontal.
+	        			Label text = new Label(player.getPlayerName());
+
+	        			// Set Id for the text of barrierVertical.
+	        			text.setId("Text " + player.getId());
+	        			
+	        			// Center the text in the span
+	        			GridPane.setHalignment(text, HPos.CENTER);
+	        			GridPane.setValignment(text, VPos.CENTER);
+	        			
+	        			// Set quick access to text's respective barrier.
+	        			text.setLabelFor(player);
+	        			
+	        			// Set text color.
+	        			text.setTextFill(Color.BLACK);
+	        			
+	        			// Make mouse clicks pass through the text.
+	        			text.setMouseTransparent(true);
+	        			
+	        			// Add the text to the right span.
+	        			boardGrid.add(text, wantedTileColumn, wantedTileRow);
+
+	        			// Print useful text.
+	        			if(showConsoleText) {
+	        				System.out.println(player.getPlayerName() + " added in " + nodeList.get(0).getId() + ".");
+	        				System.out.println();
+	        			}
+	        			
+	        			// Player added successfully.
+						return(true);
 					}
-				}			
-				Tile tile = (Tile) tilePanePlayer.getChildren().get(0); 
-				final int centerX = (int) (tile.getX() + tile.getWidth()/2);
-				final int centerY = (int) (tile.getY() + tile.getWidth()/2);
+				}
+			}
+		}
+		// Case: there is no tile in the board grid which is omega sus because tiles are added in the constructor.
+		System.out.println("THERE IS NO TILE IN THE BOARD WHAT ARE YOU DOING???");
+		System.out.println();
+
+		// Player could not be added.
+		return(false);
+	}
+	
+	/**
+	 * Removes a player from a tile.
+	 * @param int wantedTileNumber, number of the tile where the player must be removed.
+	 * @param Player player, player that must be removed.
+	 */	
+	protected boolean removePlayerTile(Player player) {		
+		// Get the board grid.
+		GridPane boardPane = (GridPane) this.getChildrenUnmodifiable().get(0);
+		
+		// Get name of the player to remove.
+		String playerTextId = "Text " + player.getId();
+		
+		// For every node in the grid :
+		for(Node node: boardPane.getChildrenUnmodifiable()) {
+			// If node is the wanted player or wanted player text : 
+			if(node.getId().equals(playerTextId)){
+				// Delete the text.
+				boardPane.getChildren().remove(node);
 				
-				player.setCenterX(centerX);
-				player.setCenterY(centerY);
+				// Delete the player.
+				boardPane.getChildren().remove(player);
 				
-				tilePanePlayer.getChildren().add(player);
+				// Player removed successfully.
+				return(true);
+			}	
+		}
+		// Player could not be removed.
+		return(false);
+	}
+	
+	/**
+	 * While printing helpful text in the console, remove a player from a tile.
+	 * @param int wantedTileNumber, number of the tile where the player must be removed.
+	 * @param Player player, player that must be removed.
+	 * @param boolean showConsoleText, show useful text.
+	 */	
+	protected boolean removePlayerTile(Player player, boolean showConsoleText) {		
+		// Get the board grid.
+		GridPane boardPane = (GridPane) this.getChildrenUnmodifiable().get(0);
+		
+		// Get player id.
+		String playerId = "Text " + player.getId();
+		
+		// Get name of the player to remove.
+		String playerTextId = "Text " + player.getId();
+		
+		// For every node in the grid :
+		for(Node node: boardPane.getChildrenUnmodifiable()) {
+			// If node is the wanted player or wanted player text : 
+			if(node.getId().equals(playerTextId)){
+				// Delete the text.
+				boardPane.getChildren().remove(node);
 				
-				//String panePlayerId = player.getParent().getId();
+				// Delete the player.
+				boardPane.getChildren().remove(player);
 				
-				player.addPlayerTextId(player.getId(), tilePanePlayer);
-				
-				if(showConsoleText == true) {
-					System.out.println(node.getId() + player.getId() + " added.");
+				// Print useful text.
+				if(showConsoleText) {
+					System.out.println(playerId + " removed successfully.");
 					System.out.println();
 				}
 				
+				// Player removed successfully.
 				return(true);
-			}
+			}	
 		}
-		// Case there are no TilePane in board collection.
+		// Print useful text.
+		if(showConsoleText) {
+			System.out.println(playerId + " could not be removed.");
+			System.out.println();
+		}
+		
+		// Player could not be removed.
 		return(false);
 	}
 	
-	protected boolean removePlayerTile(Player player) {
-		String playerId = player.getId();
-		AnchorPane boardPane = (AnchorPane) this.getChildrenUnmodifiable().get(0);
-		
-		for(Node boardPaneNode: boardPane.getChildrenUnmodifiable()) {
-			
-			if(boardPaneNode.getId().contains("TilePane")){
-				AnchorPane tilePane = (AnchorPane) boardPaneNode;
-				
-				for(Node node: tilePane.getChildren()) {
-					
-					if(node.getId().equals(playerId)) {
-						tilePane.getChildren().remove(2);
-						tilePane.getChildren().remove(2);
-						return(true);
-					}	
-				}
-			}
-		}
-		return(false);
-	}
-	
-	protected boolean removePlayerTile(Player player, boolean showConsoleText) {
-		String playerId = player.getId();
-		String tilePlayerId = player.getParent().getId();
-		
-		AnchorPane boardPane = (AnchorPane) this.getChildrenUnmodifiable().get(0);
-		
-		for(Node boardPaneNode: boardPane.getChildrenUnmodifiable()) {
-			
-			if(boardPaneNode.getId().contains("TilePane")){
-				AnchorPane tilePane = (AnchorPane) boardPaneNode;
-				
-				for(Node node: tilePane.getChildren()) {
-					
-					if(node.getId().equals(playerId)) {
-						tilePane.getChildren().remove(2);
-						tilePane.getChildren().remove(2);
-						if(showConsoleText) {
-							System.out.println(tilePlayerId + " removed.");
-							System.out.println();
-						}
-						return(true);
-					}	
-				}
-			}
-		}
-		return(false);
-	}
-	
-	protected boolean movePlayerTile(int newTileIdNumber, Player player) {
-		if(addPlayerTile(newTileIdNumber, player, false) == true) {
-			if(removePlayerTile(player, false) == true){
+	/**
+	 * Moves a player to another tile.
+	 * @param int newTileNumber, number of the tile where the player must be removed.
+	 * @param Player player, player that must be moved.
+	 */	
+	protected boolean movePlayerTile(int newTileNumber, Player player) {
+		// Remove player from the board.
+		if(removePlayerTile(player) == true) {
+			// Add player on the new tile.
+			if(addPlayerTile(newTileNumber, player) == true){
+				// Player removed successfully.
 				return(true);	
 			}		
 		}
 		else {
+			// Cannot add player.
+			// Player could not be moved.
 			return(false);
 		}
+		// Cannot remove player.
+		// Player could not be removed.
 		return(false);
 	}
 	
-	protected boolean movePlayerTile(int newTileIdNumber, Player player, boolean showConsoleText) {
-		if(addPlayerTile(newTileIdNumber, player) == true) {
-			if(removePlayerTile(player) == true){
+	/**
+	 * While printing helpful text in the console, move a player to another tile.
+	 * @param int newTileNumber, number of the tile where the player must be removed.
+	 * @param Player player, player that must be moved.
+	 * @param boolean showConsoleText, show useful text.
+	 */	
+	protected boolean movePlayerTile(int newTileNumber, Player player, boolean showConsoleText) {
+		// Remove player from the board.
+		if(removePlayerTile(player) == true) {
+			// Add player on the new tile.
+			if(addPlayerTile(newTileNumber, player) == true){
 				if(showConsoleText) {
-					System.out.println("Player" + player.getId() + " moved to Tile" + Integer.toString(newTileIdNumber) + ".");
-					System.out.println("\n");
+					System.out.println(player.getId() + " moved to Tile" + Integer.toString(newTileNumber) + ".");
+					System.out.println();
 				}
+				// Player removed successfully.
 				return(true);	
 			}		
 		}
 		else {
-			if(showConsoleText) {
-				System.out.println("Cannot move there... Try again.");
-				System.out.println("\n");
-			}
+			// Cannot add player.
+			// Player could not be moved.
 			return(false);
 		}
+		// Cannot remove player.
+		// Player could not be removed.
 		return(false);
 	}
-
 	
-	// Methods: Initialize, modify and special uses for the adjacency list of the board.
+// Methods: Setter, getter and special uses for the adjacency list of the board.
+	/**
+	 * Returns adjacency list.
+	 */	
 	protected HashMap<String, ArrayList<String>> getAdjacencyList(){
 		return this.adjacencyList;		
 	}
 	
+	/**
+	 * Sets adjacency list.
+	 */	
 	protected void setAdjacencyList(HashMap<String, ArrayList<String>> newAdjacencyList){
 		this.adjacencyList = newAdjacencyList;
 	}
 	
-	protected HashMap<String, ArrayList<String>> createAdjacencyList(AnchorPane boardPane){
+	/**
+	 * Initializes adjacency list.
+	 * @param GridPane boardGrid, GridPane containing all the node of the board. 
+	 * @param boolean showConsoleText, show useful text.
+	 */	
+	protected HashMap<String, ArrayList<String>> createAdjacencyList(GridPane boardGrid){
 		HashMap<String, ArrayList<String>> newAdjacencyList = new HashMap<>();
-		for(Node paneNode : boardPane.getChildren()) {
+		for(Node paneNode : boardGrid.getChildren()) {
 			if(paneNode.getId().contains("Barrier")){//check for each barrier in board
 				Barrier barrierX =  (Barrier) ((AnchorPane) paneNode).getChildren().get(0);//we do 2 lines at once to not use 2 variable
 				if(!((barrierX.getIdTile1().equals("") || barrierX.getIdTile2().equals(""))) && !paneNode.isVisible() ){//if the barrier have both IdTiles not empty
@@ -587,8 +1082,13 @@ public class Board extends Region{
 		return(newAdjacencyList);
 	}
 	
-	protected void updateAdjacencyList(AnchorPane boardPane){
-		setAdjacencyList(createAdjacencyList(boardPane));
+	/**
+	 * Updates adjacency list initializing a new one and overwriting the existent one.
+	 * @param GridPane boardGrid, GridPane containing all the node of the board. 
+	 * @param boolean showConsoleText, show useful text.
+	 */	
+	protected void updateAdjacencyList(GridPane boardGrid){
+		setAdjacencyList(createAdjacencyList(boardGrid));
 		System.out.println(getAdjacencyList());	
 	}
 	
@@ -760,80 +1260,6 @@ public class Board extends Region{
 				stack.addAll(vertexNeighborsNotVisited);
 			}		
 			stack.remove(0);
-		}
-		return(visited);
-	}
-	
-	/**
-	 * This method is a Depth-First Search algorithm that applies on the adjacency list in order to find a path from the start vertex (on which you can have a player) to the finish line.
-	 * @param startVertex, the vertex which the dfs has to start from
-	 * @param showConsoleText, boolean used to know if the methods has to show in the console the result
-	 * @return the linked list of the vertices that describes the path found by the algorithm
-	 */
-	protected LinkedList<String> dfs(String startVertex, boolean showConsoleText) {
-		HashMap<String, ArrayList<String>> adjacencyList = getAdjacencyList();
-		
-		Stack<String> stack = new Stack<>();
-		
-		LinkedList<String> visited = new LinkedList<>();
-		visited.add(startVertex);
-		
-		LinkedList<String> notVisited = new LinkedList<>();
-
-		ArrayList<String> vertexNeighborsNotVisited = new ArrayList<>() ;
-		
-		ArrayList<String> vertexNeighbors = adjacencyList.get(startVertex);
-		if(showConsoleText) {
-			System.out.println("vertexNeighbors: " + vertexNeighbors);
-		}
-		
-		for(String vertexName : vertexNeighbors) {
-			if(!visited.contains(vertexName) && !stack.contains(vertexName)) {
-				notVisited.add(vertexName);
-			}
-		}
-		if(showConsoleText) {
-			System.out.println("\n");
-			System.out.println("visited START: " + visited);
-			System.out.println("stack START: " + stack);
-		}
-		
-		stack.addAll(notVisited);
-	
-		while(stack.size() > 0) {
-			if(showConsoleText) {
-				System.out.println("\n");
-				System.out.println("DFS Start");
-			}
-			
-			String stackFirstElement = stack.get(0);
-			vertexNeighborsNotVisited.clear();
-			
-			if(!visited.contains(stackFirstElement)) {
-				visited.add(stackFirstElement);
-				vertexNeighbors = adjacencyList.get(stackFirstElement);
-				
-				if(showConsoleText) {
-					System.out.println("visited: " + visited);
-					System.out.println("vertexNeighbors: " + vertexNeighbors);
-				}
-				
-				for(String vertex : vertexNeighbors) {
-					if(!visited.contains(vertex) && !stack.contains(vertex)) {
-						vertexNeighborsNotVisited.add(vertex);
-					}		
-				}
-				if(showConsoleText) {
-					System.out.println("vertexNeighborsNotVisited: " + vertexNeighborsNotVisited);
-				}
-				
-				stack.addAll(vertexNeighborsNotVisited);
-			}		
-			stack.remove(0);
-			if(showConsoleText) {
-				System.out.println("visited FINAL: " + visited);
-				System.out.println("stack FINAL: " + stack);
-			}
 		}
 		return(visited);
 	}

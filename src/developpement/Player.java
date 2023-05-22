@@ -15,9 +15,14 @@ import javafx.scene.text.Text;
  */
 
 public class Player extends Circle {
+<<<<<<< Updated upstream
 	private int playerNumber;
 	private ArrayList<String> idWinningTiles;
 	private String idStartTiles;
+=======
+	private String playerName;
+	
+>>>>>>> Stashed changes
 	/**
 	 * This method is the constructor of the Player class. It assigns a start tile and a list of winning tiles to the player depending on the player number.
 	 * @param int playerNumber
@@ -25,6 +30,7 @@ public class Player extends Circle {
 	 * @param double radius
 	 * @param Color color
 	 */
+<<<<<<< Updated upstream
 	public Player(int playerNumber, String playerName, double radius, Color color) {
 		super(-1000,-1000, radius);
 		this.setPlayerNumber(playerNumber);
@@ -101,6 +107,22 @@ public class Player extends Circle {
 	 */
 	public void setIdStartTiles(String idStartTiles) {
 		this.idStartTiles = idStartTiles;
+=======
+	public Player(String playerName, double radius, Color color) {
+		super(0,0, radius);
+		this.playerName = playerName;
+		super.setId("Player " + playerName);
+		super.setFill(color);		
+	}
+	
+	
+	protected String getPlayerName() {
+		return(this.playerName);
+	}
+	
+	protected void setPlayerName(String playerName) {
+		this.playerName = playerName;
+>>>>>>> Stashed changes
 	}
 	
 	

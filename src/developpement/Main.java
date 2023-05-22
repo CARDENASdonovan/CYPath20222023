@@ -23,7 +23,12 @@ public class Main extends Application{
 		
 		Board board = new Board();
 		root.getChildren().add(board);
+		Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
+		board.addPlayerTile(81, adrien);
 		
+		board.movePlayerTile(20, adrien, true);
+		Player baat = new Player("Baat", 20, Color.CHARTREUSE);
+		//board.addPlayerTile(11, baat);
 		/*
 		board.show("BarrierHPane29");
 		board.show("BarrierHPane38");
@@ -47,11 +52,6 @@ public class Main extends Application{
 		System.out.println("Number of tiles in this path = " + resultDfs.size());
 		board.areConnected(board.getAdjacencyList(), "TilePane1", "TilePane81", true);
 		*/
-		
-		Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
-		
-		board.addPlayerTile(9, adrien, true);
-		board.movePlayerTile(20, adrien);
 		
 		Scene scene = new Scene(root, 900, 750);
 		

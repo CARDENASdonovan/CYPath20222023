@@ -25,8 +25,8 @@ public class Tile extends Rectangle {
 	 * @param double widthHeight
 	 * @param Color color
 	 */
-	protected Tile(int idNumber, double x, double y, double widthHeight, Color color) {
-		super(x, y, widthHeight, widthHeight);
+	protected Tile(int idNumber, double widthHeight, Color color) {
+		super(0, 0, widthHeight, widthHeight);
 		super.setId("Tile" + Integer.toString(idNumber));
 		super.setFill(color);
 	}
@@ -35,7 +35,7 @@ public class Tile extends Rectangle {
 	 * This method is the constructor of the Tile class with default values for every attributes.
 	 */
 	protected Tile() {
-		this(DEFAULT_idNumber, DEFAULT_X, DEFAULT_Y, DEFAULT_WIDTH_HEIGHT, DEFAULT_COLOR);		
+		this(DEFAULT_idNumber, DEFAULT_WIDTH_HEIGHT, DEFAULT_COLOR);		
 	}
 	
 	@Override

@@ -11,18 +11,16 @@ public class BarrierHorizontal extends Barrier {
 
 	/**
 	 * This method is the constructor of the BarrierHorizontal class using parameters, it uses the counterpart constructor of the Barrier class.
-	 * @param int number
-	 * @param double x
-	 * @param double y
+	 * @param int idNumber
 	 * @param double width
 	 * @param double height
 	 * @param Color color
 	 * @param String idTile1
 	 * @param String idTile2
 	 */
-	protected BarrierHorizontal(int number, double x, double y, double width, double height, Color color, String idTile1, String idTile2) {	
-		super(number, x, y, width, height, color, idTile1, idTile2);
-		super.setId("Barrier Horizontal " +Integer.toString(number));
+	protected BarrierHorizontal(int idNumber, double width, double height, Color color, String idTile1, String idTile2) {	
+		super(idNumber, width, height, color, idTile1, idTile2);
+		super.setId("Barrier Horizontal " +Integer.toString(idNumber));
 	}
 	
 	/**

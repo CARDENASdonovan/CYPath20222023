@@ -1051,14 +1051,16 @@ public class Board extends Region {
 	
 // Methods: Setter, getter and special uses for the adjacency list of the board.
 	/**
-	 * Returns adjacency list.
+	 * Getter of adjacency list.
+	 * @return HashMap<String, ArrayList<String>> adjacency list.
 	 */	
 	protected HashMap<String, ArrayList<String>> getAdjacencyList(){
 		return this.adjacencyList;		
 	}
 	
 	/**
-	 * Sets adjacency list.
+	 * Setter of adjacency list.
+	 * @param HashMap<String, ArrayList<String>> newAdjacencyList.
 	 */	
 	protected void setAdjacencyList(HashMap<String, ArrayList<String>> newAdjacencyList){
 		this.adjacencyList = newAdjacencyList;

@@ -19,7 +19,7 @@ public class BarrierVertical extends Barrier {
 	 * @param String idTile1
 	 * @param String idTile2
 	 */
-	protected BarrierVertical(int idNumber, double width, double height, Color color, String idTile1, String idTile2) {	
+	public BarrierVertical(int idNumber, double width, double height, Color color, String idTile1, String idTile2) {	
 		super(idNumber, width, height, color, idTile1, idTile2);
 		super.setId("Barrier Vertical " + Integer.toString(idNumber));
 	}
@@ -27,7 +27,7 @@ public class BarrierVertical extends Barrier {
 	/**
 	 * This method is the constructor of the BarrierVertical class with default values for attributes, it uses the counterpart constructor of the Barrier class.
 	 */
-	protected BarrierVertical() {
+	public BarrierVertical() {
 		super();		
 	}
 }

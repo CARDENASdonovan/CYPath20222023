@@ -51,7 +51,7 @@ public class Barrier extends Rectangle {
 	 * @param Pane pane
 	 */
 	/*
-	protected void addBarrierTextId(String textString, Color textColor, int angle, GridPane pane) {
+	public void addBarrierTextId(String textString, Color textColor, int angle, GridPane pane) {
 		Text text = new Text(getX(), getY(), textString);
 		text.setId("Barrier" + textString + "Text");
 		text.setFill(textColor);
@@ -63,7 +63,7 @@ public class Barrier extends Rectangle {
 	 * This method returns the id of one of the tile attached to the barrier.
 	 * @return the id (String) of one of the adjacent tile of the barrier
 	 */
-	protected String getIdTile1() {
+	public String getIdTile1() {
 		return this.idTile1;
 	}
 	
@@ -72,7 +72,7 @@ public class Barrier extends Rectangle {
 	 * @return the id (String) of the other adjacent tile.
 	 */
 
-	protected String getIdTile2() {
+	public String getIdTile2() {
 		return this.idTile2;
 	}
 	
@@ -80,7 +80,7 @@ public class Barrier extends Rectangle {
 	 * This method allows to change the id of the tile adjacent to the barriers.
 	 * @param String id, the id of the new adjacent tile
 	 */
-	protected void setIdTile1(String id) {
+	public void setIdTile1(String id) {
 		this.idTile1 = id;
 	}
 	
@@ -89,7 +89,7 @@ public class Barrier extends Rectangle {
 	 * @param String id, the id of the other new adjacent tile
 	 */
 	
-	protected void setIdTile2(String id) {
+	public void setIdTile2(String id) {
 		this.idTile2 = id;
 	}
 	

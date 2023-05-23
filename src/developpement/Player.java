@@ -16,11 +16,11 @@ import javafx.scene.text.Text;
 public class Player extends Circle {
 	private String playerName;
 	private int playerNumber;
-	public boolean winner = false;
-	public boolean isTurn = false;
+	private boolean winner = false;
+	private boolean isTurn = false;
 	private ArrayList<String> idWinningTiles;
-	public String tileId;
-	private String idStartTiles;
+	private String tileId;
+	private String idStartTile;
 	
 	/**
 	 * This method is the constructor of the Player class. It assigns a start tile and a list of winning tiles to the player depending on the player number.
@@ -60,6 +60,13 @@ public class Player extends Circle {
 		super.setFill(color);
 	}
 	
+	public Player(String playerName, double radius, Color color) {
+		super(0,0, radius);
+		this.playerName = playerName;
+		super.setId("Player " + playerName);
+		super.setFill(color);		
+	}
+	
 	/**
 	 * Getter of playerName.
 	 * @return String playerName
@@ -76,8 +83,6 @@ public class Player extends Circle {
 		this.playerName = playerName;
 
 	}
-	
-	
 	
 	/**
 	 * This method is used to get the number of a player.
@@ -115,32 +120,52 @@ public class Player extends Circle {
 	 * This method is used to get the id of the starting tile of a player.
 	 * @return the id of the starting tile of the player (String)
 	 */
-	public String getIdStartTiles() {
-		return idStartTiles;
+	public String getIdStartTile() {
+		return idStartTile;
 	}
 
 	/**
 	 * This method is used to set the id of the starting tile of a player.
 	 * @param String idStartTiles
 	 */
-	public void setIdStartTiles(String idStartTiles) {
-		this.idStartTiles = idStartTiles;
-	}
-
-	public Player(String playerName, double radius, Color color) {
-		super(0,0, radius);
-		this.playerName = playerName;
-		super.setId("Player " + playerName);
-		super.setFill(color);		
+	public void setIdStartTiles(String idStartTile) {
+		this.idStartTile = idStartTile;
 	}
 	
+	public String getTileId() {
+		return this.tileId;
+	}
+	
+	public void setTileId(String tileId) {
+		this.tileId=tileId;
+	}
+	
+	
+	
+	public boolean isWinner() {
+		return winner;
+	}
+
+	public void setWinner(boolean winner) {
+		this.winner = winner;
+	}
+
+	public boolean isTurn() {
+		return isTurn;
+	}
+
+	public void setTurn(boolean isTurn) {
+		this.isTurn = isTurn;
+	}
+
+
 	@Override
 	/**
 	 * This method allows to print every attributes of the Player object in the terminal.
 	 * @return a String to print
 	 */
 	public String toString() {
-		return("Player idNumber: " + getId() + "\n" + "centerX: " + getCenterX() + "\n" + "centerY: " + getCenterY() + "\n" + "Radius: " + getRadius() + ".");
+		return("Player idNumber: " + getId() + "\n" + "CenterX: " + getCenterX() + "\n" + "CenterY: " + getCenterY() + "\n" + "Radius: " + getRadius() + "\n" + "Tile : " + getTileId() + "\n" +".");
 	}
 	
 	@Override
@@ -162,15 +187,14 @@ public class Player extends Circle {
 	 * @param String textString
 	 * @param AnchorPane pane
 	 */
-	protected void addPlayerTextId(String textString, AnchorPane pane) {
+	public void addPlayerTextId(String textString, AnchorPane pane) {
 		Text text = new Text(getCenterX() - getRadius(), getCenterY(), textString);
 		text.setId("Player" + textString + "Text");
 		pane.getChildren().add(text);
 	}
 
-	protected String getTileId() {
-		return this.tileId;
-	}
+
+	
 
 	
 }

@@ -39,378 +39,22 @@ import javafx.scene.text.Font;
 
 public class Board extends Region {	
 	private HashMap<String, ArrayList<String>> adjacencyList;
-	public String hoverTileid = "";
-	public Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
-	public ArrayList<String> winnerTiles = new ArrayList<String>();
+	private String hoverTileid = "";
+	private Player player1 = new Player("Player1", 20, Color.RED);
+	private Player player2 = new Player("Player2", 20, Color.BLUE);
+	private Player player3 = new Player("Player3", 20, Color.YELLOW);
+	private Player player4 = new Player("Player4", 20, Color.GREEN);
+	private ArrayList<String> winnerTiles1 = new ArrayList<String>();
+	private ArrayList<String> winnerTiles2 = new ArrayList<String>();
+	private ArrayList<String> winnerTiles3 = new ArrayList<String>();
+	private ArrayList<String> winnerTiles4 = new ArrayList<String>();
 	
 	/**
 	 * Constructs an (int rowTotalNumber) x (int columnTotalNumber) Object (Node) using JavaFX library.
 	 * @param int rowTotalNumber
 	 * @param int columnTotalNumber
 	 */
-	
-	public Board() {
-	// Initialization of this instance attributes.
-		// Initialization of the number of tiles columns and rows we want.
-		final int tileColumnsQuantity = 9;
-		final int tileRowsQuantity = 9;
-		
-		// We need in total (tileColumnsQuantity*2 + 1) columns and (tileRowsQuantity*2 + 1) rows to fit the barriers.
-		final int columnsTotalQuantity = tileColumnsQuantity*2 + 1;
-		final int rowsTotalQuantity = tileRowsQuantity*2 + 1;
-		
-		// Dimensions of the barriers to build.
-	    final double barrierHorizontalWidth = 70;
-	    final double barrierHorizontalHeight = 10;
-	    
-	    final double barrierVerticalWidth = barrierHorizontalHeight;
-	    final double barrierVerticalHeight = barrierHorizontalWidth;
-	    
-		// Dimensions of the tiles to build.
-	    final double tileWidth = barrierHorizontalWidth;
-	    
-	    // Useful accumulators for names or loops.
-	    int accBarrierHorizontalId = 1;
-	    int accBarrierVerticalId = 1;
-	    int accTileId = 1;
-	    
-	    // Position of the top-left corner of the Board.
-	    final int initialX = 0;
-	    final int initialY = 0;
-	    
-		// Useful variables to change the color of each elements type at once.
-	    Color cornerColor = Color.RED;
-	    Color barrierHorizontalColor = Color.RED;
-	    Color barrierVerticalColor = Color.RED;
-	    Color textColor = Color.BLACK;
-	    Color tileColor = Color.LIGHTGRAY;
-	    
-	// Initialization of the board grid.
-	    // Creation of the Pane.
-	    GridPane boardGrid = new GridPane();
-	    
-	    // Set Id of boardPane.
-	    boardGrid.setId("boardGrid");
-	    
-        // Set background color of the board and show grid borders.
-	    //boardGrid.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
-	    
-	    // Align elements in the center of the grid.
-	    boardGrid.setAlignment(Pos.CENTER);
-	    
-	    // Set the position of the top-left corner of the board grid.
-	    boardGrid.setLayoutX(initialX);
-	    boardGrid.setLayoutY(initialY);
-        
-	// Set the columns of the grid.
-	    // Create all the columns needed.
-	    for(int columnNumber = 0; columnNumber < columnsTotalQuantity; columnNumber++) {
-	    	// If even column :
-	    	if(columnNumber % 2 == 0) {
-	    		// Create a column and make it fit the width of vertical barriers.
-        		ColumnConstraints column = new ColumnConstraints(barrierVerticalWidth);
-        		
-        		// Add the column to the grid.
-        		boardGrid.getColumnConstraints().add(column);
-        	}
-	    	
-	    	// If odd column :
-        	else {
-        		// Create a column and make it fit the width of horizontal barriers.
-        		ColumnConstraints column = new ColumnConstraints(barrierHorizontalWidth);
-        		
-        		// Add the column to the grid.
-        		boardGrid.getColumnConstraints().add(column);
-        	}
-        }
-	    
-	// Set the rows of the grid.
-	    // Create all the rows needed.
-        for(int rowNumber = 0; rowNumber < rowsTotalQuantity; rowNumber++) {
-        	// If even row :
-        	if(rowNumber%2 == 0) {
-        		// Create a row and make it fit the height of horizontal barriers.
-        		RowConstraints row = new RowConstraints(barrierHorizontalHeight);
-        		
-        		// Add the row to the grid.
-        		boardGrid.getRowConstraints().add(row);
-        	}
-        	// If odd row :
-        	else {
-        		// Create a row and make it fit the height of vertical barriers.
-        		RowConstraints row = new RowConstraints(barrierVerticalHeight);
-        		
-        		// Add the column to the grid.
-        		boardGrid.getRowConstraints().add(row);
-        	}
-        }
-        
-	// Initialization and addition of barriers, corners and tiles.
-        // We have to fill every row of the grid :
-		for(int rowNumber = 0; rowNumber < rowsTotalQuantity; rowNumber++) {
 
-			// We have to fill every column of the grid :
-        	for(int columnNumber = 0; columnNumber < columnsTotalQuantity; columnNumber++) {
-        		
-        		// If even row :
-        		if(rowNumber % 2 == 0) {
-        		    
-        			// If even column :
-        			if(columnNumber % 2 == 0) {
-        			// Set a corner.
-        				// Create Rectangle "corner" which width is barrierVerticalWidth and height is barrierHorizontalHeight.
-	        			Rectangle corner = new Rectangle(0,0,barrierVerticalWidth,barrierHorizontalHeight);
-	        			
-	        			// Set Id of the corner.
-	        			corner.setId("Corner" + columnNumber + rowNumber);
-	        			
-	        			// Set corner color
-	     		        corner.setFill(cornerColor);
-	     		        
-	     		        // Add the corner to the grid.
-	     		        boardGrid.add(corner, columnNumber, rowNumber);
-	     		    }
-    			
-        			// If odd column :
-        			else {
-        			// Set a horizontal barrier.
-        				// Create Barrier "barrierHorizontal" with the right dimensions.
-	        			BarrierHorizontal barrierHorizontal = new BarrierHorizontal(accBarrierHorizontalId,barrierHorizontalWidth,barrierHorizontalHeight,barrierHorizontalColor,"","");   			
-	        			
-	        		// Add actions on events for barrierHorizontal.
-	        			// If barrier hover is true :
-	        			barrierHorizontal.hoverProperty().addListener((observable, oldValue, hoverBoolean) -> {
-	        				if(barrierHorizontal.getOpacity() == 0) {
-		        				if(hoverBoolean) {
-		        					barrierHorizontal.setOpacity(1);
-		        					barrierHorizontal.setFill(Color.GRAY);
-		        				}
-	        				}
-	        				else {
-	        					if(!hoverBoolean && barrierHorizontal.getFill() != barrierHorizontalColor) {
-		        					barrierHorizontal.setOpacity(0);
-		        				}
-	        				}
-	        			});
-	        			
-	    		        // Set an event when the barrier is clicked.    		
-	    	            barrierHorizontal.setOnMouseClicked(new EventHandler<MouseEvent>()
-	    	            {
-	    	                @Override
-	    	                // Set the action(s) to do.
-	    	                public void handle(MouseEvent event) {
-	    	                    if(barrierHorizontal.getFill() != barrierHorizontalColor) {
-	    	                    	barrierHorizontal.setFill(barrierHorizontalColor);
-	    	                    }
-	    	                    else {
-	    	                    	barrierHorizontal.setOpacity(0);
-	    	                    }
-	    	                }
-	    	            });
-	    	            
-	        			// Add the barrierHorizontal to the right span.
-	        			boardGrid.add(barrierHorizontal, columnNumber, rowNumber);
-	        			
-		        		// Create text on the barrierHorizontal.
-	        			Label text = new Label("H" + Integer.toString(accBarrierHorizontalId));
-	        			
-	        			// Set Id of the text for barrierHorizontal.
-	        			text.setId("Text " + barrierHorizontal.getId());
-	        			
-	        			// Set quick access to text's respective barrier.
-	        			text.setLabelFor(barrierHorizontal);
-	        			
-	        			// Set text color.
-	        			text.setTextFill(textColor);
-	        			
-	        			// Make mouse clicks pass through the text.
-	        			text.setMouseTransparent(true);
-	        			
-	        			// Add the text to the right span.
-	        			boardGrid.add(text, columnNumber, rowNumber);
-	        			
-	        			// Center the text in the span
-	        			GridPane.setHalignment(text, HPos.CENTER);
-	        			GridPane.setValignment(text, VPos.CENTER);
-	        			
-	        			// If the barrier is adjacent to 2 tiles :
-	        			if(accBarrierHorizontalId > 9  && accBarrierHorizontalId < 82) {
-	        				// Set id of the adjacent tiles in current barrier attributes.
-	        				barrierHorizontal.setIdTile1("Tile "+Integer.toString(accBarrierHorizontalId-9));
-	        				barrierHorizontal.setIdTile2("Tile "+Integer.toString(accBarrierHorizontalId));
-	        			}
-	        			
-	        			// Increment accumulator to the next barrier number.
-	        			accBarrierHorizontalId++;
-        			}
-    			}
-        		
-        		// If odd row :
-    			else {
-    				if(columnNumber % 2 == 0) {
-    				// Set a vertical barrier.
-    					// Create Barrier "barrierVertical" with the right dimensions.
-	        			BarrierVertical barrierVertical = new BarrierVertical(accBarrierVerticalId, barrierVerticalWidth, barrierVerticalHeight, barrierVerticalColor,"","");
-	        			
-		        	// Add actions on events for barrierVertical.
-	        			// If barrier hover is true :
-	        			barrierVertical.hoverProperty().addListener((observable, oldValue, hoverBoolean) -> {
-	        				if(barrierVertical.getOpacity() == 0) {
-		        				if(hoverBoolean) {
-		        					barrierVertical.setOpacity(1);
-		        					barrierVertical.setFill(Color.GRAY);
-		        				}
-	        				}
-	        				else {
-	        					if(!hoverBoolean && barrierVertical.getFill() != barrierHorizontalColor) {
-		        					barrierVertical.setOpacity(0);
-		        				}
-	        				}
-	        			});
-	        			
-	    		        // Set an event when the barrier is clicked.    		
-	    	            barrierVertical.setOnMouseClicked(new EventHandler<MouseEvent>()
-	    	            {
-	    	                @Override
-	    	                // Set the action(s) to do.
-	    	                public void handle(MouseEvent event) {
-	    	                    if(barrierVertical.getFill() != barrierHorizontalColor) {
-	    	                    	barrierVertical.setFill(barrierHorizontalColor);
-	    	                    }
-	    	                    else {
-	    	                    	barrierVertical.setOpacity(0);
-	    	                    }
-	    	                }
-	    	            });
-	    	            
-	        			// Add the barrierVertical to the right span.
-	        			boardGrid.add(barrierVertical, columnNumber, rowNumber);
-	        			
-		        		// Create text on the barrierHorizontal.
-	        			Label text = new Label("V" + Integer.toString(accBarrierVerticalId));
-
-	        			// Set Id for the text of barrierVertical.
-	        			text.setId("Text " + barrierVertical.getId());
-	        			
-	        			// Set quick access to text's respective barrier.
-	        			text.setLabelFor(barrierVertical);
-	        			
-	        			// Set text color.
-	        			text.setTextFill(textColor);
-	        			
-	        			// Make mouse clicks pass through the text.
-	        			text.setMouseTransparent(true);
-	        			
-	        			// Add the text to the right span.
-	        			boardGrid.add(text, columnNumber, rowNumber);
-	        			
-	        			// Center the text in the span
-	        			GridPane.setHalignment(text, HPos.CENTER);
-	        			GridPane.setValignment(text, VPos.CENTER);
-	        			
-	        			text.setFont(new Font(barrierHorizontalHeight-4));
-	        			
-	        			// Rotate the text.
-	        			text.setRotate(90);
-	        			
-	        			// If the barrier is adjacent to 2 tiles :
-	        			if(accBarrierVerticalId % 10 != 0  && (accBarrierVerticalId-1) % 10 != 0) {
-	        				// Set id of the adjacent tiles in current barrier attributes.
-	        				barrierVertical.setIdTile1("Tile"+Integer.toString(accBarrierVerticalId-1-((int) accBarrierVerticalId/10)));
-	        				barrierVertical.setIdTile2("Tile"+Integer.toString(accBarrierVerticalId-((int) accBarrierVerticalId/10)));
-	        			}
-	        			
-	        			// Increment accumulator to the next barrier number.
-	        			accBarrierVerticalId++;
-    				}
-    				else {
-        			// Set a tile.
-    					// Create Tile "tile" with the right dimensions.
-	    		        Tile tile = new Tile(accTileId, tileWidth, tileColor);
-	    		        
-		        	// Add actions on events for tile.
-	        			// If barrier hover is true :
-	        			tile.hoverProperty().addListener((observable, oldValue, hoverBoolean) -> {
-	        				hoverTileid = tile.getId();
-	        				System.out.println(this.hoverTileid);
-	        				if(hoverBoolean) {
-	        					tile.setOpacity(1);
-	        					tile.setFill(Color.CHOCOLATE);
-	        				}
-        				
-        					if(!hoverBoolean && tile.getFill() != barrierHorizontalColor) {
-        						tile.setFill(tileColor);
-        					}
-	        			});
-
-	    		        // Set an event when the tile is clicked.    		
-	    	            tile.setOnMouseClicked(new EventHandler<MouseEvent>()
-	    	            {	
-
-	    	                @Override
-	    	                // Set the action(s) to do.
-	    	                public void handle(MouseEvent event) {
-	    	                	int sizeHoverTileid = hoverTileid.length();
-	    	                	String tileNumber = "";
-	    	                	if(sizeHoverTileid == 5) {
-	    	                		tileNumber = hoverTileid.substring(sizeHoverTileid-1);
-	    	                	}
-	    	                	else {
-	    	                		tileNumber = hoverTileid.substring(sizeHoverTileid-2);
-	    	                	}
-	        	            	Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
-	        	            	removePlayerTile(adrien,true);
-	    	                	addPlayerTile(Integer.parseInt(tileNumber), adrien, true);
-	    	                	//movePlayerTile(Integer.parseInt(tileNumber), adrien, true);
-	    	                    if(tile.getFill() != Color.GREEN) {
-	    	                    	tile.setFill(Color.GREEN);
-	    	                    }
-	    	                    else {
-	    	                    	tile.setFill(Color.BLUE);
-	    	                    }
-	    	                }
-	    	            });
-	    		        
-	    		        // Add the tile to the right span.
-	        			boardGrid.add(tile, columnNumber, rowNumber);
-	        			
-		        		// Create text on the tile.
-	        			Label text = new Label("Tile " + Integer.toString(accTileId));
-
-	        			// Set Id of the tile.
-	        			text.setId("Text " + tile.getId());
-	        			
-	        			// Set quick access to text's respective barrier.
-	        			text.setLabelFor(tile);
-	        			
-	        			// Set text color.
-	        			text.setTextFill(textColor);
-	        			
-	        			// Make mouse clicks pass through the text.
-	        			text.setMouseTransparent(true);
-	        			
-	        			// Add the text to the right span.
-	        			boardGrid.add(text, columnNumber, rowNumber);
-	        			
-	        			// Center the text in the span
-	        			GridPane.setHalignment(text, HPos.CENTER);
-	        			GridPane.setValignment(text, VPos.CENTER);
-
-	        			// Increment accumulator to the next barrier number.
-	        			accTileId++;
-    				}
-	    		}  
-			}
-        }
-		// Add boardGrid to Region.
-		this.getChildren().add(boardGrid);
-		
-		// Set barriers visibility as false.
-		hideAllBarrier();
-		
-		// Set HashMap<String, ArrayList<String>> "adjacencyList".
-		updateAdjacencyList(boardGrid);
-	}
 	
 	/**
 	 * Constructs a (int rowTotalNumber) x (int columnTotalNumber) Object (Node) using JavaFX library.
@@ -420,10 +64,29 @@ public class Board extends Region {
 	 * @param int columnTotalNumber
 	 */
 	
-	public Board(int initialX, int initialY, int tileRowsQuantity, int tileColumnsQuantity) {
-		for(int i=73; i<82; i++) {
-			winnerTiles.add("Tile " + i);
+	public Board(int initialX, int initialY, int tileRowsQuantity, int tileColumnsQuantity, int numberOfPlayers) {
+		player1.isTurn = true;
+	// Initialization of the winner tiles for each player.
+		// For player 1.
+		for(int i = 73; i < 82; i++) {
+			winnerTiles1.add("Tile " + i);
 		}
+	
+		// For player 2.
+		for(int i = 1; i < 10; i++) {
+			winnerTiles2.add("Tile " + i);
+		}
+		
+		// For player 3.
+		for(int i = 1; i < 74; i+=9) {
+			winnerTiles3.add("Tile " + i);
+		}
+		
+		// For player 4.
+		for(int i = 9; i < 82; i+=9) {
+			winnerTiles4.add("Tile " + i);
+		}
+		
 	// Initialization of this instance attributes.
 		// We need in total (tileColumnsQuantity*2 + 1) columns and (tileRowsQuantity*2 + 1) rows to fit the barriers.
 		final int columnsTotalQuantity = tileColumnsQuantity*2 + 1;
@@ -457,9 +120,6 @@ public class Board extends Region {
 	    
 	    // Set Id of boardPane.
 	    boardGrid.setId("boardGrid");
-	    
-        // Set background color of the board and show grid borders.
-	    //boardGrid.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
 	    
 	    // Align elements in the center of the grid.
 	    boardGrid.setAlignment(Pos.CENTER);
@@ -703,7 +363,9 @@ public class Board extends Region {
 	        			// If barrier hover is true :
 	        			tile.hoverProperty().addListener((observable, oldValue, hoverBoolean) -> {
 	        				hoverTileid = tile.getId();
-	        				System.out.println(this.hoverTileid);
+	        				System.out.println("Hovered tile: " + this.hoverTileid);
+	        				
+	        				// Color tile if hovered.
 	        				if(hoverBoolean) {
 	        					tile.setOpacity(1);
 	        					tile.setFill(Color.CHOCOLATE);
@@ -713,75 +375,113 @@ public class Board extends Region {
         						tile.setFill(tileColor);
         					}
 	        			});
-
+	        			
+	        			
 	    		        // Set an event when the tile is clicked.    		
 	    	            tile.setOnMouseClicked(new EventHandler<MouseEvent>()
 	    	            {	
-
 	    	                @Override
 	    	                // Set the action(s) to do.
 	    	                public void handle(MouseEvent event) {
+	    	                	
+    	                	// Get hovered tile id and number.
 	    	                	String tileNumberString;
 	    	                	int tileNumber;
 
-	    	                	// Get hovered tile id and number.
+	    	                	// If tile id matches "Tile X" form, ("Tile 1", ..., "Tile 9") :
 	    	                	if(hoverTileid.length() == 6) {
 	    	                		tileNumberString = hoverTileid.substring(hoverTileid.length()-1);
 	    	                		tileNumber = Integer.parseInt(tileNumberString);
 	    	                	}
+	    	                	// If tile id does not match "Tile X" form :
 	    	                	else {
 	    	                		tileNumberString = hoverTileid.substring(hoverTileid.length()-2);
 	    	                		tileNumber = Integer.parseInt(tileNumberString);
 	    	                	}
-	    	                	      	
-	    	                	// If remove is failed it means player was not exists in board.
-	    	                		
-	    	                		// Add to update position.
-		    	                	System.out.println("Initial: " + getAdjacencyList());
-			                		System.out.println();
 	    	                	
-	    	                		System.out.println("Player " + adrien.tileId);
-	    	                		System.out.println();
-	    	                		
-	    	                		if(adrien.tileId == null) {
-	    	                			removePlayerTile(adrien, true);
-		    	                		adrien.tileId = hoverTileid;
-		    	                		addPlayerTile(tileNumber, adrien, true);
-		    	                		adrien.tileId = hoverTileid;
-		    	                		System.out.println("Player is in " + adrien.tileId);
+	    	                	// If remove is failed it means player was not exists in board.
+    	                		// Add to update position.
+    	                	
+    	                		System.out.println("Player1 turn?" + player1.isTurn);
+    	                		System.out.println();
+    	                		System.out.println("Player2 turn?" + player2.isTurn);
+    	                		System.out.println();
+    	                		
+    	                		if(player1.isTurn == true && player2.isTurn == false) {
+    	                			System.out.println("PLAYER 1 TURN");
+    	                			
+    	                			// If player is not on board :
+	    	                		if(player1.tileId == null) {
+	    	                			// Try to remove it JUST IN CASE for less weird situations. ¯\_(ツ)_/¯
+	    	                			removePlayerTile(player1, true);
+	    	                			
+	    	                			// set
+		    	                		player1.tileId = hoverTileid;
+		    	                		addPlayerTile(tileNumber, player1, true);
+		    	                		player1.tileId = hoverTileid;
+		    	                		System.out.println("Player is in " + player1.tileId);
 		    	                		System.out.println("Now: " + getAdjacencyList());
 		    	                		System.out.println("WAITING ANOTHER CLICK...");
 		    	                		System.out.println();
+		    	                		player1.isTurn = !player1.isTurn;
+		    	                		player2.isTurn = !player2.isTurn;
+		    	                		
+		    	                		
+		    	                		// Check if player is on winner tile :
+		    	                		for(String winnerTileId: winnerTiles1) {
+		    	                			System.out.println(winnerTileId);
+		    	                			// If player1 is on a winner tile :
+		    	                			if(player1.tileId.equals(winnerTileId)) {
+		    	                				player1.winner = true;
+		    	                				System.out.println();
+		    	                				System.out.println("WINNER PLAYER 1");
+		    	                				System.out.println();
+		    	                				System.exit(1);
+		    	                			}
+		    	                			// If player1 is NOT on a winner tile :
+		    	                			else {
+		    	                				player1.winner = false;
+		    	                			}
+		    	                		}
+		    	                		
+		    	                		
 	    	                		}
-	    	                	
+	    	                		// If it is not the first time player1 is added AND he has not won :
 		    	                	else {
-		    	                		System.out.println(adrien.tileId);
-	    	                			System.out.println("Yay");
-			    	                	System.out.println(getAdjacencyList());
-	    	                			System.out.println(areConnected(adjacencyList, hoverTileid, adrien.tileId, true));
+		    	                		System.out.println("Position: " + player1.tileId);
+	    	                			System.out.println("Available tiles: " + areConnected(adjacencyList, hoverTileid, player1.tileId, true));
 	    	                			System.out.println();
-	    	                			if(areConnected(adjacencyList, hoverTileid, adrien.tileId)){
-		    	                			removePlayerTile(adrien, true);
-			    	                		adrien.tileId = hoverTileid;
-			    	                		addPlayerTile(tileNumber, adrien, true);
-			    	                		adrien.tileId = hoverTileid;
-			    	                		for(String winnerTileId: winnerTiles) {
+	    	                			
+	    	                			// If clicked tile is accessible :
+	    	                			// Move
+	    	                			if(areConnected(adjacencyList, hoverTileid, player2.tileId)) {
+		    	                			removePlayerTile(player1, true);
+			    	                		player1.tileId = hoverTileid;
+			    	                		addPlayerTile(tileNumber, player1, true);
+			    	                		player1.tileId = hoverTileid;
+			    	                		
+			    	                		// Check if player is on winner tile :
+			    	                		for(String winnerTileId: winnerTiles1) {
 			    	                			System.out.println(winnerTileId);
-			    	                			if(adrien.tileId.equals(winnerTileId)) {
-			    	                				adrien.winner = true;
+			    	                			// If player1 is on a winner tile :
+			    	                			if(player1.tileId.equals(winnerTileId)) {
+			    	                				player1.winner = true;
 			    	                				System.out.println();
-			    	                				System.out.println("WINNER");
-			    	                				System.out.println("WINNER");
-			    	                				System.out.println("WINNER");
-			    	                				System.out.println("WINNER");
-			    	                				System.out.println("WINNER");
+			    	                				System.out.println("WINNER PLAYER 1");
 			    	                				System.out.println();
+			    	                				System.exit(1);
 			    	                			}
+			    	                			// If player1 is NOT on a winner tile :
 			    	                			else {
-			    	                				adrien.winner = false;
+			    	                				player1.winner = false;
 			    	                			}
 			    	                		}
-			    	                		System.out.println("Player is in " + adrien.tileId);
+	
+			    	                		
+			    	                		// Switch turns.
+			    	                		player1.isTurn = !player1.isTurn;
+			    	                		player2.isTurn = !player2.isTurn;
+			    	                		System.out.println("Player is in " + player2.tileId);
 			    	                		System.out.println("WAITING ANOTHER CLICK...");
 			    	                		System.out.println();
 	    	                			}
@@ -791,7 +491,86 @@ public class Board extends Region {
 	    	                				System.out.println();
 	    	                			}
 		    	                	}
+    	                		}
+    	                		// If turn player 2
+    	                		else if(player2.isTurn == true && player1.isTurn == false){
+    	                			System.out.println("PLAYER 2 TURN");
+	    	                		if(player2.tileId == null) {
+	    	                			removePlayerTile(player2, true);
+		    	                		player2.tileId = hoverTileid;
+		    	                		addPlayerTile(tileNumber, player2, true);
+		    	                		player2.tileId = hoverTileid;
+		    	                		System.out.println("Player is in " + player2.tileId);
+		    	                		System.out.println("Now: " + getAdjacencyList());
+		    	                		System.out.println("WAITING ANOTHER CLICK...");
+		    	                		System.out.println();
+		    	                		player1.isTurn = !player1.isTurn;
+		    	                		player2.isTurn = !player2.isTurn;
+		    	                		
+		    	                		
+		    	                		// Check if player is on winner tile :
+		    	                		for(String winnerTileId: winnerTiles2) {
+		    	                			System.out.println(winnerTileId);
+		    	                			// If player1 is on a winner tile :
+		    	                			if(player2.tileId.equals(winnerTileId)) {
+		    	                				player2.winner = true;
+		    	                				System.out.println();
+		    	                				System.out.println("WINNER PLAYER 2");
+		    	                				System.out.println();
+		    	                				System.exit(1);
+		    	                			}
+		    	                			// If player1 is NOT on a winner tile :
+		    	                			else {
+		    	                				player1.winner = false;
+		    	                			}
+		    	                		}
+		    	                		
+		    	                		
+	    	                		}
 	    	                	
+		    	                	else {
+		    	                		// Check if player is on winner tile :
+		    	                		for(String winnerTileId: winnerTiles2) {
+		    	                			System.out.println(winnerTileId);
+		    	                			// If player1 is on a winner tile :
+		    	                			if(player2.tileId.equals(winnerTileId)) {
+		    	                				player2.winner = true;
+		    	                				System.out.println();
+		    	                				System.out.println("WINNER PLAYER 1");
+		    	                				System.out.println();
+		    	                				System.exit(1);
+		    	                			}
+		    	                			// If player1 is NOT on a winner tile :
+		    	                			else {
+		    	                				player2.winner = false;
+		    	                			}
+		    	                		}
+		    	                		
+		    	                		System.out.println(player2.tileId);
+	    	                			System.out.println("Yay");
+			    	                	System.out.println(getAdjacencyList());
+	    	                			System.out.println(areConnected(adjacencyList, hoverTileid, player2.tileId, true));
+	    	                			System.out.println();
+	    	                			if(areConnected(adjacencyList, hoverTileid, player2.tileId)){
+		    	                			removePlayerTile(player2, true);
+			    	                		player2.tileId = hoverTileid;
+			    	                		addPlayerTile(tileNumber, player2, true);
+			    	                		player2.tileId = hoverTileid;
+			    	                		
+			    	                		
+			    	                		player1.isTurn = !player1.isTurn;
+			    	                		player2.isTurn = !player2.isTurn;
+			    	                		System.out.println("Player is in " + player2.tileId);
+			    	                		System.out.println("WAITING ANOTHER CLICK...");
+			    	                		System.out.println();
+	    	                			}
+	    	                			else {
+	    	                				System.out.println("NOPE");
+	    	                				System.out.println("WAITING ANOTHER CLICK...");
+	    	                				System.out.println();
+	    	                			}
+		    	                	}
+    	                		}
 	    	                	/*
 	    	                    if(tile.getFill() != Color.GREEN) {
 	    	                    	tile.setFill(Color.GREEN);
@@ -1538,11 +1317,11 @@ public class Board extends Region {
 			
 			adjacencyList.put(idEdge1, b);
 			if(showConsoleText) {
-				System.out.println("Cr�ation de : " + idEdge1 + b);
+				System.out.println("Création de : " + idEdge1 + b);
 			}
 			adjacencyList.put(idEdge2, c);
 			if(showConsoleText) {
-				System.out.println("Cr�ation de : " + idEdge2 + c);
+				System.out.println("Création de : " + idEdge2 + c);
 			}
 			
 			adjacencyList.get(idEdge1).add(idEdge2);

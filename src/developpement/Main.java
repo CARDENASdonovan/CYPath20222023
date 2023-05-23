@@ -16,7 +16,7 @@ public class Main extends Application{
 		AnchorPane root = new AnchorPane();	
 		root.setId("root");
 		
-		Board board = new Board(50, 10, 9, 9);
+		Board board = new Board(50,10,9,9,2);
 		root.getChildren().add(board);
 		
 		/*

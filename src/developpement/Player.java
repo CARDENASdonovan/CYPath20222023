@@ -168,7 +168,9 @@ public class Player extends Circle {
 		pane.getChildren().add(text);
 	}
 
-
+	protected String getTileId() {
+		return this.tileId;
+	}
 
 	
 }

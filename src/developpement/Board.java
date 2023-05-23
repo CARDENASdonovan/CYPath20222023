@@ -44,6 +44,7 @@ public class Board extends Region {
 	private Player player2 = new Player("Player2", 20, Color.BLUE);
 	private Player player3 = new Player("Player3", 20, Color.YELLOW);
 	private Player player4 = new Player("Player4", 20, Color.GREEN);
+	private int nbJoueurs = 2;
 	private ArrayList<String> winnerTiles1 = new ArrayList<String>();
 	private ArrayList<String> winnerTiles2 = new ArrayList<String>();
 	private ArrayList<String> winnerTiles3 = new ArrayList<String>();
@@ -297,22 +298,22 @@ public class Board extends Region {
 	        				}
 	        			});
 	        			
-	    		        // Set an event when the barrier is clicked.    		
-	    	            barrierVertical.setOnMouseClicked(new EventHandler<MouseEvent>()
-	    	            {
-	    	                @Override
-	    	                // Set the action(s) to do.
-	    	                public void handle(MouseEvent event) {
-	    	                    if(barrierVertical.getFill() != barrierHorizontalColor) {
-	    	                    	barrierVertical.setFill(barrierHorizontalColor);
-	    	                    	updateAdjacencyList(boardGrid);
-	    	                    }
-	    	                    else {
-	    	                    	barrierVertical.setOpacity(0);
-	    	                    	updateAdjacencyList(boardGrid);
-	    	                    }
-	    	                }
-	    	            });
+	        			// Set an event when the barrier is clicked.
+                        barrierVertical.setOnMouseClicked(new EventHandler<MouseEvent>()
+                        {
+                            @Override
+                            // Set the action(s) to do.
+                            public void handle(MouseEvent event) {
+                                if(barrierVertical.getFill() != barrierHorizontalColor) {
+                                    barrierVertical.setFill(barrierHorizontalColor);
+                                    updateAdjacencyList(boardGrid);
+                                }
+                                else {
+                                    barrierVertical.setOpacity(0);
+                                    updateAdjacencyList(boardGrid);
+                                }
+                            }
+                        });
 	    	            
 	        			// Add the barrierVertical to the right span.
 	        			boardGrid.add(barrierVertical, columnNumber, rowNumber);
@@ -407,7 +408,7 @@ public class Board extends Region {
     	                		System.out.println("Player2 turn?" + player2.isTurn);
     	                		System.out.println();
     	                		
-    	                		if(player1.isTurn == true && player2.isTurn == false) {
+    	                		if(player1.isTurn == true) {
     	                			System.out.println("PLAYER 1 TURN");
     	                			
     	                			// If player is not on board :
@@ -423,8 +424,7 @@ public class Board extends Region {
 		    	                		System.out.println("Now: " + getAdjacencyList());
 		    	                		System.out.println("WAITING ANOTHER CLICK...");
 		    	                		System.out.println();
-		    	                		player1.isTurn = !player1.isTurn;
-		    	                		player2.isTurn = !player2.isTurn;
+		    	                		changeTurn();
 		    	                		
 		    	                		
 		    	                		// Check if player is on winner tile :
@@ -454,10 +454,9 @@ public class Board extends Region {
 	    	                			
 	    	                			// If clicked tile is accessible :
 	    	                			// Move
-	    	                			if(areConnected(adjacencyList, hoverTileid, player2.tileId)) {
-		    	                			removePlayerTile(player1, true);
-			    	                		player1.tileId = hoverTileid;
-			    	                		addPlayerTile(tileNumber, player1, true);
+	    	                			if(canMove(player1.getTileId(),hoverTileid)) {
+		    	                			//set
+			    	                		movePlayerTile(tileNumber,player1);
 			    	                		player1.tileId = hoverTileid;
 			    	                		
 			    	                		// Check if player is on winner tile :
@@ -479,8 +478,7 @@ public class Board extends Region {
 	
 			    	                		
 			    	                		// Switch turns.
-			    	                		player1.isTurn = !player1.isTurn;
-			    	                		player2.isTurn = !player2.isTurn;
+			    	                		changeTurn();
 			    	                		System.out.println("Player is in " + player2.tileId);
 			    	                		System.out.println("WAITING ANOTHER CLICK...");
 			    	                		System.out.println();
@@ -493,7 +491,7 @@ public class Board extends Region {
 		    	                	}
     	                		}
     	                		// If turn player 2
-    	                		else if(player2.isTurn == true && player1.isTurn == false){
+    	                		else if(player2.isTurn == true ){
     	                			System.out.println("PLAYER 2 TURN");
 	    	                		if(player2.tileId == null) {
 	    	                			removePlayerTile(player2, true);
@@ -504,8 +502,7 @@ public class Board extends Region {
 		    	                		System.out.println("Now: " + getAdjacencyList());
 		    	                		System.out.println("WAITING ANOTHER CLICK...");
 		    	                		System.out.println();
-		    	                		player1.isTurn = !player1.isTurn;
-		    	                		player2.isTurn = !player2.isTurn;
+		    	                		changeTurn();
 		    	                		
 		    	                		
 		    	                		// Check if player is on winner tile :
@@ -527,7 +524,6 @@ public class Board extends Region {
 		    	                		
 		    	                		
 	    	                		}
-	    	                	
 		    	                	else {
 		    	                		// Check if player is on winner tile :
 		    	                		for(String winnerTileId: winnerTiles2) {
@@ -551,15 +547,11 @@ public class Board extends Region {
 			    	                	System.out.println(getAdjacencyList());
 	    	                			System.out.println(areConnected(adjacencyList, hoverTileid, player2.tileId, true));
 	    	                			System.out.println();
-	    	                			if(areConnected(adjacencyList, hoverTileid, player2.tileId)){
-		    	                			removePlayerTile(player2, true);
+	    	                			if(canMove(player1.getTileId(),hoverTileid)) {
+		    	                			//set
+			    	                		movePlayerTile(tileNumber,player1);
 			    	                		player2.tileId = hoverTileid;
-			    	                		addPlayerTile(tileNumber, player2, true);
-			    	                		player2.tileId = hoverTileid;
-			    	                		
-			    	                		
-			    	                		player1.isTurn = !player1.isTurn;
-			    	                		player2.isTurn = !player2.isTurn;
+			    	                		changeTurn();
 			    	                		System.out.println("Player is in " + player2.tileId);
 			    	                		System.out.println("WAITING ANOTHER CLICK...");
 			    	                		System.out.println();
@@ -614,6 +606,14 @@ public class Board extends Region {
         }
 		// Add boardGrid to Region.
 		this.getChildren().add(boardGrid);
+		
+		//initialise the players
+		addPlayerTile(5, player1);
+		addPlayerTile(77, player2);
+		if(nbJoueurs == 4) {
+			addPlayerTile(37, player3);
+			addPlayerTile(45, player4);
+		}
 		
 		// Set barriers visibility as false.
 		hideAllBarrier();
@@ -1085,21 +1085,23 @@ public class Board extends Region {
 		Color playerColor = (Color) playerShape.getFill();
 		double playerRadius = player.getRadius();
 		
-		// Remove player from the board.
-		if(removePlayerTile(player) == true) {
-			// player instance was deleted so we have to construct it again... 
-			player = new Player(playerName, playerRadius, playerColor);
-			
-			// Add player on the new tile.
-			if(addPlayerTile(newTileNumber, player) == true){
-				// Player removed successfully.
-				return(true);	
-			}		
-		}
-		else {
-			// Cannot add player.
-			// Player could not be moved.
-			return(false);
+		// Remove player from the board. 
+		if(canMove(player.getTileId(),"Tile " + newTileNumber)) {
+			if(removePlayerTile(player) == true) {
+				// player instance was deleted so we have to construct it again... 
+				player = new Player(playerName, playerRadius, playerColor);
+				
+				// Add player on the new tile.
+				if(addPlayerTile(newTileNumber, player) == true){
+					// Player removed successfully.
+					return(true);	
+				}		
+			}
+			else {
+				// Cannot add player.
+				// Player could not be moved.
+				return(false);
+			}
 		}
 		// Cannot remove player.
 		// Player could not be removed.
@@ -1399,5 +1401,51 @@ public class Board extends Region {
 			}
 		}
 		return(false);
+	}
+	
+	
+	protected boolean isTileOccupied(String TileA) {
+		if (nbJoueurs == 2)
+			return (player1.getTileId().equals(TileA) || player2.getTileId().equals(TileA));
+		return (player1.getTileId().equals(TileA) || player2.getTileId().equals(TileA) || player3.getTileId().equals(TileA) ||player4.getTileId().equals(TileA));
+	}
+	
+	protected boolean canMove(String TileA,String TileB) {
+		if (isTileOccupied(TileB)) //can't move if the tile is occupied
+			return false;
+		
+		ArrayList<String> adjTileA = getAdjacencyList().get(TileA);
+		for(String x: adjTileA) {//can move if the tile is adjacent
+			if (x.equals(TileB))
+				return true;
+		}
+		return false;//can't move if the tile is not adjacent
+	}
+	
+	
+	
+	protected void changeTurn() {
+		if(nbJoueurs == 2) {
+			player1.isTurn=!player1.isTurn;
+			player2.isTurn=!player2.isTurn;
+		}
+		else {
+			if(player1.isTurn) {
+				player1.isTurn=!player1.isTurn;
+				player2.isTurn=!player2.isTurn;
+			}
+			else if(player2.isTurn) {
+					player2.isTurn=!player2.isTurn;
+					player3.isTurn=!player3.isTurn;
+			}
+			else if(player3.isTurn) {
+					player3.isTurn=!player3.isTurn;
+					player4.isTurn=!player4.isTurn;
+			}
+			else if(player4.isTurn) {
+					player4.isTurn=!player4.isTurn;
+					player1.isTurn=!player1.isTurn;
+			}
+		}	
 	}
 }

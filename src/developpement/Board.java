@@ -44,7 +44,7 @@ public class Board extends Region {
 	private Player player2 = new Player("Player2", 20, Color.BLUE);
 	private Player player3 = new Player("Player3", 20, Color.YELLOW);
 	private Player player4 = new Player("Player4", 20, Color.GREEN);
-	private int nbJoueurs = 2;
+	private int nbPlayers = 2;
 	private ArrayList<String> winnerTiles1 = new ArrayList<String>();
 	private ArrayList<String> winnerTiles2 = new ArrayList<String>();
 	private ArrayList<String> winnerTiles3 = new ArrayList<String>();
@@ -622,7 +622,7 @@ public class Board extends Region {
 		player1.setTileId("Tile 5");
 		addPlayerTile(77, player2);
 		player2.setTileId("Tile 77");
-		if(nbJoueurs == 4) {
+		if(nbPlayers == 4) {
 			addPlayerTile(37, player3);
 			player3.setTileId("Tile 37");
 			addPlayerTile(45, player4);
@@ -663,7 +663,7 @@ public class Board extends Region {
 	/**
 	 * Sets barrier's opacity to 0 to hide every barrier on the board.
 	 */
-	protected void hideAllBarrier() {
+	public void hideAllBarrier() {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -681,7 +681,7 @@ public class Board extends Region {
 	 * While printing helpful text in the console, sets barrier's opacity to 0 to hide every barrier on the board.
 	 * @param boolean showConsoleText, show useful text. 
 	 */
-	protected void hideAllBarrier(boolean showConsoleText) {
+	public void hideAllBarrier(boolean showConsoleText) {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -705,7 +705,7 @@ public class Board extends Region {
  	* Changes the visibility of any element on the board via id search.
  	* @param String idNode, id of the element to hide.
  	*/
-	protected void show(String idNode) {
+	public void show(String idNode) {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -723,7 +723,7 @@ public class Board extends Region {
  	* Changes the visibility of any element on the board via id search.
  	* @param String idNode, id of the element to hide.
  	*/
-	protected void show(String idNode, boolean showConsoleText) {
+	public void show(String idNode, boolean showConsoleText) {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -745,7 +745,7 @@ public class Board extends Region {
  	* Changes the visibility of any element on the board via id search.
  	* @param String idNode, id of the element to hide.
  	*/
-	protected void hide(String idNode) {
+	public void hide(String idNode) {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -764,7 +764,7 @@ public class Board extends Region {
  	* @param String idNode, id of the element to hide.
 	* @param boolean showConsoleText, show useful text.
  	*/
-	protected void hide(String idNode, boolean showConsoleText) {
+	public void hide(String idNode, boolean showConsoleText) {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -791,7 +791,7 @@ public class Board extends Region {
 	 * @param int wantedTileNumber, Number tile on which you add the player.
 	 * @param Player player, object of Player class to put on the tile.
 	 */	
-	protected boolean addPlayerTile(int wantedTileNumber, Player player) {
+	public boolean addPlayerTile(int wantedTileNumber, Player player) {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		String wantedTileId = "Tile " + wantedTileNumber;
@@ -898,7 +898,7 @@ public class Board extends Region {
 	 * @param Player player, object of Player class to put on the tile.
 	 * @param boolean showConsoleText, show useful text.
 	 */	
-	protected boolean addPlayerTile(int wantedTileNumber, Player player, boolean showConsoleText) {
+	public boolean addPlayerTile(int wantedTileNumber, Player player, boolean showConsoleText) {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -1016,7 +1016,7 @@ public class Board extends Region {
 	 * @param int wantedTileNumber, number of the tile where the player must be removed.
 	 * @param Player player, player that must be removed.
 	 */	
-	protected boolean removePlayerTile(Player player) {		
+	public boolean removePlayerTile(Player player) {		
 		// Get the board grid.
 		GridPane boardPane = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -1047,7 +1047,7 @@ public class Board extends Region {
 	 * @param Player player, player that must be removed.
 	 * @param boolean showConsoleText, show useful text.
 	 */	
-	protected boolean removePlayerTile(Player player, boolean showConsoleText) {		
+	public boolean removePlayerTile(Player player, boolean showConsoleText) {		
 		// Get the board grid.
 		GridPane boardPane = (GridPane) this.getChildrenUnmodifiable().get(0);
 		
@@ -1092,7 +1092,7 @@ public class Board extends Region {
 	 * @param int newTileNumber, number of the tile where the player must be removed.
 	 * @param Player player, player that must be moved.
 	 */	
-	protected boolean movePlayerTile(int newTileNumber, Player player) {
+	public boolean movePlayerTile(int newTileNumber, Player player) {
 		// Get and save player attributes for later.
 		String playerName = player.getPlayerName();
 		Circle playerShape = (Circle) player;
@@ -1128,7 +1128,7 @@ public class Board extends Region {
 	 * @param Player player, player that must be moved.
 	 * @param boolean showConsoleText, show useful text.
 	 */	
-	protected boolean movePlayerTile(int newTileNumber, Player player, boolean showConsoleText) {
+	public boolean movePlayerTile(int newTileNumber, Player player, boolean showConsoleText) {
 		// Get and save player attributes for later.
 		String playerName = player.getPlayerName();
 		Circle playerShape = (Circle) player;
@@ -1165,7 +1165,7 @@ public class Board extends Region {
 	 * Getter of adjacency list.
 	 * @return HashMap<String, ArrayList<String>> adjacency list.
 	 */	
-	protected HashMap<String, ArrayList<String>> getAdjacencyList(){
+	public HashMap<String, ArrayList<String>> getAdjacencyList(){
 		return this.adjacencyList;		
 	}
 	
@@ -1173,7 +1173,7 @@ public class Board extends Region {
 	 * Setter of adjacency list.
 	 * @param HashMap<String, ArrayList<String>> newAdjacencyList.
 	 */	
-	protected void setAdjacencyList(HashMap<String, ArrayList<String>> newAdjacencyList){
+	public void setAdjacencyList(HashMap<String, ArrayList<String>> newAdjacencyList){
 		this.adjacencyList = newAdjacencyList;
 	}
 	
@@ -1182,7 +1182,7 @@ public class Board extends Region {
 	 * @param GridPane boardGrid, GridPane containing all the node of the board. 
 	 * @param boolean showConsoleText, show useful text.
 	 */	
-	protected HashMap<String, ArrayList<String>> createAdjacencyList(GridPane boardGrid){
+	public HashMap<String, ArrayList<String>> createAdjacencyList(GridPane boardGrid){
 		HashMap<String, ArrayList<String>> newAdjacencyList = new HashMap<>();
 		for(Node node : boardGrid.getChildren()) {
 			if(node.getId().contains("Barrier") && !node.getId().contains("Text")){//check for each barrier in board
@@ -1202,7 +1202,7 @@ public class Board extends Region {
 	 * @param GridPane boardGrid, GridPane containing all the node of the board. 
 	 * @param boolean showConsoleText, show useful text.
 	 */	
-	protected void updateAdjacencyList(GridPane boardGrid){
+	public void updateAdjacencyList(GridPane boardGrid){
 		setAdjacencyList(createAdjacencyList(boardGrid));
 	}
 	
@@ -1211,7 +1211,7 @@ public class Board extends Region {
 	 * @param GridPane boardGrid, GridPane containing all the node of the board. 
 	 * @param boolean showConsoleText, show useful text.
 	 */	
-	protected void updateAdjacencyList(GridPane boardGrid, boolean showConsoleText){
+	public void updateAdjacencyList(GridPane boardGrid, boolean showConsoleText){
 		setAdjacencyList(createAdjacencyList(boardGrid));
 		if(showConsoleText) {
 			System.out.println("Adjacency List Updated :");
@@ -1220,7 +1220,7 @@ public class Board extends Region {
 		}
 	}
 	
-	protected boolean addEdge(HashMap<String, ArrayList<String>> adjacencyList, String idEdge1, String idEdge2) {
+	public boolean addEdge(HashMap<String, ArrayList<String>> adjacencyList, String idEdge1, String idEdge2) {
 		if(adjacencyList.containsKey(idEdge1)) {
 			//adjacencyList.get(idEdge1).add(idEdge2);
 		
@@ -1272,7 +1272,7 @@ public class Board extends Region {
 		}
 	}
 	
-	protected boolean addEdge(HashMap<String, ArrayList<String>> adjacencyList, String idEdge1, String idEdge2, boolean showConsoleText) {
+	public boolean addEdge(HashMap<String, ArrayList<String>> adjacencyList, String idEdge1, String idEdge2, boolean showConsoleText) {
 		if(adjacencyList.containsKey(idEdge1)) {
 			//adjacencyList.get(idEdge1).add(idEdge2);
 		
@@ -1351,7 +1351,7 @@ public class Board extends Region {
 		}
 	}
 	
-	protected LinkedList<String> dfs(String startVertex) {
+	public LinkedList<String> dfs(String startVertex) {
 		HashMap<String, ArrayList<String>> adjacencyList = getAdjacencyList();
 		
 		Stack<String> stack = new Stack<>();
@@ -1396,11 +1396,11 @@ public class Board extends Region {
 		return(visited);
 	}
 	
-	protected boolean areConnected(HashMap<String, ArrayList<String>> adjacencyList, String verticeA, String verticeB) {
+	public boolean areConnected(HashMap<String, ArrayList<String>> adjacencyList, String verticeA, String verticeB) {
 		return(dfs(verticeA).contains(verticeB));
 	}
 	
-	protected boolean areConnected(HashMap<String, ArrayList<String>> adjacencyList, String verticeA, String verticeB, boolean showConsoleText) {
+	public boolean areConnected(HashMap<String, ArrayList<String>> adjacencyList, String verticeA, String verticeB, boolean showConsoleText) {
 		if(dfs(verticeA).contains(verticeB)){
 			if(showConsoleText) {
 				System.out.println(verticeA + " is connected to " + verticeB + ".");
@@ -1418,13 +1418,13 @@ public class Board extends Region {
 	}
 	
 	
-	protected boolean isTileOccupied(String TileA) {
-		if (nbJoueurs == 2)
+	public boolean isTileOccupied(String TileA) {
+		if (nbPlayers == 2)
 			return (player1.getTileId().equals(TileA) || player2.getTileId().equals(TileA));
 		return (player1.getTileId().equals(TileA) || player2.getTileId().equals(TileA) || player3.getTileId().equals(TileA) ||player4.getTileId().equals(TileA));
 	}
 	
-	protected boolean canMove(String TileA,String TileB) {
+	public boolean canMove(String TileA,String TileB) {
 		if (isTileOccupied(TileB)) //can't move if the tile is occupied
 			return false;
 		
@@ -1436,7 +1436,7 @@ public class Board extends Region {
 		return false;//can't move if the tile is not adjacent
 	}
 	
-	protected String availableTiles(String TileA) {//print only
+	public String availableTiles(String TileA) {//print only
 		ArrayList<String> adjTileA = getAdjacencyList().get(TileA);
 		String available = "";
 		for(String x: adjTileA) {//can move if the tile is adjacent
@@ -1450,8 +1450,8 @@ public class Board extends Region {
 	}
 	
 	
-	protected void changeTurn() {
-		if(nbJoueurs == 2) {
+	public void changeTurn() {
+		if(nbPlayers == 2) {
 			player1.setTurn(!player1.isTurn());
 			player2.setTurn(!player2.isTurn());
 		}

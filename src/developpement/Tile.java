@@ -23,7 +23,7 @@ public class Tile extends Rectangle {
 	 * @param double widthHeight
 	 * @param Color color
 	 */
-	protected Tile(int idNumber, double widthHeight, Color color) {
+	public Tile(int idNumber, double widthHeight, Color color) {
 		super(0, 0, widthHeight, widthHeight);
 		super.setId("Tile " + Integer.toString(idNumber));
 		super.setFill(color);
@@ -32,7 +32,7 @@ public class Tile extends Rectangle {
 	/**
 	 * This method is the constructor of the Tile class with default values for every attributes.
 	 */
-	protected Tile() {
+	public Tile() {
 		this(DEFAULT_idNumber, DEFAULT_WIDTH_HEIGHT, DEFAULT_COLOR);		
 	}
 	
@@ -65,7 +65,7 @@ public class Tile extends Rectangle {
 	 * @param String textString
 	 * @param Pane pane
 	 */
-	protected void addTileTextId(String textString, Pane pane) {
+	public void addTileTextId(String textString, Pane pane) {
 		Text text = new Text(30 + getX(), 35 + getY(), textString);
 		text.setId("Tile" + textString + "Text");
 		pane.getChildren().add(text);

@@ -22,7 +22,7 @@ public class Main extends Application{
 		
 		root.setId("root");
 		
-		Board board = new Board(50,10,9,9,2);
+		Board board = new Board(300,10,9,9,2);
 		root.getChildren().add(board);
 		
 		
@@ -39,12 +39,16 @@ public class Main extends Application{
 		board.show("Barrier Vertical 52");
 		board.show("Barrier Vertical 53");
 		
+		
+		//
 		ChoiceBox<String> nbPlayer = new ChoiceBox<>();
-		String[] players = {"2","3","4"};
+		String[] players = {"2","4"};
 		nbPlayer.getItems().addAll(players);
 		Button button = new Button("Select the number of players");
 		
-		button.setOnAction(event -> board.getNbPlayers(nbPlayer));
+		button.setOnAction(event ->{
+			board.getNbPlayers(nbPlayer);
+		});
 		
 		
 		root.getChildren().addAll(nbPlayer,button);
@@ -61,10 +65,9 @@ public class Main extends Application{
 		
 		board.updateAdjacencyList(boardGrid, true);
 		
-		board.areConnected(board.getAdjacencyList(), "Tile1", "Tile47", true);
 		
 		
-		Scene scene = new Scene(root, 900, 750);
+		Scene scene = new Scene(root, 1500, 750);
 		
         primaryStage.setScene(scene);
         primaryStage.show();

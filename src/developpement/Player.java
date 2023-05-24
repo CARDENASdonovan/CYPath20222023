@@ -14,7 +14,6 @@ import javafx.scene.text.Text;
  */
 
 public class Player extends Circle {
-	private String playerName;
 	private int playerNumber;
 	private boolean winner = false;
 	private boolean isTurn = false;
@@ -33,30 +32,54 @@ public class Player extends Circle {
 	public Player(String playerName, double radius, Color color) {
 		super(-1000,-1000, radius);
 		playerNumber = Integer.parseInt(playerName.substring(6));
+		System.out.println(playerName+playerNumber);
 		this.setPlayerNumber(playerNumber);
 		String t = "Tile";
 		switch(playerNumber) {
 		case 1 : for (int i=1; i<=9; i++) {
 			idWinningTiles.add(t+(72+i));
-			this.idStartTile = "5";
+			
+			
 		}
+		this.setIdStartTiles("Tile 5");
+		this.setTileId("Tile 5");
+		System.out.println(getIdStartTile());
+		 break;
+		
 		
 		case 2 : for(int i=1; i<=9; i++) {
 			idWinningTiles.add(t+i);
-			this.idStartTile = "77";
+			
+	
 		}
+		this.setIdStartTiles("Tile 77");
+		this.setTileId("Tile 77");
+		System.out.println(getIdStartTile());
+		 break;
 		
 		case 3 : for (int i=0; i<=8; i++) {
 			idWinningTiles.add(t+(1+i*9));
-			this.idStartTile = "45";
+			
+		}
+		this.setIdStartTiles("Tile 45");
+		this.setTileId("Tile 45");
+		System.out.println(getIdStartTile());
+		 break;
+		
+		case 4 : 
+			for (int i=1; i<=9; i++) {
+				idWinningTiles.add(t+(i*9));
+			}
+			this.setIdStartTiles("Tile 37");
+			this.setTileId("Tile 37");
+			System.out.println(getIdStartTile());
+			break;
+		 
+		 default:
+			    break;
+		
 		}
 		
-		case 4 : for (int i=1; i<=9; i++) {
-			idWinningTiles.add(t+(i*9));
-			this.idStartTile = "37";
-		}
-		
-		}
 		super.setId(playerName);
 		super.setFill(color);
 	}
@@ -67,23 +90,7 @@ public class Player extends Circle {
 		super.setId("Player " + playerName);
 		super.setFill(color);		
 	}*/
-	
-	/**
-	 * Getter of playerName.
-	 * @return String playerName
-	 */
-	protected String getPlayerName() {
-		return(this.playerName);
-	}
-	
-	/**
-	 * Setter of playerName.
-	 * @param String playerName.
-	 */
-	protected void setPlayerName(String playerName) {
-		this.playerName = playerName;
 
-	}
 	
 	/**
 	 * This method is used to get the number of a player.
@@ -166,7 +173,7 @@ public class Player extends Circle {
 	 * @return a String to print
 	 */
 	public String toString() {
-		return("Player idNumber: " + getId() + "\n" + "CenterX: " + getCenterX() + "\n" + "CenterY: " + getCenterY() + "\n" + "Radius: " + getRadius() + "\n" + "Tile : " + getTileId() + "\n" +".");
+		return("Player idNumber: " + getId() + "\n" + "CenterX: " + getCenterX() + "\n" + "CenterY: " + getCenterY() + "\n" + "Radius: " + getRadius() + "\n" +"*Current Tile : " + getTileId() + "\n" + "startTile"+ getIdStartTile()+".");
 	}
 	
 	@Override

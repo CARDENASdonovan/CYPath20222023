@@ -47,14 +47,11 @@ public class Board extends Region {
 	private Player player2 = new Player("Player2", 20, Color.BLUE);
 	private Player player3 = new Player("Player3", 20, Color.YELLOW);
 	private Player player4 = new Player("Player4", 20, Color.GREEN);
-	private int nbPlayers = 2;
-	private ArrayList<String> winnerTiles1 = new ArrayList<String>();
-	private ArrayList<String> winnerTiles2 = new ArrayList<String>();
-	private ArrayList<String> winnerTiles3 = new ArrayList<String>();
-	private ArrayList<String> winnerTiles4 = new ArrayList<String>(); 
+	private int nbPlayers; 
 	
-	
-	private final Player[] listPlay = {player1,player2,player3,player4};
+	//variable intermediaire qui sert à stocker tous les joueurs, tableau de joueurs
+	private final Player[] ArrayConstantOfInitialPlayer = {player1,player2,player3,player4};
+	//tableau de joueurs actif dans la partie
  	private ArrayList<Player> listPlayer = new ArrayList<Player>();
 	
 	
@@ -63,19 +60,37 @@ public class Board extends Region {
 	
 		String nbPlayers = nbPlayer.getValue();
 		this.nbPlayers = Integer.parseInt(nbPlayers);
-		// System.out.println(this.nbPlayers);
+		System.out.println(this.nbPlayers);
 		this.listPlayer();
 		
 		}
 	
+	
+	
 	public void listPlayer() {
+		listPlayer = new ArrayList<Player>();
+		
+	
+		
+		for(int i = 0; i<this.ArrayConstantOfInitialPlayer.length;i++) {
+			removePlayerTile(ArrayConstantOfInitialPlayer[i]);
+			listPlayer.add(ArrayConstantOfInitialPlayer[i]);
+			this.removePlayerTile(listPlayer.get(i));
+	
+			
+			
+		}
+		
+		
 		for(int i = 0; i<this.nbPlayers;i++) {
 			
-			listPlayer.add(listPlay[i]);
-			System.out.println(Integer.parseInt(listPlayer.get(i).getIdStartTile()));
-			this.addPlayerTile(Integer.parseInt(listPlayer.get(i).getIdStartTile()), listPlayer.get(i));
-			// System.out.println("listPlayer[i]");
-			
+			if(i==0) {
+				ArrayConstantOfInitialPlayer[i].setTurn(true);
+			}else {
+				ArrayConstantOfInitialPlayer[i].setTurn(false);
+			}	
+			ArrayConstantOfInitialPlayer[i].setTileId(ArrayConstantOfInitialPlayer[i].getIdStartTile());
+			this.addPlayerTile(Integer.parseInt(listPlayer.get(i).getIdStartTile().substring(5)), listPlayer.get(i));
 		}
 	}
 		
@@ -99,26 +114,7 @@ public class Board extends Region {
 	
 	public Board(int initialX, int initialY, int tileRowsQuantity, int tileColumnsQuantity, int numberOfPlayers) {
 		player1.setTurn(true);
-	// Initialization of the winner tiles for each player.
-		// For player 1.
-		for(int i = 73; i < 82; i++) {
-			winnerTiles1.add("Tile " + i);
-		}
 	
-		// For player 2.
-		for(int i = 1; i < 10; i++) {
-			winnerTiles2.add("Tile " + i);
-		}
-		
-		// For player 3.
-		for(int i = 1; i < 74; i+=9) {
-			winnerTiles3.add("Tile " + i);
-		}
-		
-		// For player 4.
-		for(int i = 9; i < 82; i+=9) {
-			winnerTiles4.add("Tile " + i);
-		}
 		
 	// Initialization of this instance attributes.
 		// We need in total (tileColumnsQuantity*2 + 1) columns and (tileRowsQuantity*2 + 1) rows to fit the barriers.
@@ -396,7 +392,7 @@ public class Board extends Region {
 	        			// If barrier hover is true :
 	        			tile.hoverProperty().addListener((observable, oldValue, hoverBoolean) -> {
 	        				hoverTileId = tile.getId();
-	        				System.out.println("Hovered tile: " + this.hoverTileId);
+	        				//System.out.println("Hovered tile: " + this.hoverTileId);
 	        				
 	        				// Color tile if hovered.
 	        				if(hoverBoolean) {
@@ -434,185 +430,18 @@ public class Board extends Region {
 	    	                	
 	    	                	// If remove is failed it means player was not exists in board.
     	                		// Add to update position.
-	    	                	System.out.println();
-	    	                	System.out.println();
-	    	                	System.out.println();
-    	                		System.out.println("Player1 turn?" + player1.isTurn());
-    	                		System.out.println();
-    	                		System.out.println("Player2 turn?" + player2.isTurn());
-    	                		System.out.println();
+
+    	            
     	                		
-    	                		if(player1.isTurn() == true) {
-    	                			System.out.println();
-    	                			System.out.println("PLAYER 1 TURN");
-    	                			// If player is not on board :
-	    	                		if(player1.getTileId() == null) {
-	    	                			// Try to remove it JUST IN CASE for less weird situations. ¯\_(ツ)_/¯
-	    	                			removePlayerTile(player1, true);
-	    	                			
-	    	                			// set
-		    	                		player1.setTileId(hoverTileId);
-		    	                		addPlayerTile(tileNumber, player1, true);
-		    	                		player1.setTileId(hoverTileId);
-		    	                		System.out.println("Player is in " + player1.getTileId());
-		    	                		System.out.println("Now: " + getAdjacencyList());
-		    	                		System.out.println("WAITING ANOTHER CLICK...");
-		    	                		System.out.println();
-		    	                		
-		    	                		
-		    	                		// Check if player is on winner tile :
-		    	                		for(String winnerTileId: winnerTiles1) {
-		    	                			System.out.println(winnerTileId);
-		    	                			// If player1 is on a winner tile :
-		    	                			if(player1.getTileId().equals(winnerTileId)) {
-		    	                				player1.setWinner(true);
-		    	                				System.out.println();
-		    	                				System.out.println("WINNER PLAYER 1");
-		    	                				System.out.println();
-		    	                				System.exit(1);
-		    	                			}
-		    	                			// If player1 is NOT on a winner tile :
-		    	                			else {
-		    	                				player1.setWinner(false);
-		    	                			}
-		    	                		}
-		    	                		
-		    	                		
-	    	                		}
-	    	                		// If it is not the first time player1 is added AND he has not won :
-		    	                	else {
-		    	                		
-	    	                			System.out.println();
-	    	                			System.out.println();
-		    	                		System.out.println("Position: " + player1.getTileId());
-	    	                			System.out.println("Available tiles: " + availableTiles(player1.getTileId()));
-	    	                			System.out.println();
-	    	                			
-	    	                			// If clicked tile is accessible :
-	    	                			// Move
-	    	                			if(movePlayerTile(tileNumber,player1)) {
-		    	                			//set
-			    	                		player1.setTileId(hoverTileId);
-			    	                		
-			    	                		// Check if player is on winner tile :
-			    	                		for(String winnerTileId: winnerTiles1) {
-			    	                			System.out.println(winnerTileId);
-			    	                			// If player1 is on a winner tile :
-			    	                			if(player1.getTileId().equals(winnerTileId)) {
-			    	                				player1.setWinner(true);
-			    	                				System.out.println();
-			    	                				System.out.println("WINNER PLAYER 1");
-			    	                				System.out.println();
-			    	                				System.exit(1);
-			    	                			}
-			    	                			// If player1 is NOT on a winner tile :
-			    	                			else {
-			    	                				player1.setWinner(false);
-			    	                			}
-			    	                		}
-			    	    					changeTurn();
-			    	                		// Switch turns.
-			    	                		System.out.println("Player is in " + player2.getTileId());
-			    	                		System.out.println("WAITING ANOTHER CLICK...");
-			    	                		System.out.println();
-	    	                			}
-	    	                			else {
-	    	                				System.out.println("NOPE");
-	    	                				System.out.println("WAITING ANOTHER CLICK...");
-	    	                				System.out.println();
-	    	                			}
-		    	                	}
+    	                		
+    	                			for(Player playerTurn : listPlayer) {
+        	                			if(playerTurn.isTurn()) {
+        	                				game(playerTurn,tileNumber);
+        	                			}
+        	                		}
     	                		}
-    	                		// If turn player 2
-    	                		else if(player2.isTurn() == true) {
-    	                			System.out.println();
-    	                			System.out.println("PLAYER 2 TURN");
-    	                			// If player is not on board :
-	    	                		if(player2.getTileId() == null) {
-	    	                			// Try to remove it JUST IN CASE for less weird situations. ¯\_(ツ)_/¯
-	    	                			removePlayerTile(player2, true);
-	    	                			
-	    	                			// set
-	    	                			player2.setTileId(hoverTileId);
-		    	                		addPlayerTile(tileNumber, player2, true);
-		    	                		player2.setTileId(hoverTileId);
-		    	                		System.out.println("Player is in " + player2.getTileId());
-		    	                		System.out.println("Now: " + getAdjacencyList());
-		    	                		System.out.println("WAITING ANOTHER CLICK...");
-		    	                		System.out.println();
-		    	                		
-		    	                		
-		    	                		// Check if player is on winner tile :
-		    	                		for(String winnerTileId: winnerTiles2) {
-		    	                			System.out.println(winnerTileId);
-		    	                			// If player1 is on a winner tile :
-		    	                			if(player2.getTileId().equals(winnerTileId)) {
-		    	                				player2.setWinner(true);
-		    	                				System.out.println();
-		    	                				System.out.println("WINNER PLAYER 2");
-		    	                				System.out.println();
-		    	                				System.exit(1);
-		    	                			}
-		    	                			// If player1 is NOT on a winner tile :
-		    	                			else {
-		    	                				player2.setWinner(false);
-		    	                			}
-		    	                		}
-		    	                		
-		    	                		
-	    	                		}
-	    	                		// If it is not the first time player1 is added AND he has not won :
-		    	                	else {
-		    	                		
-	    	                			System.out.println();
-	    	                			System.out.println();
-		    	                		System.out.println("Position: " + player2.getTileId());
-	    	                			System.out.println("Available tiles: " + availableTiles(player2.getTileId()));
-	    	                			System.out.println();
-	    	                			
-	    	                			// If clicked tile is accessible :
-	    	                			// Move
-	    	                			if(movePlayerTile(tileNumber,player2)) {
-		    	                			//set
-			    	                		player2.setTileId(hoverTileId);
-			    	                		
-			    	                		// Check if player is on winner tile :
-			    	                		for(String winnerTileId: winnerTiles2) {
-			    	                			System.out.println(winnerTileId);
-			    	                			// If player1 is on a winner tile :
-			    	                			if(player2.getTileId().equals(winnerTileId)) {
-			    	                				player2.setWinner(true);
-			    	                				System.out.println();
-			    	                				System.out.println("WINNER PLAYER 2");
-			    	                				System.out.println();
-			    	                				System.exit(1);
-			    	                			}
-			    	                			// If player1 is NOT on a winner tile :
-			    	                			else {
-			    	                				player2.setWinner(false);
-			    	                			}
-			    	                		}
-			    	    					changeTurn();
-			    	                		// Switch turns.
-			    	                		System.out.println("Player is in " + player1.getTileId());
-			    	                		System.out.println("WAITING ANOTHER CLICK...");
-			    	                		System.out.println();
-	    	                			}
-	    	                			else {
-	    	                				System.out.println("NOPE");
-	    	                				System.out.println("WAITING ANOTHER CLICK...");
-	    	                				System.out.println();
-	    	                			}
-		    	                	}
-    	                		}
-	    	                	/*
-	    	                    if(tile.getFill() != Color.GREEN) {
-	    	                    	tile.setFill(Color.GREEN);
-	    	                    }
-	    	                    else {
-	    	                    	tile.setFill(Color.BLUE);
-	    	                    }*/
-	    	                }
+    	                		
+	    	                
 	    	            });
 	        			
 	    		        // Add the tile to the right span.
@@ -859,13 +688,13 @@ public class Board extends Region {
 					// If the span does not contain any player :
 						// Add player in the tile span :
 						boardGrid.add(player, wantedTileColumn, wantedTileRow);
-	    	            
+						
 	        			// Center the player in the span
 	        			GridPane.setHalignment(player, HPos.CENTER);
 	        			GridPane.setValignment(player, VPos.CENTER);
 	        			
 		        		// Create text on the barrierHorizontal.
-	        			Label text = new Label(player.getPlayerName());
+	        			Label text = new Label(player.getId());
 
 	        			// Set Id for the text of barrierVertical.
 	        			text.setId("Text " + player.getId());
@@ -961,7 +790,7 @@ public class Board extends Region {
 								
 			        			// Print useful text.
 			        			if(showConsoleText) {
-			        				System.out.println(player.getPlayerName() + " cannot be added in " + nodeList.get(0).getId() + ".\nThere is already someone..." );
+			        				System.out.println(player.getId() + " cannot be added in " + nodeList.get(0).getId() + ".\nThere is already someone..." );
 			        				System.out.println();
 			        			}
 			        			
@@ -978,7 +807,7 @@ public class Board extends Region {
 	        			GridPane.setValignment(player, VPos.CENTER);
 	        			
 		        		// Create text on the barrierHorizontal.
-	        			Label text = new Label(player.getPlayerName());
+	        			Label text = new Label(player.getId());
 
 	        			// Set Id for the text of barrierVertical.
 	        			text.setId("Text " + player.getId());
@@ -1025,7 +854,7 @@ public class Board extends Region {
                     
 	        			// Print useful text.
 	        			if(showConsoleText) {
-	        				System.out.println(player.getPlayerName() + " added in " + nodeList.get(0).getId() + ".");
+	        				System.out.println(player.getId() + " added in " + nodeList.get(0).getId() + ".");
 	        				System.out.println();
 	        			}
 	        			
@@ -1073,51 +902,7 @@ public class Board extends Region {
 		return(false);
 	}
 	
-	/**
-	 * While printing helpful text in the console, remove a player from a tile.
-	 * @param int wantedTileNumber, number of the tile where the player must be removed.
-	 * @param Player player, player that must be removed.
-	 * @param boolean showConsoleText, show useful text.
-	 */	
-	public boolean removePlayerTile(Player player, boolean showConsoleText) {		
-		// Get the board grid.
-		GridPane boardPane = (GridPane) this.getChildrenUnmodifiable().get(0);
-		
-		// Get player id.
-		String playerId = "Text " + player.getId();
-		
-		// Get name of the player to remove.
-		String playerTextId = "Text " + player.getId();
-		
-		// For every node in the grid :
-		for(Node node: boardPane.getChildrenUnmodifiable()) {
-			// If node is the wanted player or wanted player text : 
-			if(node.getId().equals(playerTextId)){
-				// Delete the text.
-				boardPane.getChildren().remove(node);
-				
-				// Delete the player.
-				boardPane.getChildren().remove(player);
-				
-				// Print useful text.
-				if(showConsoleText) {
-					System.out.println(playerId + " removed successfully.");
-					System.out.println();
-				}
-				
-				// Player removed successfully.
-				return(true);
-			}	
-		}
-		// Print useful text.
-		if(showConsoleText) {
-			System.out.println(playerId + " could not be removed.");
-			System.out.println();
-		}
-		
-		// Player could not be removed.
-		return(false);
-	}
+	
 	
 	/**
 	 * Moves a player to another tile.
@@ -1126,13 +911,21 @@ public class Board extends Region {
 	 */	
 	public boolean movePlayerTile(int newTileNumber, Player player) {
 		// Get and save player attributes for later.
-		String playerName = player.getPlayerName();
+		String playerName = player.getId();
 		Circle playerShape = (Circle) player;
 		Color playerColor = (Color) playerShape.getFill();
 		double playerRadius = player.getRadius();
 		
-		// Remove player from the board. 
-		if(canMove(player.getTileId(),"Tile " + newTileNumber)) {
+		String currentTile = null;
+		// Remove player from the board.
+		if(player.getTileId() == null) {
+			
+			currentTile = player.getIdStartTile() ;
+		}else {
+			currentTile = player.getTileId() ;
+		}
+		
+		if(canMove(currentTile,"Tile " + newTileNumber)) {
 			if(removePlayerTile(player) == true) {
 				// player instance was deleted so we have to construct it again... 
 				player = new Player(playerName, playerRadius, playerColor);
@@ -1154,43 +947,7 @@ public class Board extends Region {
 		return(false);
 	}
 	
-	/**
-	 * While printing helpful text in the console, move a player to another tile.
-	 * @param int newTileNumber, number of the tile where the player must be removed.
-	 * @param Player player, player that must be moved.
-	 * @param boolean showConsoleText, show useful text.
-	 */	
-	public boolean movePlayerTile(int newTileNumber, Player player, boolean showConsoleText) {
-		// Get and save player attributes for later.
-		String playerName = player.getPlayerName();
-		Circle playerShape = (Circle) player;
-		Color playerColor = (Color) playerShape.getFill();
-		double playerRadius = player.getRadius();
-		
-		// Remove player from the board.
-		if(removePlayerTile(player) == true) {
-			// Player instance was deleted so we have to construct it again...
-			player = new Player(playerName, playerRadius, playerColor);
-
-			// Add player on the new tile.
-			if(addPlayerTile(newTileNumber, player) == true){
-				if(showConsoleText) {
-					System.out.println(player.getId() + " moved to Tile" + Integer.toString(newTileNumber) + ".");
-					System.out.println();
-				}
-				// Player removed successfully.
-				return(true);	
-			}		
-		}
-		else {
-			// Cannot add player.
-			// Player could not be moved.
-			return(false);
-		}
-		// Cannot remove player.
-		// Player could not be removed.
-		return(false);
-	}
+	
 	
 // Methods: Setter, getter and special uses for the adjacency list of the board.
 	/**
@@ -1416,10 +1173,7 @@ public class Board extends Region {
 		ArrayList<String> vertexNeighborsNotVisited = new ArrayList<>() ;
 		
 		ArrayList<String> vertexNeighbors = adjacencyList.get(startVertex);
-		if(vertexNeighbors == null) {
-			LinkedList<String> debug = new LinkedList<>();
-			return(debug);
-		}
+	
 	
 		for(String vertexName : vertexNeighbors) {
 			if(!visited.contains(vertexName) && !stack.contains(vertexName)) {
@@ -1526,4 +1280,62 @@ public class Board extends Region {
 			}
 		}	
 	}
+	
+	public boolean game(Player player, int tileNumber) {
+		
+		System.out.println();
+		System.out.println(player.getId()+ "turn");
+		// If player is not on board :
+		
+		String currentTile = null;
+		// Remove player from the board.
+		if(player.getTileId() == null) {
+			
+			currentTile = player.getIdStartTile() ;
+		}else {
+			currentTile = player.getTileId() ;
+		}
+		
+			System.out.println();
+			System.out.println();
+    		System.out.println("Positionnnnnn: " +  currentTile);
+			System.out.println("Available tiles: " + availableTiles( currentTile));
+			System.out.println();
+			
+			// If clicked tile is accessible :
+			// Move
+			if(movePlayerTile(tileNumber,player)) {
+    			//set
+        		player.setTileId(hoverTileId);
+        		
+        		// Check if player is on winner tile :
+        		/*for(String winnerTileId : player.getIdWinningTiles()) {
+        			System.out.println(winnerTileId);
+        			// If player1 is on a winner tile :
+        			if(player.getTileId().equals(winnerTileId)) {
+        				player.setWinner(true);
+        				System.out.println();
+        				System.out.println("WINNER"+ player.getId());
+        				System.out.println();
+        				System.exit(1);
+        			}
+        			// If player1 is NOT on a winner tile :
+        			else {
+        				player.setWinner(false);
+        			}
+        		}*/
+        		// Switch turns.
+        		System.out.println("WAITING ANOTHER CLICK...");
+        		System.out.println();
+        		changeTurn();
+        		return true;
+			}
+			else {
+				System.out.println("NOPE");
+				System.out.println("WAITING ANOTHER CLICK...");
+				System.out.println();
+				return false;
+			}
+    	}
+	
 }

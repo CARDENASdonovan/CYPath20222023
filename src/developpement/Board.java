@@ -13,7 +13,10 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
@@ -48,7 +51,36 @@ public class Board extends Region {
 	private ArrayList<String> winnerTiles1 = new ArrayList<String>();
 	private ArrayList<String> winnerTiles2 = new ArrayList<String>();
 	private ArrayList<String> winnerTiles3 = new ArrayList<String>();
-	private ArrayList<String> winnerTiles4 = new ArrayList<String>();
+	private ArrayList<String> winnerTiles4 = new ArrayList<String>(); 
+	
+	
+	private final Player[] listPlay = {player1,player2,player3,player4};
+ 	private ArrayList<Player> listPlayer = new ArrayList<Player>();
+	
+	
+	
+	public void getNbPlayers(ChoiceBox<String> nbPlayer) {
+	
+		String nbPlayers = nbPlayer.getValue();
+		this.nbPlayers = Integer.parseInt(nbPlayers);
+		// System.out.println(this.nbPlayers);
+		this.listPlayer();
+		
+		}
+	
+	public void listPlayer() {
+		for(int i = 0; i<this.nbPlayers;i++) {
+			
+			listPlayer.add(listPlay[i]);
+			System.out.println(Integer.parseInt(listPlayer.get(i).getIdStartTile()));
+			this.addPlayerTile(Integer.parseInt(listPlayer.get(i).getIdStartTile()), listPlayer.get(i));
+			// System.out.println("listPlayer[i]");
+			
+		}
+	}
+		
+	
+	
 	
 	/**
 	 * Constructs an (int rowTotalNumber) x (int columnTotalNumber) Object (Node) using JavaFX library.
@@ -618,7 +650,7 @@ public class Board extends Region {
 		this.getChildren().add(boardGrid);
 		
 		//Initialize the players
-		addPlayerTile(5, player1);
+		/*addPlayerTile(5, player1);
 		player1.setTileId("Tile 5");
 		addPlayerTile(77, player2);
 		player2.setTileId("Tile 77");
@@ -627,7 +659,7 @@ public class Board extends Region {
 			player3.setTileId("Tile 37");
 			addPlayerTile(45, player4);
 			player4.setTileId("Tile 45");
-		}
+		}*/
 		
 		// Set barriers visibility as false.
 		hideAllBarrier();
@@ -1363,6 +1395,13 @@ public class Board extends Region {
 		changeTurn();
 		return true;
 	}
+	
+	//public boolean checkDfs(String idEdge1, String idEdge2) {
+		
+	
+	
+	
+	
 	
 	public LinkedList<String> dfs(String startVertex) {
 		HashMap<String, ArrayList<String>> adjacencyList = getAdjacencyList();

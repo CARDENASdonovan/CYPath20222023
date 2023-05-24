@@ -37,22 +37,22 @@ public class Player extends Circle {
 		switch(playerNumber) {
 		case 1 : for (int i=1; i<=9; i++) {
 			idWinningTiles.add(t+(72+i));
-			setIdStartTiles("Tile 5");
+			this.idStartTile = "5";
 		}
 		
 		case 2 : for(int i=1; i<=9; i++) {
 			idWinningTiles.add(t+i);
-			setIdStartTiles("Tile 77");
+			this.idStartTile = "77";
 		}
 		
 		case 3 : for (int i=0; i<=8; i++) {
 			idWinningTiles.add(t+(1+i*9));
-			setIdStartTiles("Tile 45");
+			this.idStartTile = "45";
 		}
 		
 		case 4 : for (int i=1; i<=9; i++) {
 			idWinningTiles.add(t+(i*9));
-			setIdStartTiles("Tile 37");
+			this.idStartTile = "37";
 		}
 		
 		}
@@ -121,7 +121,7 @@ public class Player extends Circle {
 	 * @return the id of the starting tile of the player (String)
 	 */
 	public String getIdStartTile() {
-		return idStartTile;
+		return this.idStartTile;
 	}
 
 	/**

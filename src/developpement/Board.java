@@ -70,9 +70,8 @@ public class Board extends Region {
 	
 	public void listPlayer() {
 		for(int i = 0; i<this.nbPlayers;i++) {
-			
 			listPlayer.add(listPlay[i]);
-			System.out.println(Integer.parseInt(listPlayer.get(i).getIdStartTile()));
+			//System.out.println(Integer.parseInt(listPlayer.get(i).getIdStartTile()));
 			this.addPlayerTile(Integer.parseInt(listPlayer.get(i).getIdStartTile()), listPlayer.get(i));
 			// System.out.println("listPlayer[i]");
 			

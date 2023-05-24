@@ -1190,7 +1190,7 @@ public class Board extends Region {
 				// If the barriers id are both not empty.
 				if(!((barrier.getIdTile1().equals("") || barrier.getIdTile2().equals(""))) && node.getOpacity() == 0) {
 					// Add vertices to the edge matrix.
-					addEdge(newAdjacencyList, barrier.getIdTile1(),barrier.getIdTile2());
+					addEdge2(newAdjacencyList, barrier.getIdTile1(),barrier.getIdTile2());
 				}
 			}
 		}
@@ -1268,8 +1268,10 @@ public class Board extends Region {
 			adjacencyList.put(idEdge2, c);
 			adjacencyList.get(idEdge1).add(idEdge2);
 			adjacencyList.get(idEdge2).add(idEdge1);
+			
 			return(true);
 		}
+		
 	}
 	
 	public boolean addEdge(HashMap<String, ArrayList<String>> adjacencyList, String idEdge1, String idEdge2, boolean showConsoleText) {
@@ -1349,6 +1351,17 @@ public class Board extends Region {
 			}
 			return(true);
 		}
+	}
+	
+	public boolean addEdge2(HashMap<String, ArrayList<String>> adjacencyList, String idEdge1, String idEdge2) {
+		int compteur = 0;
+		while(compteur<2){
+			addEdge(adjacencyList,idEdge1,idEdge2);
+			compteur = compteur +1;
+			
+		}
+		changeTurn();
+		return true;
 	}
 	
 	public LinkedList<String> dfs(String startVertex) {

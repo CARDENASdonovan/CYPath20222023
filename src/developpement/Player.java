@@ -18,7 +18,7 @@ public class Player extends Circle {
 	private int playerNumber;
 	private boolean winner = false;
 	private boolean isTurn = false;
-	private ArrayList<String> idWinningTiles;
+	private ArrayList<String> idWinningTiles = new ArrayList<>();
 	private String tileId;
 	private String idStartTile;
 	
@@ -30,8 +30,9 @@ public class Player extends Circle {
 	 * @param Color color
 	 */
 
-	public Player(int playerNumber, String playerName, double radius, Color color) {
+	public Player(String playerName, double radius, Color color) {
 		super(-1000,-1000, radius);
+		playerNumber = Integer.parseInt(playerName.substring(6));
 		this.setPlayerNumber(playerNumber);
 		String t = "Tile";
 		switch(playerNumber) {
@@ -60,12 +61,12 @@ public class Player extends Circle {
 		super.setFill(color);
 	}
 	
-	public Player(String playerName, double radius, Color color) {
+	/*public Player(String playerName, double radius, Color color) {
 		super(0,0, radius);
 		this.playerName = playerName;
 		super.setId("Player " + playerName);
 		super.setFill(color);		
-	}
+	}*/
 	
 	/**
 	 * Getter of playerName.

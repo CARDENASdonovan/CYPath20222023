@@ -26,9 +26,9 @@ public class Main extends Application{
 		root.getChildren().add(board);
 		
 		
-		Player adrien = new Player("Adrien", 20, Color.CHARTREUSE);
-		board.addPlayerTile(5, adrien);
-		System.out.println(adrien.getIdStartTile());
+		//Player adrien = new Player(4,"Adrien", 20, Color.CHARTREUSE);
+
+		//System.out.println(adrien.getIdStartTile());
 		
 		
 		

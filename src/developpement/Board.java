@@ -1338,5 +1338,74 @@ public class Board extends Region {
 			}
     	}
 	
+	public boolean testBarrier(HashMap<String, ArrayList<String>> newAdjacencyList, Barrier firstBarrier, Barrier secondBarrier) {
+		String tileA = firstBarrier.getIdTile1();
+		String tileB = firstBarrier.getIdTile2();
+		String tileC = secondBarrier.getIdTile1();
+		String tileD = secondBarrier.getIdTile2();// we get all the tiles that we need to remove
+
+		//if the adjacency list contains all the tiles (we can't remove non existing barrier)
+		if(newAdjacencyList.containsKey(tileA) || newAdjacencyList.containsKey(tileB) || newAdjacencyList.containsKey(tileC) || newAdjacencyList.containsKey(tileD)){
+			removeTileLink(newAdjacencyList,tileA,tileB);//we remove them
+			removeTileLink(newAdjacencyList,tileC,tileD);
+			if(testDFS(newAdjacencyList))// if we still can finish the game
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean testDFS(HashMap<String, ArrayList<String>> newAdjacencyList) {
+		int nbCanWin = 0;
+		for(String winnerTileId1: winnerTiles1) {//for each winner tiles, if it is connected to the player, then he can still win
+			if(areConnected(newAdjacencyList, player1.getTileId(), winnerTileId1)) {
+				nbCanWin++;
+				break;
+			}
+		}
+		//we repeat for each player (easier to do here than in a function because we use global variables
+		for(String winnerTileId2: winnerTiles2) {
+			if(areConnected(newAdjacencyList, player2.getTileId(), winnerTileId2)) {
+				nbCanWin++;
+				break;
+			}
+		}
+			
+		if(nbPlayers == 4) {
+			for(String winnerTileId3: winnerTiles3) {
+				if(areConnected(newAdjacencyList, player3.getTileId(), winnerTileId3)) {
+					nbCanWin++;
+					break;
+				}
+			}
+			
+			for(String winnerTileId4: winnerTiles4) {
+				if(areConnected(newAdjacencyList, player4.getTileId(), winnerTileId4)) {
+					nbCanWin++;
+					break;
+				}
+			}
+		}
+		
+		if(nbCanWin == nbPlayers)
+			return true;
+		
+		return false;
+	}
+	
+	
+	
+	public HashMap<String, ArrayList<String>> removeTileLink(HashMap<String, ArrayList<String>> newAdjacencyList,String tileA,String tileB){
+		newAdjacencyList.get(tileA).remove(tileB);
+	    // check to erase the tile key if it is empty
+	    if (newAdjacencyList.get(tileA).isEmpty()) {
+	    	newAdjacencyList.remove(tileA);
+	    }
+	    newAdjacencyList.get(tileB).remove(tileA);
+	    if (newAdjacencyList.get(tileB).isEmpty()) {
+	    	newAdjacencyList.remove(tileB);
+	    }
+		return newAdjacencyList;
+	}
+	
 }
 

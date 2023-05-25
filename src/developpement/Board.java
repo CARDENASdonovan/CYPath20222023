@@ -1309,7 +1309,7 @@ public class Board extends Region {
         		player.setTileId(hoverTileId);
         		
         		// Check if player is on winner tile :
-        		/*for(String winnerTileId : player.getIdWinningTiles()) {
+        		for(String winnerTileId : player.getIdWinningTiles()) {
         			System.out.println(winnerTileId);
         			// If player1 is on a winner tile :
         			if(player.getTileId().equals(winnerTileId)) {
@@ -1323,7 +1323,7 @@ public class Board extends Region {
         			else {
         				player.setWinner(false);
         			}
-        		}*/
+        		}
         		// Switch turns.
         		System.out.println("WAITING ANOTHER CLICK...");
         		System.out.println();

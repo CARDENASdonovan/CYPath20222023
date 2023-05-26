@@ -36,10 +36,7 @@ public class Main extends Application{
 		
 		// Demo show and impact adjacency list  
 		GridPane boardGrid = (GridPane) board.getChildrenUnmodifiable().get(0);
-		board.show("Barrier Horizontal 47");
-		board.show("Barrier Horizontal 56");
-		board.show("Barrier Vertical 52");
-		board.show("Barrier Vertical 53");
+		
 		
 		
 		//

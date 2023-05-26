@@ -69,16 +69,11 @@ public class Board extends Region {
 	
 	public void listPlayer() {
 		listPlayer = new ArrayList<Player>();
-		
-	
-		
+		hideAllBarrier();
 		for(int i = 0; i<this.ArrayConstantOfInitialPlayer.length;i++) {
 			removePlayerTile(ArrayConstantOfInitialPlayer[i]);
 			listPlayer.add(ArrayConstantOfInitialPlayer[i]);
 			this.removePlayerTile(listPlayer.get(i));
-	
-			
-			
 		}
 		
 		
@@ -748,7 +743,7 @@ public class Board extends Region {
 				}
 			}
 		}
-		// Case: there is no tile in the board grid which is omega sus.
+		// Case: there is no tile in the board grid.
 		// Player could not be added.
 		return(false);
 	}
@@ -1290,7 +1285,6 @@ public class Board extends Region {
 		String currentTile = null;
 		// Remove player from the board.
 		if(player.getTileId() == null) {
-			
 			currentTile = player.getIdStartTile() ;
 		}else {
 			currentTile = player.getTileId() ;

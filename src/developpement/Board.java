@@ -1356,14 +1356,14 @@ public class Board extends Region {
 	
 	public boolean testDFS(HashMap<String, ArrayList<String>> newAdjacencyList) {
 		int nbCanWin = 0;
-		for(String winnerTileId1: winnerTiles1) {//for each winner tiles, if it is connected to the player, then he can still win
+		for(String winnerTileId1 : player1.getIdWinningTiles()) {//for each winner tiles, if it is connected to the player, then he can still win
 			if(areConnected(newAdjacencyList, player1.getTileId(), winnerTileId1)) {
 				nbCanWin++;
 				break;
 			}
 		}
 		//we repeat for each player (easier to do here than in a function because we use global variables
-		for(String winnerTileId2: winnerTiles2) {
+		for(String winnerTileId2: player2.getIdWinningTiles()) {
 			if(areConnected(newAdjacencyList, player2.getTileId(), winnerTileId2)) {
 				nbCanWin++;
 				break;
@@ -1371,14 +1371,14 @@ public class Board extends Region {
 		}
 			
 		if(nbPlayers == 4) {
-			for(String winnerTileId3: winnerTiles3) {
+			for(String winnerTileId3: player3.getIdWinningTiles()) {
 				if(areConnected(newAdjacencyList, player3.getTileId(), winnerTileId3)) {
 					nbCanWin++;
 					break;
 				}
 			}
 			
-			for(String winnerTileId4: winnerTiles4) {
+			for(String winnerTileId4: player4.getIdWinningTiles()) {
 				if(areConnected(newAdjacencyList, player4.getTileId(), winnerTileId4)) {
 					nbCanWin++;
 					break;
@@ -1388,8 +1388,8 @@ public class Board extends Region {
 		
 		if(nbCanWin == nbPlayers)
 			return true;
-		
-		return false;
+		else 
+			return false;
 	}
 	
 	

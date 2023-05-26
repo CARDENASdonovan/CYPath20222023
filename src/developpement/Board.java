@@ -1292,7 +1292,7 @@ public class Board extends Region {
 		
 			System.out.println();
 			System.out.println();
-    		System.out.println("Positionnnnnn: " +  currentTile);
+    		System.out.println("Position: " +  currentTile);
 			System.out.println("Available tiles: " + availableTiles( currentTile));
 			System.out.println();
 			
@@ -1386,7 +1386,37 @@ public class Board extends Region {
 			return false;
 	}
 	
+	public boolean isAdjacentBarrier(Barrier barrierPlayed, Barrier barrierToPlay) {
+		if (barrierPlayed instanceof BarrierHorizontal) {
+			int barrierHNb = Integer.parseInt(barrierPlayed.getId().substring(8));
+			int barrierToPlayNb = Integer.parseInt(barrierToPlay.getId().substring(8));
+			if (barrierToPlayNb == barrierHNb+1) {
+				return true;
+			}
+			else if (barrierToPlayNb == barrierHNb-1) {
+				return true;
+			}
+			else 
+				return false;
+		}
+		else if (barrierPlayed instanceof BarrierVertical) {
+			int barrierVNb = Integer.parseInt(barrierPlayed.getId().substring(8));
+			int barrierToPlayNb = Integer.parseInt(barrierToPlay.getId().substring(8));
+			if (barrierToPlayNb == barrierVNb+1) {
+				return true;
+			}
+			else if (barrierToPlayNb == barrierVNb-1) {
+				return true;
+			}
+			else 
+				return false;
+		}
+		
+		else
+			System.out.println("Erreur, la barrière n'existe pas");
+			return false;
 	
+	}
 	
 	public HashMap<String, ArrayList<String>> removeTileLink(HashMap<String, ArrayList<String>> newAdjacencyList,String tileA,String tileB){
 		newAdjacencyList.get(tileA).remove(tileB);

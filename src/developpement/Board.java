@@ -1386,36 +1386,43 @@ public class Board extends Region {
 			return false;
 	}
 	
-	public boolean isAdjacentBarrier(Barrier barrierPlayed, Barrier barrierToPlay) {
-		if (barrierPlayed instanceof BarrierHorizontal) {
-			int barrierHNb = Integer.parseInt(barrierPlayed.getId().substring(8));
-			int barrierToPlayNb = Integer.parseInt(barrierToPlay.getId().substring(8));
-			if (barrierToPlayNb == barrierHNb+1) {
-				return true;
+	public boolean areBarriersPlayable(Barrier barrierPlayed, Barrier barrierToPlay) {
+		//test if one of the barrier is already active
+		if (barrierPlayed.getOpacity() == 0 && barrierToPlay.getOpacity()==0)
+		{
+			//test if barriers are adjacent
+			if (barrierPlayed instanceof BarrierHorizontal) {
+				int barrierHNb = Integer.parseInt(barrierPlayed.getId().substring(8));
+				int barrierToPlayNb = Integer.parseInt(barrierToPlay.getId().substring(8));
+				if (barrierToPlayNb == barrierHNb+1) {
+					if (barrierHNb%9 != 0)
+						return true;
+				}
+				else if (barrierToPlayNb == barrierHNb-1) {
+					if (barrierToPlayNb%9 != 0)
+						return true;
+				}
+				else 
+					return false;
 			}
-			else if (barrierToPlayNb == barrierHNb-1) {
-				return true;
+			else if (barrierPlayed instanceof BarrierVertical) {
+				int barrierVNb = Integer.parseInt(barrierPlayed.getId().substring(8));
+				int barrierToPlayNb = Integer.parseInt(barrierToPlay.getId().substring(8));
+				if (barrierToPlayNb == barrierVNb+10) {
+					return true;
+				}
+				else if (barrierToPlayNb == barrierVNb-10) {
+					return true;
+				}
+				else 
+					return false;
 			}
-			else 
+			
+			else
+				System.out.println("Erreur, la barrière n'existe pas");
 				return false;
 		}
-		else if (barrierPlayed instanceof BarrierVertical) {
-			int barrierVNb = Integer.parseInt(barrierPlayed.getId().substring(8));
-			int barrierToPlayNb = Integer.parseInt(barrierToPlay.getId().substring(8));
-			if (barrierToPlayNb == barrierVNb+1) {
-				return true;
-			}
-			else if (barrierToPlayNb == barrierVNb-1) {
-				return true;
-			}
-			else 
-				return false;
-		}
-		
-		else
-			System.out.println("Erreur, la barrière n'existe pas");
-			return false;
-	
+		return false;
 	}
 	
 	public HashMap<String, ArrayList<String>> removeTileLink(HashMap<String, ArrayList<String>> newAdjacencyList,String tileA,String tileB){

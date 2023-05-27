@@ -1,6 +1,7 @@
 package developpement;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -14,15 +15,14 @@ import javafx.scene.text.Text;
  */
 
 public class Player extends Circle {
-	private int playerNumber;
+	HashMap<String, Color> mapPlayerColor = new HashMap<>();
 
-	private String currentTileId;
-	private String idStartTile;
-	
+	private int playerNumber;
 	private boolean winner = false;
 	private boolean isTurn = false;
-	
 	private ArrayList<String> idWinningTiles = new ArrayList<>();
+	private String idStartTile;
+	private String currentTileId;
 	/**
 	 * This method is the constructor of the Player class. It assigns a start tile and a list of winning tiles to the player depending on the player number.
 	 * @param int playerNumber
@@ -31,68 +31,64 @@ public class Player extends Circle {
 	 * @param Color color
 	 */
 
-	public Player(String playerName, double radius, Color color) {
-		super(-1000,-1000, radius);
-		playerNumber = Integer.parseInt(playerName.substring(6));
-		System.out.println(playerName+playerNumber);
+	public Player(String playerName, boolean isTurn) {
+		super(-1000,-1000, 25);
+		super.setId(playerName);
+
+		mapPlayerColor.put("Player 1", Color.RED);
+		mapPlayerColor.put("Player 2", Color.LIGHTBLUE);
+		mapPlayerColor.put("Player 3", Color.YELLOW);
+		mapPlayerColor.put("Player 4", Color.LIGHTGREEN);
+		
+		super.setFill(mapPlayerColor.get(playerName));
+		
+		playerNumber = Integer.parseInt(playerName.substring(7));
+		System.out.println(playerNumber);
 		this.setPlayerNumber(playerNumber);
+		
 		String t = "Tile ";
 		switch(playerNumber) {
-		case 1 : for (int i=1; i<=9; i++) {
-			idWinningTiles.add(t+(72+i));
 			
-			
-		}
-		this.setIdStartTiles("Tile 5");
-		this.setTileId("Tile 5");
-		System.out.println(getIdStartTile());
-		 break;
-		
-		
-		case 2 : for(int i=1; i<=9; i++) {
-			idWinningTiles.add(t+i);
-			
-	
-		}
-		this.setIdStartTiles("Tile 77");
-		this.setTileId("Tile 77");
-		System.out.println(getIdStartTile());
-		 break;
-		
-		case 3 : for (int i=0; i<=8; i++) {
-			idWinningTiles.add(t+(1+i*9));
-			
-		}
-		this.setIdStartTiles("Tile 45");
-		this.setTileId("Tile 45");
-		System.out.println(getIdStartTile());
-		 break;
-		
-		case 4 : 
-			for (int i=1; i<=9; i++) {
-				idWinningTiles.add(t+(i*9));
-			}
-			this.setIdStartTiles("Tile 37");
-			this.setTileId("Tile 37");
-			System.out.println(getIdStartTile());
+			case 1 : 
+				for (int i=1; i<=9; i++) {
+					idWinningTiles.add(t+(72+i));		
+				}
+				this.setIdStartTiles("Tile 5");
+				this.setCurrentTileId("Tile 5");
+				this.setTurn(isTurn);
 			break;
-		 
-		 default:
-			    break;
-		
+			
+			case 2 :
+				for(int i=1; i<=9; i++) {
+					idWinningTiles.add(t+i);
+				}
+				this.setIdStartTiles("Tile 77");
+				this.setCurrentTileId("Tile 77");
+				this.setTurn(isTurn);
+			 break;
+			
+			case 3 :
+				for (int i=0; i<=8; i++) {
+					idWinningTiles.add(t+(1+i*9));
+				}
+				this.setIdStartTiles("Tile 45");
+				this.setCurrentTileId("Tile 45");
+				this.setTurn(isTurn);
+			break;
+			
+			case 4 : 
+				for (int i=1; i<=9; i++) {
+					idWinningTiles.add(t+(i*9));
+				}
+				this.setIdStartTiles("Tile 37");
+				this.setCurrentTileId("Tile 37");
+				this.setTurn(isTurn);
+			break;
+			 
+			default:
+			break;
 		}
-		
-		super.setId(playerName);
-		super.setFill(color);
 	}
-	
-	/*public Player(String playerName, double radius, Color color) {
-		super(0,0, radius);
-		this.playerName = playerName;
-		super.setId("Player " + playerName);
-		super.setFill(color);		
-	}*/
-
 	
 	/**
 	 * This method is used to get the number of a player.
@@ -143,15 +139,13 @@ public class Player extends Circle {
 	}
 	
 	public String getCurrentTileId() {
-		return this.currentTileId;
+		return(this.currentTileId);
 	}
 	
-	public void setTileId(String currentTileId) {
+	public void setCurrentTileId(String currentTileId) {
 		this.currentTileId = currentTileId;
 	}
-	
-	
-	
+
 	public boolean isWinner() {
 		return winner;
 	}
@@ -167,7 +161,6 @@ public class Player extends Circle {
 	public void setTurn(boolean isTurn) {
 		this.isTurn = isTurn;
 	}
-
 
 	@Override
 	/**
@@ -208,6 +201,3 @@ public class Player extends Circle {
 
 	
 }
-
-
-

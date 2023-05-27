@@ -39,7 +39,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
-
 /**
  * The Board class represents the game board with everything on it : tiles, barriers and players. It also has methods to to change the visibility of every object, to move a player on the board, to place barriers and to check if a path to win exists for each player.
  * An adjacency list is added as an attribute to the class in order to be used in the methods that search for a path.
@@ -49,10 +48,10 @@ import javafx.scene.text.Font;
 public class Board extends Region {	
 	private HashMap<String, ArrayList<String>> adjacencyList;
 	private String hoverTileId = "";
-	private Player player1 = new Player("Player1", 20, Color.RED);
-	private Player player2 = new Player("Player2", 20, Color.BLUE);
-	private Player player3 = new Player("Player3", 20, Color.YELLOW);
-	private Player player4 = new Player("Player4", 20, Color.GREEN);
+	private Player player1 = new Player("Player 1", false);
+	private Player player2 = new Player("Player 2", false);
+	private Player player3 = new Player("Player 3", false);
+	private Player player4 = new Player("Player 4", false);
 
 	private int numberOfPlayers = 0; 
 
@@ -70,8 +69,6 @@ public class Board extends Region {
 	private final Player[] ArrayConstantOfInitialPlayer = {player1,player2,player3,player4};
 	//tableau de joueurs actif dans la partie
 	private ArrayList<Player> listPlayer = new ArrayList<Player>();
-
-
 
 	public void resetGame(ChoiceBox<String> nbPlayer) {
 		String nbPlayers = nbPlayer.getValue();
@@ -92,12 +89,15 @@ public class Board extends Region {
 			}else {
 				ArrayConstantOfInitialPlayer[i].setTurn(false);
 			}	
-			ArrayConstantOfInitialPlayer[i].setTileId(ArrayConstantOfInitialPlayer[i].getIdStartTile());
+			ArrayConstantOfInitialPlayer[i].setCurrentTileId(ArrayConstantOfInitialPlayer[i].getIdStartTile());
 			this.addPlayerTile(Integer.parseInt(listPlayer.get(i).getIdStartTile().substring(5)), listPlayer.get(i));
 		}
 	}
 
 
+	public void initiateGameFromSave(int nbPlayer, ArrayList<Player> listPlayer) {
+
+	}
 
 
 	/**
@@ -983,9 +983,7 @@ public class Board extends Region {
 	public boolean movePlayerTile(int newTileNumber, Player player) {
 		// Get and save player attributes for later.
 		String playerName = player.getId();
-		Circle playerShape = (Circle) player;
-		Color playerColor = (Color) playerShape.getFill();
-		double playerRadius = player.getRadius();
+		boolean playerTurn = player.isTurn();
 
 		String currentTileId;
 		// Remove player from the board.
@@ -999,7 +997,7 @@ public class Board extends Region {
 		if(canMove(currentTileId,"Tile " + newTileNumber)) {
 			if(removePlayerTile(player) == true) {
 				// player instance was deleted so we have to construct it again... 
-				player = new Player(playerName, playerRadius, playerColor);
+				player = new Player(playerName, playerTurn);
 
 				// Add player on the new tile.
 				if(addPlayerTile(newTileNumber, player) == true){
@@ -1340,14 +1338,14 @@ public class Board extends Region {
 		System.out.println();
 		System.out.println();
 		System.out.println("Position: " +  currentTile);
-		System.out.println("Available tiles: " + availableTiles( currentTile));
+		System.out.println("Available tiles: " + availableTiles(currentTile));
 		System.out.println();
 
 		// If clicked tile is accessible :
 		// Move
 		if(movePlayerTile(tileNumber,player)) {
 			//set
-			player.setTileId(hoverTileId);
+			player.setCurrentTileId(hoverTileId);
 
 			// Check if player is on winner tile :
 			for(String winnerTileId : player.getIdWinningTiles()) {
@@ -1393,10 +1391,151 @@ public class Board extends Region {
 		return newAdjacencyList;
 	}
 
-	public void saveGame(HashMap<String, ArrayList<String>> adjacencyList, int numberOfPlayers, Player player1, Player player2, Player player3, Player player4) {
-		// Creating an instance of file
-		Path path = Paths.get("C:\\Users\\CYTech Student\\eclipse-workspace\\TestText2\\src\\saved.txt");
 
+	public void readSavedGame(String path) throws FileNotFoundException, IllegalArgumentException {
+		HashMap<String, ArrayList<String>> adjacencyListClone = new HashMap<String, ArrayList<String>>();
+		ArrayList<String> savedText = new ArrayList<>();
+		try {
+			Scanner read;
+
+			read = new Scanner (new File(path));
+			read.useDelimiter(";\\R");
+			String listeAdjString, nbPlayersString,
+			player1Name, player1CurrentTile, player1TurnString, 
+			player2Name, player2CurrentTile, player2TurnString,
+			player3Name, player3CurrentTile, player3TurnString,
+			player4Name, player4CurrentTile, player4TurnString;
+			try {
+				if(!read.hasNext()) {
+					System.out.println("Text file is empty");
+					System.out.println();
+					System.exit(0);
+				}
+				while(read.hasNext()) {
+					// Read first text string in file until ";\\R" 
+					listeAdjString = read.next();
+					listeAdjString = listeAdjString.replace("[", "");
+					listeAdjString = listeAdjString.replace("]", "");
+
+					Map<String, String> map = Splitter.on("\\Z").withKeyValueSeparator("=").split(listeAdjString);
+
+					String[] strSplit = new String[0];
+
+					//map.remove("");
+
+					for(Entry<String, String> pair : map.entrySet()) {
+
+						String key = pair.getKey();
+
+						String value = map.get(pair.getKey());
+
+						strSplit = value.split(",");
+
+						ArrayList<String> strList = new ArrayList<String>(Arrays.asList(strSplit));
+
+						adjacencyListClone.put(key, strList);
+					}
+					System.out.println("listAdj: " + adjacencyListClone);
+					System.out.println();
+
+					setAdjacencyList(adjacencyListClone);
+
+					nbPlayersString = read.next();
+					savedText.add(nbPlayersString);
+
+					player1Name = read.next();
+					savedText.add(player1Name);
+
+					player1CurrentTile = read.next();
+					savedText.add(player1CurrentTile);
+
+					player1TurnString = read.next();
+					savedText.add(player1TurnString);
+
+					System.out.println("player1Name " + player1Name + " player1CurrentTile " + player1CurrentTile + " player1Turn " + player1TurnString);
+
+					player2Name = read.next();
+					savedText.add(player2Name);
+
+					player2CurrentTile = read.next();
+					savedText.add(player2CurrentTile);
+
+					player2TurnString = read.next();
+					savedText.add(player2TurnString);
+
+					System.out.println("player2Name " + player2Name + " player2CurrentTile " + player2CurrentTile + " player2Turn " + player2TurnString);
+
+					player3Name = read.next();
+					savedText.add(player3Name);
+
+					player3CurrentTile = read.next();
+					savedText.add(player3CurrentTile);
+
+					player3TurnString = read.next();
+					savedText.add(player3TurnString);
+
+					System.out.println("player3Name " + player3Name + " player3CurrentTile " + player3CurrentTile + " player3Turn " + player3TurnString);
+
+					player4Name = read.next();
+					savedText.add(player4Name);
+
+					player4CurrentTile = read.next();
+					savedText.add(player4CurrentTile);
+
+					player4TurnString = read.next();
+					savedText.add(player4TurnString);
+
+					System.out.println("player4Name " + player4Name + " player4CurrentTile " + player4CurrentTile + " player4Turn " + player4TurnString);
+					System.out.println();
+					System.out.println("nbPlayer: " + Integer.parseInt(nbPlayersString));
+					System.out.println();
+
+					int startPlayer1Data = 1;
+					Boolean player1Turn = Boolean.valueOf(savedText.get(startPlayer1Data+2));
+					Player player1 = new Player(savedText.get(startPlayer1Data), player1Turn);
+					player1.setCurrentTileId(savedText.get(startPlayer1Data+1));
+
+					int startPlayer2Data = 1;
+					Boolean player2Turn = Boolean.valueOf(savedText.get(startPlayer2Data+2));
+					Player player2 = new Player(savedText.get(startPlayer2Data), player2Turn);
+					player2.setCurrentTileId(savedText.get(startPlayer2Data+1));
+
+					int startPlayer3Data = 1;
+					Boolean player3Turn = Boolean.valueOf(savedText.get(startPlayer3Data+2));
+					Player player3 = new Player(savedText.get(startPlayer3Data), player3Turn);
+					player3.setCurrentTileId(savedText.get(startPlayer3Data+1));
+
+					int startPlayer4Data = 1;
+					Boolean player4Turn = Boolean.valueOf(savedText.get(startPlayer4Data+2));
+					Player player4 = new Player(savedText.get(startPlayer4Data), player4Turn);
+					player4.setCurrentTileId(savedText.get(startPlayer4Data+1));
+
+					initiateGameFromSave(startPlayer4Data, listPlayer);
+				}
+			}
+			catch(NoSuchElementException e) {
+				System.out.println();
+				System.out.println("Wrong amount of strings to read");
+				System.out.println();
+				return;
+			}
+		}
+		catch(FileNotFoundException e){
+			System.out.println("Text file not found");
+			System.out.println();
+			return;
+		}
+	}
+
+	public void saveGame(Player player1, Player player2, Player player3, Player player4) {
+		//Creating an instance of file
+		Path path = Paths.get("H:\\Documents\\GitHub\\CYPath20222023\\save.txt");
+
+		HashMap<String, ArrayList<String>> adjacencyList = new HashMap<String, ArrayList<String>>();
+		adjacencyList = getAdjacencyList();
+		
+		int numberOfPlayers = getNumberOfPlayers();
+		
 		// Custom string as an input
 		String adjacencyListString = adjacencyList.toString(), numberOfPlayersString,
 				player1Name, player1CurrentTile, player1TurnString,
@@ -1452,8 +1591,12 @@ public class Board extends Region {
 			toSave += str + breakLine;
 		}
 
+		//System.out.println(toSave);
+
 		// Try block to check for exceptions
 		try {
+			// Now calling Files.writeString() method
+			// with path , content & standard charsets
 			Files.writeString(path, toSave, StandardCharsets.UTF_8);
 		}
 
@@ -1465,116 +1608,12 @@ public class Board extends Region {
 		}
 	}
 
-
-	public ArrayList<String> readSavedGame(String path) throws FileNotFoundException, IllegalArgumentException {
-		ArrayList<String> savedText = new ArrayList<>();
-		try {
-			Scanner read;
-
-			read = new Scanner (new File(path));
-			read.useDelimiter(";\\R");
-			String listeAdjString, nbPlayersString,
-			player1Name, player1CurrentTile, player1TurnString, 
-			player2Name, player2CurrentTile, player2TurnString,
-			player3Name, player3CurrentTile, player3TurnString,
-			player4Name, player4CurrentTile, player4TurnString;
-			try {
-				if(!read.hasNext()) {
-					System.out.println("Text file is empty");
-					System.out.println();
-					System.exit(0);
-				}
-				while(read.hasNext()) {
-					// Read first text string in file until ";\\R" 
-					listeAdjString = read.next();
-					listeAdjString = listeAdjString.replace("[", "");
-					listeAdjString = listeAdjString.replace("]", "");
-
-					Map<String, String> map = Splitter.on("\\Z").withKeyValueSeparator("=").split(listeAdjString);
-
-					String[] strSplit = new String[0];
-
-					//map.remove("");
-
-					for(Entry<String, String> pair : map.entrySet()) {
-
-						String key = pair.getKey();
-
-						String value = map.get(pair.getKey());
-
-						strSplit = value.split(",");
-
-						ArrayList<String> strList = new ArrayList<String>(Arrays.asList(strSplit));
-
-						adjacencyList.put(key, strList);
-					}
-					System.out.println("listAdj: " + adjacencyList);
-					System.out.println();
-
-					nbPlayersString = read.next();
-					savedText.add(nbPlayersString);
-
-					player1Name = read.next();
-					savedText.add(player1Name);
-
-					player1CurrentTile = read.next();
-					savedText.add(player1CurrentTile);
-
-					player1TurnString = read.next();
-					savedText.add(player1TurnString);
-
-					System.out.println("player1Name " + player1Name + " player1CurrentTile " + player1CurrentTile + " player1Turn " + player1TurnString);
-
-					player2Name = read.next();
-					savedText.add(player2Name);
-
-					player2CurrentTile = read.next();
-					savedText.add(player2CurrentTile);
-
-					player2TurnString = read.next();
-					savedText.add(player2TurnString);
-
-					System.out.println("player2Name " + player2Name + " player2CurrentTile " + player2CurrentTile + " player2Turn " + player2TurnString);
-
-					player3Name = read.next();
-					savedText.add(player3Name);
-
-					player3CurrentTile = read.next();
-					savedText.add(player3CurrentTile);
-
-					player3TurnString = read.next();
-					savedText.add(player3TurnString);
-
-					System.out.println("player3Name " + player3Name + " player3CurrentTile " + player3CurrentTile + " player3Turn " + player3TurnString);
-
-					player4Name = read.next();
-					savedText.add(player4Name);
-
-					player4CurrentTile = read.next();
-					savedText.add(player4CurrentTile);
-
-					player4TurnString = read.next();
-					savedText.add(player4TurnString);
-
-					System.out.println("player4Name " + player4Name + " player4CurrentTile " + player4CurrentTile + " player4Turn " + player4TurnString);
-					System.out.println();
-					System.out.println("nbPlayer: " + Integer.parseInt(nbPlayersString));
-					System.out.println();
-					return(savedText);
-				}
-				return(savedText);
-			}
-			catch(NoSuchElementException e) {
-				System.out.println();
-				System.out.println("Wrong amount of strings to read");
-				System.out.println();
-				return(savedText);
-			}
-		}
-		catch(FileNotFoundException e){
-			System.out.println("Text file not found");
-			System.out.println();
-			return(savedText);
-		}
+	public int getNumberOfPlayers() {
+		return(this.numberOfPlayers);
 	}
+	
+	public void setNumberOfPlayers(int numberOfplayers) {
+		this.numberOfPlayers = numberOfplayers;
+	}
+	
 }

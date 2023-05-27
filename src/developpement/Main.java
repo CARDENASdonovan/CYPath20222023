@@ -4,6 +4,9 @@ package developpement;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.google.common.base.Splitter;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -24,7 +27,7 @@ public class Main extends Application{
 		
 		root.setId("root");
 		
-		Board board = new Board(300,10,9,9,2);
+		Board board = new Board(300,10,9,9);
 		root.getChildren().add(board);
 		
 		
@@ -46,7 +49,7 @@ public class Main extends Application{
 		Button button = new Button("Select the number of players");
 		
 		button.setOnAction(event ->{
-			board.getNbPlayers(nbPlayer);
+			board.resetGame(nbPlayer);
 		});
 		
 		
@@ -65,9 +68,13 @@ public class Main extends Application{
 		
 		board.updateAdjacencyList(boardGrid, true);
 		
+		HashMap<String, ArrayList<String>> adjL = board.getAdjacencyList();
+		String adj = adjL.toString();
+		adj = adj.replace("]","]\\Z");
+		adj = adj.substring(0,adj.length()-3);
+		System.out.println("adj: " + adj);
 		
-		
-		Scene scene = new Scene(root, 1500, 750);
+		Scene scene = new Scene(root, 1200, 750);
 		
         primaryStage.setScene(scene);
         primaryStage.show();

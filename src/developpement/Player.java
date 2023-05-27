@@ -15,12 +15,14 @@ import javafx.scene.text.Text;
 
 public class Player extends Circle {
 	private int playerNumber;
-	private boolean winner = false;
-	private boolean isTurn = false;
-	private ArrayList<String> idWinningTiles = new ArrayList<>();
-	private String tileId;
+
+	private String currentTileId;
 	private String idStartTile;
 	
+	private boolean winner = false;
+	private boolean isTurn = false;
+	
+	private ArrayList<String> idWinningTiles = new ArrayList<>();
 	/**
 	 * This method is the constructor of the Player class. It assigns a start tile and a list of winning tiles to the player depending on the player number.
 	 * @param int playerNumber
@@ -34,7 +36,7 @@ public class Player extends Circle {
 		playerNumber = Integer.parseInt(playerName.substring(6));
 		System.out.println(playerName+playerNumber);
 		this.setPlayerNumber(playerNumber);
-		String t = "Tile";
+		String t = "Tile ";
 		switch(playerNumber) {
 		case 1 : for (int i=1; i<=9; i++) {
 			idWinningTiles.add(t+(72+i));
@@ -140,12 +142,12 @@ public class Player extends Circle {
 		this.idStartTile = idStartTile;
 	}
 	
-	public String getTileId() {
-		return this.tileId;
+	public String getCurrentTileId() {
+		return this.currentTileId;
 	}
 	
-	public void setTileId(String tileId) {
-		this.tileId=tileId;
+	public void setTileId(String currentTileId) {
+		this.currentTileId = currentTileId;
 	}
 	
 	
@@ -173,7 +175,7 @@ public class Player extends Circle {
 	 * @return a String to print
 	 */
 	public String toString() {
-		return("Player idNumber: " + getId() + "\n" + "CenterX: " + getCenterX() + "\n" + "CenterY: " + getCenterY() + "\n" + "Radius: " + getRadius() + "\n" +"*Current Tile : " + getTileId() + "\n" + "startTile"+ getIdStartTile()+".");
+		return("Player idNumber: " + getId() + "\n" + "CenterX: " + getCenterX() + "\n" + "CenterY: " + getCenterY() + "\n" + "Radius: " + getRadius() + "\n" +"*Current Tile : " + getCurrentTileId() + "\n" + "startTile"+ getIdStartTile()+".");
 	}
 	
 	@Override

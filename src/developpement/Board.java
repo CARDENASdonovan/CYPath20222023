@@ -1131,6 +1131,14 @@ public class Board extends Region {
 		}
 
 	}
+	/**
+	 * This method is used to add an edge to the adjacencyList
+	 * @param adjacencyList
+	 * @param idEdge1
+	 * @param idEdge2
+	 * @param showConsoleText
+	 * @return A boolean true if the action happened and false if the Edge can't be added
+	 */
 
 	public boolean addEdge(HashMap<String, ArrayList<String>> adjacencyList, String idEdge1, String idEdge2, boolean showConsoleText) {
 		if(adjacencyList.containsKey(idEdge1)) {
@@ -1211,7 +1219,11 @@ public class Board extends Region {
 		}
 	}
 
-
+/**
+ * This method does a DFS starting from the startVertex Tile
+ * @param startVertex
+ * @return
+ */
 	public LinkedList<String> dfs(String startVertex) {
 		HashMap<String, ArrayList<String>> adjacencyList = getAdjacencyList();
 

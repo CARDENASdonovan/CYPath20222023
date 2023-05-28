@@ -138,26 +138,50 @@ public class Player extends Circle {
 		this.idStartTile = idStartTile;
 	}
 	
+	/**
+	 * This method is used to get the id of the current tile 
+	 * @return the id of the tile where the player is
+	 */
 	public String getCurrentTileId() {
 		return(this.currentTileId);
 	}
 	
+	/**
+	 * This method is used to set the Tile id for the player
+	 * @param String currentTileId
+	 */
 	public void setCurrentTileId(String currentTileId) {
 		this.currentTileId = currentTileId;
 	}
 
+	/**
+	 * This method is used to get a boolean telling if a player won or not
+	 * @return a boolean
+	 */
 	public boolean isWinner() {
 		return winner;
 	}
+	/**
+	 * This method is used to set the winner boolean
+	 * @param winner
+	 */
 
 	public void setWinner(boolean winner) {
 		this.winner = winner;
 	}
 
+	/**
+	 * This method is used to get the argument isTurn of the player
+	 * @return a boolean saying if it's the player's turn or not
+	 */
 	public boolean isTurn() {
 		return isTurn;
 	}
 
+	/**
+	 * This method is used to set the isTurn boolean
+	 * @param isTurn
+	 */
 	public void setTurn(boolean isTurn) {
 		this.isTurn = isTurn;
 	}

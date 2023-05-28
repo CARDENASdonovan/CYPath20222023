@@ -2,9 +2,19 @@ package developpement;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 import com.google.common.base.Splitter;
 
@@ -64,11 +74,15 @@ public class Main extends Application{
 		buttonNewGame.setPrefWidth(height/3);
 		// Event.
 		buttonNewGame.setOnMouseClicked(event ->{
-			game(stage);
+			newGame(stage);
 		});
 		
 		Button buttonLoadGame = new Button("Load Game");
 		buttonLoadGame.setPrefWidth(height/3);
+		// Event.
+		buttonLoadGame.setOnMouseClicked(event ->{
+			//loadGame(stage);
+		});
 		
 		VBox buttonsVBox = new VBox(buttonNewGame, buttonLoadGame);
 		buttonsVBox.setAlignment(Pos.CENTER);
@@ -164,41 +178,88 @@ public class Main extends Application{
 		stage.show();
 	}
 	
-	public void game(Stage stage) {
-	// Create main view pane.
+	public void newGame(Stage stage) {
+		// Create main view pane.
 		GridPane gamePane = new GridPane();
 		gamePane.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
 		gamePane.setId("gamePane");
 		gamePane.setLayoutX(0);
 		gamePane.setLayoutY(0);
-	// Board.
-		Board board = new Board(10,10,9,9);
+		// Board.
+		Player player1 = new Player("Player 1", true);
+		Player player2 = new Player("Player 2", false);
+		Player player3 = new Player("Player 3", false);
+		Player player4 = new Player("Player 4", false);
+		
+		Board board = new Board(10,10,9,9,player1,player2,player3,player4);
 		VBox boardBox = new VBox(board);
-	// ChoiceBox.
+		// ChoiceBox.
 		ChoiceBox<String> nbPlayer = new ChoiceBox<>();
 		String[] players = {"2","4"};
 		nbPlayer.getItems().addAll(players);
-	// Button.
+		// Button.
 		Button button = new Button("Select the number of players");
-		
+
 		button.setOnAction(event ->{
 			board.resetBoard(nbPlayer);
 		});
-		
+
 		VBox nbPlayerBox = new VBox(nbPlayer, button);
 		gamePane.add(boardBox, 0, 0);
 		gamePane.add(nbPlayerBox, 1, 0);
-		
+
 		GridPane boardGrid = (GridPane) board.getChildrenUnmodifiable().get(0);
 
 		board.updateAdjacencyList(boardGrid);
-		
+
 		Scene mainMenuScene = new Scene(gamePane, 1000, 750);
 		stage.setX(250);
 		stage.setY(20);
 		stage.setScene(mainMenuScene);
 		stage.show();
 	}
+	
+	public void loadGame(Stage stage) {
+		// Create main view pane.
+		GridPane gamePane = new GridPane();
+		gamePane.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
+		gamePane.setId("gamePane");
+		gamePane.setLayoutX(0);
+		gamePane.setLayoutY(0);
+		// Board.
+		Player player1 = new Player("Player 1", true);
+		Player player2 = new Player("Player 2", false);
+		Player player3 = new Player("Player 3", false);
+		Player player4 = new Player("Player 4", false);
+		
+		Board board = new Board(10,10,9,9,player1,player2,player3,player4);
+		VBox boardBox = new VBox(board);
+		// ChoiceBox.
+		ChoiceBox<String> nbPlayer = new ChoiceBox<>();
+		String[] players = {"2","4"};
+		nbPlayer.getItems().addAll(players);
+		// Button.
+		Button button = new Button("Select the number of players");
+
+		button.setOnAction(event ->{
+			board.resetBoard(nbPlayer);
+		});
+
+		VBox nbPlayerBox = new VBox(nbPlayer, button);
+		gamePane.add(boardBox, 0, 0);
+		gamePane.add(nbPlayerBox, 1, 0);
+
+		GridPane boardGrid = (GridPane) board.getChildrenUnmodifiable().get(0);
+
+		board.updateAdjacencyList(boardGrid);
+
+		Scene mainMenuScene = new Scene(gamePane, 1000, 750);
+		stage.setX(250);
+		stage.setY(20);
+		stage.setScene(mainMenuScene);
+		stage.show();
+	}
+	
 	
 	
     /**

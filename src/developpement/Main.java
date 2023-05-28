@@ -214,13 +214,14 @@ public class Main extends Application{
 			board.resetBoard(nbPlayer);
 		});
 		
-		Button buttonLoad = new Button("Select the number of players");
+		Button buttonLoad = new Button("Save game");
 
 		buttonLoad.setOnAction(event ->{
 			board.saveGame(board.getPlayer1(), board.getPlayer2(), board.getPlayer3(), board.getPlayer4());
 		});
 		
 		VBox nbPlayerBox = new VBox(nbPlayer, buttonReset, buttonLoad);
+		nbPlayerBox.setSpacing(10.0);
 		gamePane.add(boardBox, 0, 0);
 		gamePane.add(nbPlayerBox, 1, 0);
 
@@ -281,13 +282,12 @@ public class Main extends Application{
 		board.setPlayers(newPlayer1, newPlayer2, newPlayer3, newPlayer4);
 		board.addPlayerTile(Integer.parseInt(board.listPlayer.get(0).getCurrentTileId().substring(5)), player1);
 		board.addPlayerTile(Integer.parseInt(board.listPlayer.get(1).getCurrentTileId().substring(5)), player2);
-		board.addPlayerTile(Integer.parseInt(board.listPlayer.get(2).getCurrentTileId().substring(5)), player3);
-		board.addPlayerTile(Integer.parseInt(board.listPlayer.get(3).getCurrentTileId().substring(5)), player4);
-
-		if(!board.testDFS()) {
-			System.exit(0);
-		}
 		
+		if(numberOfPlayers == 4) {
+			board.addPlayerTile(Integer.parseInt(board.listPlayer.get(2).getCurrentTileId().substring(5)), player3);
+			board.addPlayerTile(Integer.parseInt(board.listPlayer.get(3).getCurrentTileId().substring(5)), player4);
+		}
+
 		VBox boardBox = new VBox(board);
 		// ChoiceBox.
 		ChoiceBox<String> nbPlayer = new ChoiceBox<>();
@@ -300,13 +300,14 @@ public class Main extends Application{
 			board.resetBoard(nbPlayer);
 		});
 
-		Button buttonLoad = new Button("Select the number of players");
+		Button buttonLoad = new Button("Save Game");
 
 		buttonLoad.setOnAction(event ->{
 			board.saveGame(board.getPlayer1(), board.getPlayer2(), board.getPlayer3(), board.getPlayer4());
 		});
 		
 		VBox nbPlayerBox = new VBox(nbPlayer, buttonReset, buttonLoad);
+		nbPlayerBox.setSpacing(10.0);
 		gamePane.add(boardBox, 0, 0);
 		gamePane.add(nbPlayerBox, 1, 0);
 

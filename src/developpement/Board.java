@@ -1644,7 +1644,10 @@ public class Board extends Region {
 
 		adjacencyListString = adjacencyListString.replace("{", "");
 		adjacencyListString = adjacencyListString.replace("}", "");
-
+		adjacencyListString = adjacencyListString.replace("], ", "]\\Z");
+		adjacencyListString = adjacencyListString.replace("\\Z;", ";");
+		
+		
 		System.out.println(adjacencyListString);
 
 		@SuppressWarnings("removal")

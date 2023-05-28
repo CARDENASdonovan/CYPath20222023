@@ -43,7 +43,6 @@ public class Player extends Circle {
 		super.setFill(mapPlayerColor.get(playerName));
 		
 		playerNumber = Integer.parseInt(playerName.substring(7));
-		System.out.println(playerNumber);
 		this.setPlayerNumber(playerNumber);
 		
 		String t = "Tile ";

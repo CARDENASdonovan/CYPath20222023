@@ -79,6 +79,10 @@ public class Board extends Region {
 	private int temporaryBarrierHorizontalNumber = 0;
 	private int temporaryBarrierVerticalNumber = 0;
 
+	private boolean needSecondClickToJump = false;
+	private String availableTileJump1 = "";
+	private String availableTileJump2 = "";
+	
 	private String temporaryBarrierId = "";
 
 	//variable intermediaire qui sert à stocker tous les joueurs, tableau de joueurs
@@ -244,7 +248,7 @@ public class Board extends Region {
 								}
 							}
 							else {
-								if(!hoverBoolean && barrierHorizontal.getFill() != barrierHorizontalColor && barrierHorizontal.getFill() != temporaryBarrierColor) {
+								if(!hoverBoolean && barrierHorizontal.getFill() != barrierHorizontalColor && barrierHorizontal.getFill() != temporaryBarrierColor && barrierHorizontal.getFill() != Color.BLACK)  {
 									barrierHorizontal.setOpacity(0);
 								}
 							}
@@ -261,11 +265,11 @@ public class Board extends Region {
 									// If game has started
 									if(numberOfPlayers >= 2) {
 										// If a horizontal barrier was not clicked before :
-										if(needSecondBarrierHorizontal == false && needSecondBarrierVertical == false) {
+										if(needSecondBarrierHorizontal == false && needSecondBarrierVertical == false && needSecondClickToJump == false) {
 											// Get clicked barrier NUMBER.
 											temporaryBarrierHorizontalNumber = Integer.parseInt(barrierHorizontal.getId().substring(19));
 											// If the barrier is not active (red), temporarily selected (yellow) or hovered (gray) : 
-											if(barrierHorizontal.getFill() != barrierHorizontalColor && barrierHorizontal.getFill() != temporaryBarrierColor && barrierHorizontal.getFill() != Color.WHITE) {
+											if(barrierHorizontal.getFill() != barrierHorizontalColor && barrierHorizontal.getFill() != temporaryBarrierColor && barrierHorizontal.getFill() != Color.WHITE && barrierHorizontal.getFill() != Color.BLACK) {
 												// If the temporary barrier has an adjacent barrier at it's right AND at it's left:
 												if(temporaryBarrierHorizontalNumber%9 - 1 != 0  && temporaryBarrierHorizontalNumber%9 != 0) {
 													// Temporarily activate this barrier to allow dfs with the potential new adjacency list. 
@@ -453,7 +457,7 @@ public class Board extends Region {
 								}
 							}
 							else {
-								if((!hoverBoolean && barrierVertical.getFill() != temporaryBarrierColor && barrierVertical.getFill() != barrierVerticalColor)) {
+								if((!hoverBoolean && barrierVertical.getFill() != temporaryBarrierColor && barrierVertical.getFill() != barrierVerticalColor && barrierVertical.getFill() != Color.BLACK)) {
 									barrierVertical.setOpacity(0);
 								}
 							}
@@ -474,11 +478,11 @@ public class Board extends Region {
 									// If game has started
 									if(numberOfPlayers >= 2) {
 										// If a vertical barrier was not clicked before :
-										if(needSecondBarrierVertical == false && needSecondBarrierHorizontal == false) {
+										if(needSecondBarrierVertical == false && needSecondBarrierHorizontal == false && needSecondClickToJump == false) {
 											// Get clicked barrier NUMBER.
 											temporaryBarrierVerticalNumber = Integer.parseInt(barrierVertical.getId().substring(17));
 											// If the barrier is not active (red), temporarily selected (yellow) or hovered (gray) : 
-											if(barrierVertical.getFill() != barrierVerticalColor && barrierVertical.getFill() != temporaryBarrierColor && barrierVertical.getFill() != Color.WHITE) {
+											if(barrierVertical.getFill() != barrierVerticalColor && barrierVertical.getFill() != temporaryBarrierColor && barrierVertical.getFill() != Color.WHITE && barrierVertical.getFill() != Color.BLACK) {
 												// If the temporary barrier has an adjacent barrier above AND under it:
 												if(temporaryBarrierVerticalNumber + 10 < 91 && temporaryBarrierVerticalNumber - 10 > 0) {
 													// Temporarily activate this barrier to allow dfs with the potential new adjacency list. 
@@ -669,7 +673,7 @@ public class Board extends Region {
 								tile.setFill(Color.CHOCOLATE);
 							}
 
-							if(!hoverBoolean && tile.getFill() != barrierHorizontalColor) {
+							if(!hoverBoolean && tile.getFill() != barrierHorizontalColor && tile.getFill() != Color.YELLOW) {
 								tile.setFill(tileColor);
 							}
 						});
@@ -700,14 +704,43 @@ public class Board extends Region {
 								// If remove is failed it means player was not exists in board.
 								// Add to update position.
 
-								if(needSecondBarrierHorizontal == false && needSecondBarrierVertical == false) {
+								if(needSecondBarrierHorizontal == false && needSecondBarrierVertical == false && needSecondClickToJump == false) {
 									for(Player playerTurn : listPlayer) {
 										if(playerTurn.isTurn()) {
 											playTurn(playerTurn,tileNumber);
 											break;
 										}
 									}
-								}	
+								}
+								else if(needSecondClickToJump == true) {
+									if(hoverTileId.equals(availableTileJump1)  || hoverTileId.equals(availableTileJump2)){
+										//check if it is in need of a second click to jump on a tiles
+										for(Player x : listPlayer) {
+											if(x.isTurn()) {
+												if(removePlayerTile(x) == true)
+												{
+													if(addPlayerTile(Integer.parseInt(hoverTileId.substring(5)), x)==true){
+														System.out.println("la tuile à été changé pour " +hoverTileId);
+														// Add player on the new tile.
+														x.setCurrentTileId(hoverTileId);
+														Tile tileX = (Tile) getNodeById(availableTileJump1);
+														tileX.setFill(tileColor);
+														Tile tileY = (Tile) getNodeById(availableTileJump2);
+														tileY.setFill(tileColor);
+														availableTileJump1="";
+														availableTileJump2="";
+														needSecondClickToJump=false;
+														changeTurn();
+														break;
+													}
+												}
+											}
+										}
+									}
+									else {
+										System.out.println("waiting for click on "+availableTileJump1+" or "+availableTileJump2);
+									}
+								}
 							}
 						});
 
@@ -824,8 +857,14 @@ public class Board extends Region {
 			if(node.getId().contains("Barrier") && !node.getId().contains("Text")){
 				// Hide the barrier.
 				node.setOpacity(0);
-				Barrier barrier = (Barrier) node;
-				barrier.setFill(Color.WHITE);
+				Barrier barrier = (Barrier) node;if(!(barrier.getIdTile1().equals(barrier.getIdTile2()))) {
+					barrier.setFill(Color.WHITE);
+				}
+				else {
+					barrier.setOpacity(1);
+					barrier.setFill(Color.BLACK);//colors the barrier in black if it is a border 
+				}
+					
 			}
 		}
 		// Set HashMap<String, ArrayList<String>> "adjacencyList".
@@ -847,7 +886,13 @@ public class Board extends Region {
 				// Hide the barrier.
 				node.setOpacity(0);
 				Barrier barrier = (Barrier) node;
-				barrier.setFill(Color.WHITE);
+				if(!(barrier.getIdTile1().equals(barrier.getIdTile2()))) {
+					barrier.setFill(Color.WHITE);	
+				}
+				else {
+					barrier.setOpacity(1);
+					barrier.setFill(Color.BLACK);//colors the barrier in black if it is a border 
+				}
 			}
 		}
 		// Set HashMap<String, ArrayList<String>> "adjacencyList".
@@ -880,7 +925,13 @@ public class Board extends Region {
 		// Hide the barrier.
 		node.setOpacity(0);
 		Barrier barrier = (Barrier) node;
-		barrier.setFill(Color.WHITE);
+		if(!(barrier.getIdTile1().equals(barrier.getIdTile2()))) {
+			barrier.setFill(Color.WHITE);	
+		}
+		else {
+			barrier.setOpacity(1);
+			barrier.setFill(Color.BLACK);//colors the barrier in black if it is a border 
+		}
 	}
 
 	/**
@@ -1030,6 +1081,11 @@ public class Board extends Region {
 	 * @param int newTileNumber, number of the tile where the player must be removed.
 	 * @param Player player, player that must be moved.
 	 */	
+	/**
+	 * Moves a player to another tile.
+	 * @param int newTileNumber, number of the tile where the player must be removed.
+	 * @param Player player, player that must be moved.
+	 */	
 	public boolean movePlayerTile(int newTileNumber, Player player) {
 		// Get and save player attributes for later.
 		String playerName = player.getId();
@@ -1043,27 +1099,117 @@ public class Board extends Region {
 		}else {
 			currentTileId = player.getCurrentTileId() ;
 		}
-
-		if(canMove(currentTileId,"Tile " + newTileNumber)) {
-			if(removePlayerTile(player) == true) {
-				// player instance was deleted so we have to construct it again... 
-				player = new Player(playerName, "Tile " + newTileNumber, playerTurn);
-
-				// Add player on the new tile.
-				if(addPlayerTile(newTileNumber, player) == true){
-					// Player removed successfully.
-					return(true);	
-				}		
+			
+		if(canMove(player.getCurrentTileId(),"Tile " + newTileNumber)) {
+			if(isTileOccupied("Tile "+newTileNumber)) {
+				ArrayList<String> availableTiles = tilesAvailableThroughPlayer(newTileNumber,Integer.parseInt(player.getCurrentTileId().substring(5)));
+				if (availableTiles.size()==1) {
+					if(removePlayerTile(player) == true){
+						// player instance was deleted so we have to construct it again... 
+						player = new Player(playerName,availableTiles.get(0), playerTurn);
+						// Add player on the new tile.
+						System.out.println("la tuile à été changé pour " +availableTiles.get(0));
+						if(addPlayerTile(Integer.parseInt(availableTiles.get(0).substring(5)), player) == true){
+							// Player removed successfully.
+							for(Player x : listPlayer) {
+								if(x.isTurn()) {
+									x.setCurrentTileId(availableTiles.get(0));
+									return(true);
+								}
+							}
+						}	
+					}
+				}
+				else { 
+					needSecondClickToJump=true;
+					availableTileJump1=availableTiles.get(0);
+					availableTileJump2=availableTiles.get(1);
+					Tile tileX = (Tile) getNodeById(availableTileJump1);
+					tileX.setFill(Color.YELLOW);
+					Tile tileY = (Tile) getNodeById(availableTileJump2);
+					tileY.setFill(Color.YELLOW);
+					
+					return true;
+				}				
 			}
-			else {
-				// Cannot add player.
-				// Player could not be moved.
-				return(false);
+			else  
+			{
+				if(removePlayerTile(player) == true)
+				{
+					// player instance was deleted so we have to construct it again... 
+					player = new Player(playerName,hoverTileId, playerTurn);
+		
+					// Add player on the new tile.
+					if(addPlayerTile(newTileNumber, player) == true){
+						// Player removed successfully
+						for(Player x : listPlayer) {
+							if(x.isTurn()) {
+								x.setCurrentTileId(hoverTileId);
+								return(true);	
+							}
+						}
+					}	
+				}
 			}
+		}
+		else {
+			// Cannot add player.
+			// Player could not be moved.
+			return(false);
 		}
 		// Cannot remove player.
 		// Player could not be removed.
 		return(false);
+	}
+
+	public ArrayList<String> tilesAvailableThroughPlayer(int newTileNumber, int actualTileNumber) {
+		ArrayList<String> adjNewTile = getAdjacencyList().get("Tile "+newTileNumber);
+		adjNewTile.remove("Tile "+actualTileNumber);
+		ArrayList<String> TilesAvailable = new ArrayList<>();
+				
+		for(String x: adjNewTile) {
+			if(isTileOccupied(x)) {
+			//check if the tile is occupied, and relaunch the same fonction in case of 2 player are aligned until it is true or false
+				if(x.equals("Tile "+(newTileNumber-(actualTileNumber-newTileNumber))) && CanHopThroughPlayer((newTileNumber-(actualTileNumber-newTileNumber)),newTileNumber)) {
+					//the second part of the condition is for the specific case of a player blocking a path without end
+					return tilesAvailableThroughPlayer((newTileNumber-(actualTileNumber-newTileNumber)),newTileNumber);
+				}
+			}
+			else {
+				if(adjNewTile.size() == 1){
+					//only one available tile and there is no one in here so we have to jump there
+					return adjNewTile;
+				}
+				if(x.equals("Tile "+(newTileNumber-(actualTileNumber-newTileNumber)))) {
+					//can do simple jump so return the tile after the hop
+					ArrayList<String> TileX = new ArrayList<>();
+					TileX.add(x);
+					return (TileX);
+				}
+				TilesAvailable.add(x);
+			}	
+		}
+		return TilesAvailable;
+	}
+	
+	public boolean CanHopThroughPlayer(int newTileNumber, int actualTileNumber) {
+		ArrayList<String> adjNewTile = getAdjacencyList().get("Tile "+newTileNumber);
+		adjNewTile.remove("Tile "+actualTileNumber);
+		if(adjNewTile.size() >= 1) {
+			//if the only adjacent tile is the one from where we are we can't jump through the player
+			for(String x: adjNewTile) {
+					if(isTileOccupied(x)) {
+						//check if the tile is occupied, and relaunch the same fonction in case of 2 player are aligned until it is true or false
+						if(x.equals("Tile "+(newTileNumber-(actualTileNumber-newTileNumber)))) {
+							return CanHopThroughPlayer((newTileNumber-(actualTileNumber-newTileNumber)),newTileNumber);
+						}
+					}
+					else {
+						return true;
+					}
+			}
+		}
+		return false;
 	}
 
 
@@ -1342,9 +1488,18 @@ public class Board extends Region {
 	 */
 
 	public boolean isTileOccupied(String TileA) {
-		if (numberOfPlayers == 2)
-			return (getPlayer1().getCurrentTileId().equals(TileA) || getPlayer2().getCurrentTileId().equals(TileA));
-		return (getPlayer1().getCurrentTileId().equals(TileA) || getPlayer2().getCurrentTileId().equals(TileA) || getPlayer3().getCurrentTileId().equals(TileA) ||getPlayer4().getCurrentTileId().equals(TileA));
+		//we check if a player which is on 
+		if (player1.getCurrentTileId().equals(TileA) && (!player1.isTurn()))
+			return true;
+		if (player2.getCurrentTileId().equals(TileA) && (!player2.isTurn()))
+			return true;
+		if(numberOfPlayers == 4) {
+			if (player3.getCurrentTileId().equals(TileA) && (!player3.isTurn()))
+				return true;
+			if (player4.getCurrentTileId().equals(TileA) && (!player4.isTurn()))
+				return true;
+		}
+		return false;
 	}
 
 	/**
@@ -1354,13 +1509,19 @@ public class Board extends Region {
 	 * @return a boolean : true if the move is possible, false if not
 	 */
 	public boolean canMove(String TileA,String TileB) {
-		if (isTileOccupied(TileB)) //can't move if the tile is occupied
-			return false;
-
 		ArrayList<String> adjTileA = getAdjacencyList().get(TileA);
 		for(String x: adjTileA) {//can move if the tile is adjacent
-			if (x.equals(TileB))
-				return true;
+			System.out.println(x+" "+TileB);
+			if (x.equals(TileB)){
+				if(isTileOccupied(TileB)) {//we check if there is an available tiles through a player
+					if(CanHopThroughPlayer(Integer.parseInt(TileB.substring(5)),Integer.parseInt(TileA.substring(5)))){
+						return true;
+					}
+				}
+				else {
+					return true;
+				}
+			}
 		}
 		return false;//can't move if the tile is not adjacent
 	}
@@ -1449,8 +1610,6 @@ public class Board extends Region {
 		// If clicked tile is accessible :
 		// Move
 		if(movePlayerTile(tileNumber,player)) {
-			//set
-			player.setCurrentTileId(hoverTileId);
 
 			// Check if player is on winner tile :
 			for(String winnerTileId : player.getIdWinningTiles()) {
@@ -1471,7 +1630,9 @@ public class Board extends Region {
 			// Switch turns.
 			System.out.println("WAITING ANOTHER CLICK...");
 			System.out.println();
-			changeTurn();
+			if(needSecondClickToJump == false) {
+				changeTurn();
+			}
 			return true;
 		}
 		else {
@@ -1640,8 +1801,7 @@ public class Board extends Region {
 				player1Name, player1CurrentTile, player1TurnString,
 				player2Name, player2CurrentTile, player2TurnString,
 				player3Name, player3CurrentTile, player3TurnString,
-				player4Name, player4CurrentTile, player4TurnString,
-				listBarrier;
+				player4Name, player4CurrentTile, player4TurnString;
 
 		String breakLine = ";\r\n";
 
@@ -1689,8 +1849,6 @@ public class Board extends Region {
 		stringsToFormat.add(player4CurrentTile);
 		stringsToFormat.add(player4TurnString);
 		
-		stringsToFormat.add(listBarrier);
-
 		String toSave = "";
 		for(String str : stringsToFormat) {
 			toSave += str + breakLine;

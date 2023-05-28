@@ -1266,6 +1266,12 @@ public class Board extends Region {
 		return(visited);
 	}
 
+	/**
+	 * This method is used to get a boolean telling if two Tiles are connected
+	 * @param verticeA
+	 * @param verticeB
+	 * @return a boolean : true if they are connected, false if not
+	 */
 	public boolean areConnected(String verticeA, String verticeB) {
 		if(dfs(verticeA).contains(verticeB)){
 			return(true);
@@ -1275,6 +1281,11 @@ public class Board extends Region {
 		}
 	}
 
+	/**
+	 * this method is used to know if a tile is already occupied by a player
+	 * @param TileA
+	 * @return a boolean : true if the Tile is occupied, false if not
+	 */
 
 	public boolean isTileOccupied(String TileA) {
 		if (numberOfPlayers == 2)
@@ -1282,6 +1293,12 @@ public class Board extends Region {
 		return (player1.getCurrentTileId().equals(TileA) || player2.getCurrentTileId().equals(TileA) || player3.getCurrentTileId().equals(TileA) ||player4.getCurrentTileId().equals(TileA));
 	}
 
+	/**
+	 * This method tells us if we can move from TileA to TileB
+	 * @param TileA
+	 * @param TileB
+	 * @return a boolean : true if the move is possible, false if not
+	 */
 	public boolean canMove(String TileA,String TileB) {
 		if (isTileOccupied(TileB)) //can't move if the tile is occupied
 			return false;
@@ -1294,6 +1311,11 @@ public class Board extends Region {
 		return false;//can't move if the tile is not adjacent
 	}
 
+	/**
+	 * This method is used to get a list of the available tiles when the player is on tileA 
+	 * @param TileA
+	 * @return A String with all the available tiles
+	 */
 	public String availableTiles(String TileA) {//print only
 		ArrayList<String> adjTileA = getAdjacencyList().get(TileA);
 		String available = "";
@@ -1307,7 +1329,9 @@ public class Board extends Region {
 		return available;
 	}
 
-
+/**
+ * This method is used to change the player playing
+ */
 	public void changeTurn() {
 		if(numberOfPlayers == 2) {
 			player1.setTurn(!player1.isTurn());
@@ -1333,6 +1357,12 @@ public class Board extends Region {
 		}	
 	}
 
+	/**
+	 * This method is used to manage a player's turn
+	 * @param player
+	 * @param tileNumber
+	 * @return a boolean : true if the player played is turn, false if not
+	 */
 	public boolean playTurn(Player player, int tileNumber) {
 
 		System.out.println();

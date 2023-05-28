@@ -69,7 +69,10 @@ public class Board extends Region {
 	private final Player[] ArrayConstantOfInitialPlayer = {player1,player2,player3,player4};
 	//tableau de joueurs actif dans la partie
 	private ArrayList<Player> listPlayer = new ArrayList<Player>();
-
+/**
+ * This method is used to restart a game 
+ * @param nbPlayer
+ */
 	public void resetGame(ChoiceBox<String> nbPlayer) {
 		String nbPlayers = nbPlayer.getValue();
 		this.numberOfPlayers = Integer.parseInt(nbPlayers);
@@ -94,6 +97,11 @@ public class Board extends Region {
 		}
 	}
 
+	/**
+	 * this method is used to initiate a game which was previously saved
+	 * @param nbPlayer
+	 * @param listPlayer
+	 */
 
 	public void initiateGameFromSave(int nbPlayer, ArrayList<Player> listPlayer) {
 
@@ -466,6 +474,10 @@ public class Board extends Region {
 						{
 							@Override
 							// Set the action(s) to do.
+							/**
+							 * This method manages the differents possibilities that has a player
+							 * @param event
+							 */
 							public void handle(MouseEvent event) {
 								// If there is not 20 barriers already on the board :
 								if(numberTotalBarriers < 20) {
@@ -770,6 +782,11 @@ public class Board extends Region {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Node getNodeById(String id) {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
@@ -1419,6 +1436,13 @@ public class Board extends Region {
 		}
 	}
 
+	/**
+	 * This method is used to remove the link between tileA and tileB
+	 * @param newAdjacencyList
+	 * @param tileA
+	 * @param tileB
+	 * @return the grid actualised 
+	 */
 
 	public HashMap<String, ArrayList<String>> removeTileLink(HashMap<String, ArrayList<String>> newAdjacencyList,String tileA,String tileB){
 		newAdjacencyList.get(tileA).remove(tileB);
@@ -1433,7 +1457,12 @@ public class Board extends Region {
 		return newAdjacencyList;
 	}
 
-
+/**
+ * This method is used to restart a game from a saved one
+ * @param path
+ * @throws FileNotFoundException
+ * @throws IllegalArgumentException
+ */
 	public void readSavedGame(String path) throws FileNotFoundException, IllegalArgumentException {
 		HashMap<String, ArrayList<String>> adjacencyListClone = new HashMap<String, ArrayList<String>>();
 		ArrayList<String> savedText = new ArrayList<>();
@@ -1568,7 +1597,13 @@ public class Board extends Region {
 			return;
 		}
 	}
-
+/**
+ * This method is used to save a game
+ * @param player1
+ * @param player2
+ * @param player3
+ * @param player4
+ */
 	public void saveGame(Player player1, Player player2, Player player3, Player player4) {
 		//Creating an instance of file
 		Path path = Paths.get("H:\\Documents\\GitHub\\CYPath20222023\\save.txt");
@@ -1644,16 +1679,23 @@ public class Board extends Region {
 
 		// Catch block to handle the exception
 		catch (IOException e) {
-			// Print messqage exception occurred as
+			// Print message exception occurred as
 			// invalid. directory local path is passed
 			System.out.print("Invalid Path");
 		}
 	}
-
+/**
+ * This method gives the number of players in the game
+ * @return the number player in the game
+ */
 	public int getNumberOfPlayers() {
 		return(this.numberOfPlayers);
 	}
 	
+	/**
+	 * This method set the number of players
+	 * @param numberOfplayers
+	 */
 	public void setNumberOfPlayers(int numberOfplayers) {
 		this.numberOfPlayers = numberOfplayers;
 	}

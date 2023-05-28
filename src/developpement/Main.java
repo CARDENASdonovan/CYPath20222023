@@ -128,9 +128,28 @@ public class Main extends Application{
 				}
 		    }
 		});
+		
+		// Create clickable hyperlink for opening the project overview.
+		Hyperlink linkRapport = new Hyperlink();
+		linkRapport.setText("Open Rapport Pdf");
+		linkRapport.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent event) {
+		        System.out.println("This link is clicked");
+		        File file = new File("H:\\Documents\\GitHub\\CYPath20222023\\rapportProjetJava.pdf");
+		        Desktop desktop = Desktop.getDesktop();
+		        try {
+					desktop.open(file);
+				}
+		        catch (IOException e) {
+					e.printStackTrace();
+					System.out.println("File not found");
+				}
+		    }
+		});
 		// linkOverview pane to simplify visual alignment in grid.
-		HBox linkOverviewBox = new HBox(linkOverview);
-		linkOverviewBox.setAlignment(Pos.BOTTOM_CENTER);
+				VBox linkOverviewBox = new VBox(linkOverview, linkRapport);
+				linkOverviewBox.setAlignment(Pos.BOTTOM_CENTER);
 		
 		// Create clickable hyperlink for opening the project documentation.
 		Hyperlink linkJavadoc = new Hyperlink();

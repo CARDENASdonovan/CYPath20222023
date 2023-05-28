@@ -1665,6 +1665,7 @@ public class Board extends Region {
 	}
 
 
+
 	public ArrayList<String> readSavedGame(String path) throws FileNotFoundException, IllegalArgumentException {
 		HashMap<String, ArrayList<String>> readAdjacencyList = new HashMap<String, ArrayList<String>>();
 		ArrayList<String> savedText = new ArrayList<>();
@@ -1677,7 +1678,9 @@ public class Board extends Region {
 			player1Name, player1CurrentTile, player1TurnString, 
 			player2Name, player2CurrentTile, player2TurnString,
 			player3Name, player3CurrentTile, player3TurnString,
-			player4Name, player4CurrentTile, player4TurnString;
+			player4Name, player4CurrentTile, player4TurnString,
+			listBarrierString;
+			
 			try {
 				if(!read.hasNext()) {
 					System.out.println("Text file is empty");
@@ -1756,7 +1759,19 @@ public class Board extends Region {
 
 					player4TurnString = read.next();
 					savedText.add(player4TurnString);
+					
+					listBarrierString = read.next();
+					savedText.add(listBarrierString);
 
+					String[] strSplit2 = listBarrierString.split(", ");
+					// Now convert string into ArrayList
+			        ArrayList<String> strListArray = new ArrayList<String>(Arrays.asList(strSplit2));
+			  
+			        // Now print the ArrayList
+			        for (String s : strListArray) {
+			        	showBarrier(s, Color.RED);
+			        }
+			        
 					System.out.println("player4Name " + player4Name + " player4CurrentTile " + player4CurrentTile + " player4Turn " + player4TurnString);
 					System.out.println();
 					System.out.println("nbPlayer: " + Integer.parseInt(nbPlayersString));
@@ -1849,6 +1864,11 @@ public class Board extends Region {
 		stringsToFormat.add(player4CurrentTile);
 		stringsToFormat.add(player4TurnString);
 		
+		String newListBarrier = listBarrierActive.toString();
+		newListBarrier = newListBarrier.replace("[", "");
+		newListBarrier = newListBarrier.replace("]", "");
+		stringsToFormat.add(newListBarrier);
+		
 		String toSave = "";
 		for(String str : stringsToFormat) {
 			toSave += str + breakLine;
@@ -1870,6 +1890,9 @@ public class Board extends Region {
 			System.out.print("Invalid Path");
 		}
 	}
+	
+	
+	
 	/**
 	 * This method gives the number of players in the game
 	 * @return the number player in the game

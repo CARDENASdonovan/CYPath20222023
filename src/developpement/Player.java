@@ -31,7 +31,7 @@ public class Player extends Circle {
 	 * @param Color color
 	 */
 
-	public Player(String playerName, boolean isTurn) {
+	public Player(String playerName, String currentTileid, boolean isTurn) {
 		super(-1000,-1000, 25);
 		super.setId(playerName);
 
@@ -54,7 +54,7 @@ public class Player extends Circle {
 					idWinningTiles.add(t+(72+i));		
 				}
 				this.setIdStartTiles("Tile 5");
-				this.setCurrentTileId("Tile 5");
+				this.setCurrentTileId(currentTileid);
 				this.setTurn(isTurn);
 			break;
 			
@@ -63,7 +63,7 @@ public class Player extends Circle {
 					idWinningTiles.add(t+i);
 				}
 				this.setIdStartTiles("Tile 77");
-				this.setCurrentTileId("Tile 77");
+				this.setCurrentTileId(currentTileid);
 				this.setTurn(isTurn);
 			 break;
 			
@@ -72,7 +72,7 @@ public class Player extends Circle {
 					idWinningTiles.add(t+(1+i*9));
 				}
 				this.setIdStartTiles("Tile 45");
-				this.setCurrentTileId("Tile 45");
+				this.setCurrentTileId(currentTileid);
 				this.setTurn(isTurn);
 			break;
 			
@@ -81,7 +81,7 @@ public class Player extends Circle {
 					idWinningTiles.add(t+(i*9));
 				}
 				this.setIdStartTiles("Tile 37");
-				this.setCurrentTileId("Tile 37");
+				this.setCurrentTileId(currentTileid);
 				this.setTurn(isTurn);
 			break;
 			 

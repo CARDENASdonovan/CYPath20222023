@@ -81,7 +81,15 @@ public class Main extends Application{
 		buttonLoadGame.setPrefWidth(height/3);
 		// Event.
 		buttonLoadGame.setOnMouseClicked(event ->{
-			//loadGame(stage);
+			try {
+				loadGame(stage);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		});
 		
 		VBox buttonsVBox = new VBox(buttonNewGame, buttonLoadGame);
@@ -186,10 +194,10 @@ public class Main extends Application{
 		gamePane.setLayoutX(0);
 		gamePane.setLayoutY(0);
 		// Board.
-		Player player1 = new Player("Player 1", true);
-		Player player2 = new Player("Player 2", false);
-		Player player3 = new Player("Player 3", false);
-		Player player4 = new Player("Player 4", false);
+		Player player1 = new Player("Player 1", "Tile 5", true);
+		Player player2 = new Player("Player 2", "Tile 5", false);
+		Player player3 = new Player("Player 3", "Tile 5", false);
+		Player player4 = new Player("Player 4", "Tile 5", false);
 		
 		Board board = new Board(10,10,9,9,player1,player2,player3,player4);
 		VBox boardBox = new VBox(board);
@@ -219,7 +227,7 @@ public class Main extends Application{
 		stage.show();
 	}
 	
-	public void loadGame(Stage stage) {
+	public void loadGame(Stage stage) throws FileNotFoundException, IllegalArgumentException {
 		// Create main view pane.
 		GridPane gamePane = new GridPane();
 		gamePane.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
@@ -227,31 +235,56 @@ public class Main extends Application{
 		gamePane.setLayoutX(0);
 		gamePane.setLayoutY(0);
 		// Board.
-		Player player1 = new Player("Player 1", true);
-		Player player2 = new Player("Player 2", false);
-		Player player3 = new Player("Player 3", false);
-		Player player4 = new Player("Player 4", false);
+		Player player1 = new Player("Player 1", "", true);
+		Player player2 = new Player("Player 2", "", false);
+		Player player3 = new Player("Player 3", "", false);
+		Player player4 = new Player("Player 4", "", false);
 		
 		Board board = new Board(10,10,9,9,player1,player2,player3,player4);
-		VBox boardBox = new VBox(board);
+
+		String path = "H:\\Documents\\GitHub\\CYPath20222023\\read.txt";
+		
+		ArrayList<String> savedText = board.readSavedGame(path);
+		System.out.println(savedText.get(2));
+		
+		int startPlayer1Data = 1;
+		Boolean player1Turn = Boolean.valueOf(savedText.get(startPlayer1Data+2));
+		Player newPlayer1 = new Player(savedText.get(startPlayer1Data), savedText.get(startPlayer1Data+1), player1Turn);
+		
+		int startPlayer2Data = 4;
+		Boolean player2Turn = Boolean.valueOf(savedText.get(startPlayer2Data+2));
+		Player newPlayer2 = new Player(savedText.get(startPlayer2Data), savedText.get(startPlayer2Data+1), player2Turn);
+		
+		int startPlayer3Data = 7;
+		Boolean player3Turn = Boolean.valueOf(savedText.get(startPlayer3Data+2));
+		Player newPlayer3 = new Player(savedText.get(startPlayer3Data), savedText.get(startPlayer3Data+1), player3Turn);
+		
+		int startPlayer4Data = 10;
+		Boolean player4Turn = Boolean.valueOf(savedText.get(startPlayer4Data+2));
+		Player newPlayer4 = new Player(savedText.get(startPlayer4Data), savedText.get(startPlayer4Data+1), player4Turn);
+		
+		board = null;
+		Board board2 = new Board(10,10,9,9,newPlayer1,newPlayer2,newPlayer3,newPlayer4,true);
+		
+		VBox boardBox = new VBox(board2);
 		// ChoiceBox.
 		ChoiceBox<String> nbPlayer = new ChoiceBox<>();
 		String[] players = {"2","4"};
 		nbPlayer.getItems().addAll(players);
 		// Button.
 		Button button = new Button("Select the number of players");
-
+/*
 		button.setOnAction(event ->{
-			board.resetBoard(nbPlayer);
+			board2.resetBoard(nbPlayer);
 		});
-
+*/
 		VBox nbPlayerBox = new VBox(nbPlayer, button);
 		gamePane.add(boardBox, 0, 0);
 		gamePane.add(nbPlayerBox, 1, 0);
 
-		GridPane boardGrid = (GridPane) board.getChildrenUnmodifiable().get(0);
+		GridPane boardGrid = (GridPane) board2.getChildrenUnmodifiable().get(0);
 
-		board.updateAdjacencyList(boardGrid);
+		board2.updateAdjacencyList(boardGrid);
 
 		Scene mainMenuScene = new Scene(gamePane, 1000, 750);
 		stage.setX(250);

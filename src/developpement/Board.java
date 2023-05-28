@@ -85,7 +85,7 @@ public class Board extends Region {
 	private final Player[] ArrayConstantOfInitialPlayer = {getPlayer1(), getPlayer2(), getPlayer3(), getPlayer4()};
 	//tableau de joueurs actif dans la partie
 	public ArrayList<Player> listPlayer = new ArrayList<Player>();
-	public ArrayList<Barrier> listBarrierActive = new ArrayList<Barrier>();
+	public ArrayList<String> listBarrierActive = new ArrayList<>();
 
 	/**
 	 * This method is used to restart a game 
@@ -866,7 +866,7 @@ public class Board extends Region {
 		node.setOpacity(1);
 		Barrier barrier = (Barrier) node;
 		barrier.setFill(color);
-		listBarrierActive.add(barrier);
+		listBarrierActive.add(barrier.getId());
 	}
 
 	/**
@@ -1640,7 +1640,8 @@ public class Board extends Region {
 				player1Name, player1CurrentTile, player1TurnString,
 				player2Name, player2CurrentTile, player2TurnString,
 				player3Name, player3CurrentTile, player3TurnString,
-				player4Name, player4CurrentTile, player4TurnString;
+				player4Name, player4CurrentTile, player4TurnString,
+				listBarrier;
 
 		String breakLine = ";\r\n";
 
@@ -1687,6 +1688,8 @@ public class Board extends Region {
 		stringsToFormat.add(player4Name);
 		stringsToFormat.add(player4CurrentTile);
 		stringsToFormat.add(player4TurnString);
+		
+		stringsToFormat.add(listBarrier);
 
 		String toSave = "";
 		for(String str : stringsToFormat) {

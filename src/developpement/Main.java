@@ -201,11 +201,6 @@ public class Main extends Application{
 		gamePane.setLayoutX(0);
 		gamePane.setLayoutY(0);
 		// Board.
-		Player player1 = new Player("Player 1", "Tile 5", true);
-		Player player2 = new Player("Player 2", "Tile 5", false);
-		Player player3 = new Player("Player 3", "Tile 5", false);
-		Player player4 = new Player("Player 4", "Tile 5", false);
-		
 		Board board = new Board(10,10,9,9);
 		VBox boardBox = new VBox(board);
 		// ChoiceBox.
@@ -213,13 +208,19 @@ public class Main extends Application{
 		String[] players = {"2","4"};
 		nbPlayer.getItems().addAll(players);
 		// Button.
-		Button button = new Button("Select the number of players");
+		Button buttonReset = new Button("Select the number of players");
 
-		button.setOnAction(event ->{
+		buttonReset.setOnAction(event ->{
 			board.resetBoard(nbPlayer);
 		});
+		
+		Button buttonLoad = new Button("Select the number of players");
 
-		VBox nbPlayerBox = new VBox(nbPlayer, button);
+		buttonLoad.setOnAction(event ->{
+			board.saveGame(board.getPlayer1(), board.getPlayer2(), board.getPlayer3(), board.getPlayer4());
+		});
+		
+		VBox nbPlayerBox = new VBox(nbPlayer, buttonReset, buttonLoad);
 		gamePane.add(boardBox, 0, 0);
 		gamePane.add(nbPlayerBox, 1, 0);
 
@@ -293,13 +294,19 @@ public class Main extends Application{
 		String[] players = {"2","4"};
 		nbPlayer.getItems().addAll(players);
 		// Button.
-		Button button = new Button("Select the number of players");
-/*
-		button.setOnAction(event ->{
-			board2.resetBoard(nbPlayer);
+		Button buttonReset = new Button("Select the number of players");
+
+		buttonReset.setOnAction(event ->{
+			board.resetBoard(nbPlayer);
 		});
-*/
-		VBox nbPlayerBox = new VBox(nbPlayer, button);
+
+		Button buttonLoad = new Button("Select the number of players");
+
+		buttonLoad.setOnAction(event ->{
+			board.saveGame(board.getPlayer1(), board.getPlayer2(), board.getPlayer3(), board.getPlayer4());
+		});
+		
+		VBox nbPlayerBox = new VBox(nbPlayer, buttonReset, buttonLoad);
 		gamePane.add(boardBox, 0, 0);
 		gamePane.add(nbPlayerBox, 1, 0);
 

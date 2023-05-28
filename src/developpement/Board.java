@@ -53,16 +53,21 @@ public class Board extends Region {
 	private Player player3=new Player("Player 3", "Tile 45", false);
 	private Player player4=new Player("Player 4", "Tile 37", false);
 	
+	public Player getPlayer1() {
+		return player1;
+	}
+
+
 	public void setPlayers(Player player1, Player player2, Player player3, Player player4) {
 		this.player1 = player1;
 		this.player2 = player2;
-		this.player3 = player3;
+		this.setPlayer3(player3);
 		this.player4 = player4;
 		this.listPlayer = new ArrayList<Player>();
-		listPlayer.add(this.player1);
-		listPlayer.add(this.player2);
-		listPlayer.add(this.player3);
-		listPlayer.add(this.player4);
+		listPlayer.add(this.getPlayer1());
+		listPlayer.add(this.getPlayer2());
+		listPlayer.add(this.getPlayer3());
+		listPlayer.add(this.getPlayer4());
 	}
 	private int numberOfPlayers = 0; 
 
@@ -77,7 +82,7 @@ public class Board extends Region {
 	private String temporaryBarrierId = "";
 
 	//variable intermediaire qui sert à stocker tous les joueurs, tableau de joueurs
-	private final Player[] ArrayConstantOfInitialPlayer = {player1, player2, player3, player4};
+	private final Player[] ArrayConstantOfInitialPlayer = {getPlayer1(), getPlayer2(), getPlayer3(), getPlayer4()};
 	//tableau de joueurs actif dans la partie
 	public ArrayList<Player> listPlayer = new ArrayList<Player>();
 	public ArrayList<Player> listBarrierActive = new ArrayList<Player>();
@@ -272,12 +277,12 @@ public class Board extends Region {
 													ArrayList<Boolean> resultAreConnected3 = new ArrayList<>();
 													ArrayList<Boolean> resultAreConnected4 = new ArrayList<>();
 													// Check if player 1 can win.
-													for(String winningTile1 : player1.getIdWinningTiles()) {
-														resultAreConnected1.add(areConnected(player1.getCurrentTileId(), winningTile1));
+													for(String winningTile1 : getPlayer1().getIdWinningTiles()) {
+														resultAreConnected1.add(areConnected(getPlayer1().getCurrentTileId(), winningTile1));
 													}
 													// Check if player 2 can win.
-													for(String winningTile2 : player2.getIdWinningTiles()) {
-														resultAreConnected2.add(areConnected(player2.getCurrentTileId(), winningTile2));
+													for(String winningTile2 : getPlayer2().getIdWinningTiles()) {
+														resultAreConnected2.add(areConnected(getPlayer2().getCurrentTileId(), winningTile2));
 													}
 													// When only 2 players are playing against, collections for players 3 and 4 must be neutral in the following conditions.
 													resultAreConnected3.add(true);
@@ -288,12 +293,12 @@ public class Board extends Region {
 														resultAreConnected3 = new ArrayList<>();
 														resultAreConnected4 = new ArrayList<>();
 														// Check if player 3 can win.
-														for(String winningTile3 : player3.getIdWinningTiles()) {
-															resultAreConnected3.add(areConnected(player3.getCurrentTileId(), winningTile3));
+														for(String winningTile3 : getPlayer3().getIdWinningTiles()) {
+															resultAreConnected3.add(areConnected(getPlayer3().getCurrentTileId(), winningTile3));
 														}
 														// Check if player 4 can win.
-														for(String winningTile4 : player4.getIdWinningTiles()) {
-															resultAreConnected4.add(areConnected(player4.getCurrentTileId(), winningTile4));
+														for(String winningTile4 : getPlayer4().getIdWinningTiles()) {
+															resultAreConnected4.add(areConnected(getPlayer4().getCurrentTileId(), winningTile4));
 														}
 													}
 													// If every player at least one win condition available :
@@ -337,12 +342,12 @@ public class Board extends Region {
 													ArrayList<Boolean> resultAreConnected3 = new ArrayList<>();
 													ArrayList<Boolean> resultAreConnected4 = new ArrayList<>();
 													// Check if player 1 can win.
-													for(String winningTile1 : player1.getIdWinningTiles()) {
-														resultAreConnected1.add(areConnected(player1.getCurrentTileId(), winningTile1));
+													for(String winningTile1 : getPlayer1().getIdWinningTiles()) {
+														resultAreConnected1.add(areConnected(getPlayer1().getCurrentTileId(), winningTile1));
 													}
 													// Check if player 2 can win.
-													for(String winningTile2 : player2.getIdWinningTiles()) {
-														resultAreConnected2.add(areConnected(player2.getCurrentTileId(), winningTile2));
+													for(String winningTile2 : getPlayer2().getIdWinningTiles()) {
+														resultAreConnected2.add(areConnected(getPlayer2().getCurrentTileId(), winningTile2));
 													}
 													// When only 2 players are playing against, collections for players 3 and 4 must be neutral in the following conditions.
 													resultAreConnected3.add(true);
@@ -354,12 +359,12 @@ public class Board extends Region {
 														resultAreConnected4 = new ArrayList<>();
 
 														// Check if player 3 can win.
-														for(String winningTile3 : player3.getIdWinningTiles()) {
-															resultAreConnected3.add(areConnected(player3.getCurrentTileId(), winningTile3));
+														for(String winningTile3 : getPlayer3().getIdWinningTiles()) {
+															resultAreConnected3.add(areConnected(getPlayer3().getCurrentTileId(), winningTile3));
 														}
 														// Check if player 4 can win.
-														for(String winningTile4 : player4.getIdWinningTiles()) {
-															resultAreConnected4.add(areConnected(player4.getCurrentTileId(), winningTile4));
+														for(String winningTile4 : getPlayer4().getIdWinningTiles()) {
+															resultAreConnected4.add(areConnected(getPlayer4().getCurrentTileId(), winningTile4));
 														}
 													}
 													// If every player at least one win condition available :
@@ -485,12 +490,12 @@ public class Board extends Region {
 													ArrayList<Boolean> resultAreConnected3 = new ArrayList<>();
 													ArrayList<Boolean> resultAreConnected4 = new ArrayList<>();
 													// Check if player 1 can win.
-													for(String winningTile1 : player1.getIdWinningTiles()) {
-														resultAreConnected1.add(areConnected(player1.getCurrentTileId(), winningTile1));
+													for(String winningTile1 : getPlayer1().getIdWinningTiles()) {
+														resultAreConnected1.add(areConnected(getPlayer1().getCurrentTileId(), winningTile1));
 													}
 													// Check if player 2 can win.
-													for(String winningTile2 : player2.getIdWinningTiles()) {
-														resultAreConnected2.add(areConnected(player2.getCurrentTileId(), winningTile2));
+													for(String winningTile2 : getPlayer2().getIdWinningTiles()) {
+														resultAreConnected2.add(areConnected(getPlayer2().getCurrentTileId(), winningTile2));
 													}
 													// When only 2 players are playing against, collections for players 3 and 4 must be neutral in the following conditions.
 													resultAreConnected3.add(true);
@@ -501,12 +506,12 @@ public class Board extends Region {
 														resultAreConnected3 = new ArrayList<>();
 														resultAreConnected4 = new ArrayList<>();
 														// Check if player 3 can win.
-														for(String winningTile3 : player3.getIdWinningTiles()) {
-															resultAreConnected3.add(areConnected(player3.getCurrentTileId(), winningTile3));
+														for(String winningTile3 : getPlayer3().getIdWinningTiles()) {
+															resultAreConnected3.add(areConnected(getPlayer3().getCurrentTileId(), winningTile3));
 														}
 														// Check if player 4 can win.
-														for(String winningTile4 : player4.getIdWinningTiles()) {
-															resultAreConnected4.add(areConnected(player4.getCurrentTileId(), winningTile4));
+														for(String winningTile4 : getPlayer4().getIdWinningTiles()) {
+															resultAreConnected4.add(areConnected(getPlayer4().getCurrentTileId(), winningTile4));
 														}
 													}
 													// If every player at least one win condition available :
@@ -550,12 +555,12 @@ public class Board extends Region {
 													ArrayList<Boolean> resultAreConnected3 = new ArrayList<>();
 													ArrayList<Boolean> resultAreConnected4 = new ArrayList<>();
 													// Check if player 1 can win.
-													for(String winningTile1 : player1.getIdWinningTiles()) {
-														resultAreConnected1.add(areConnected(player1.getCurrentTileId(), winningTile1));
+													for(String winningTile1 : getPlayer1().getIdWinningTiles()) {
+														resultAreConnected1.add(areConnected(getPlayer1().getCurrentTileId(), winningTile1));
 													}
 													// Check if player 2 can win.
-													for(String winningTile2 : player2.getIdWinningTiles()) {
-														resultAreConnected2.add(areConnected(player2.getCurrentTileId(), winningTile2));
+													for(String winningTile2 : getPlayer2().getIdWinningTiles()) {
+														resultAreConnected2.add(areConnected(getPlayer2().getCurrentTileId(), winningTile2));
 													}
 													// When only 2 players are playing against, collections for players 3 and 4 must be neutral in the following conditions.
 													resultAreConnected3.add(true);
@@ -567,12 +572,12 @@ public class Board extends Region {
 														resultAreConnected4 = new ArrayList<>();
 
 														// Check if player 3 can win.
-														for(String winningTile3 : player3.getIdWinningTiles()) {
-															resultAreConnected3.add(areConnected(player3.getCurrentTileId(), winningTile3));
+														for(String winningTile3 : getPlayer3().getIdWinningTiles()) {
+															resultAreConnected3.add(areConnected(getPlayer3().getCurrentTileId(), winningTile3));
 														}
 														// Check if player 4 can win.
-														for(String winningTile4 : player4.getIdWinningTiles()) {
-															resultAreConnected4.add(areConnected(player4.getCurrentTileId(), winningTile4));
+														for(String winningTile4 : getPlayer4().getIdWinningTiles()) {
+															resultAreConnected4.add(areConnected(getPlayer4().getCurrentTileId(), winningTile4));
 														}
 													}
 													// If every player at least one win condition available :
@@ -1336,8 +1341,8 @@ public class Board extends Region {
 
 	public boolean isTileOccupied(String TileA) {
 		if (numberOfPlayers == 2)
-			return (player1.getCurrentTileId().equals(TileA) || player2.getCurrentTileId().equals(TileA));
-		return (player1.getCurrentTileId().equals(TileA) || player2.getCurrentTileId().equals(TileA) || player3.getCurrentTileId().equals(TileA) ||player4.getCurrentTileId().equals(TileA));
+			return (getPlayer1().getCurrentTileId().equals(TileA) || getPlayer2().getCurrentTileId().equals(TileA));
+		return (getPlayer1().getCurrentTileId().equals(TileA) || getPlayer2().getCurrentTileId().equals(TileA) || getPlayer3().getCurrentTileId().equals(TileA) ||getPlayer4().getCurrentTileId().equals(TileA));
 	}
 
 	/**
@@ -1381,33 +1386,33 @@ public class Board extends Region {
 	 */
 	public void changeTurn() {
 		if(numberOfPlayers == 2) {
-			player1.setTurn(!player1.isTurn());
-			player2.setTurn(!player2.isTurn());
+			getPlayer1().setTurn(!getPlayer1().isTurn());
+			getPlayer2().setTurn(!getPlayer2().isTurn());
 			return;
 		}
 		else {
-			if(player1.isTurn()) {
+			if(getPlayer1().isTurn()) {
 				System.out.println("CAS 1");
-				player1.setTurn(!player1.isTurn());
-				player2.setTurn(!player2.isTurn());
+				getPlayer1().setTurn(!getPlayer1().isTurn());
+				getPlayer2().setTurn(!getPlayer2().isTurn());
 				return;
 			}
-			if(player2.isTurn()) {
+			if(getPlayer2().isTurn()) {
 				System.out.println("CAS 2");
-				player2.setTurn(!player2.isTurn());
-				player3.setTurn(!player3.isTurn());
+				getPlayer2().setTurn(!getPlayer2().isTurn());
+				getPlayer3().setTurn(!getPlayer3().isTurn());
 				return;
 			}
-			if(player3.isTurn()) {
+			if(getPlayer3().isTurn()) {
 				System.out.println("CAS 3");
-				player3.setTurn(!player3.isTurn());
-				player4.setTurn(!player4.isTurn());
+				getPlayer3().setTurn(!getPlayer3().isTurn());
+				getPlayer4().setTurn(!getPlayer4().isTurn());
 				return;
 			}
-			if(player4.isTurn()) {
+			if(getPlayer4().isTurn()) {
 				System.out.println("CAS 4");
-				player4.setTurn(!player4.isTurn());
-				player1.setTurn(!player1.isTurn());
+				getPlayer4().setTurn(!getPlayer4().isTurn());
+				getPlayer1().setTurn(!getPlayer1().isTurn());
 				return;
 			}
 		}	
@@ -1621,7 +1626,7 @@ public class Board extends Region {
 	 */
 	public void saveGame(Player player1, Player player2, Player player3, Player player4) {
 		//Creating an instance of file
-		Path path = Paths.get("H:\\Documents\\GitHub\\CYPath20222023\\save.txt");
+		Path path = Paths.get("H:\\Documents\\GitHub\\CYPath20222023\\read.txt");
 
 		HashMap<String, ArrayList<String>> adjacencyList = new HashMap<String, ArrayList<String>>();
 		adjacencyList = getAdjacencyList();
@@ -1717,30 +1722,30 @@ public class Board extends Region {
 
 	public boolean testDFS() {
         int nbCanWin = 0;
-        for(String winnerTileId1: player1.getIdWinningTiles()) {//for each winner tiles, if it is connected to the player, then he can still win
-            if(areConnected(player1.getCurrentTileId(), winnerTileId1)) {
+        for(String winnerTileId1: getPlayer1().getIdWinningTiles()) {//for each winner tiles, if it is connected to the player, then he can still win
+            if(areConnected(getPlayer1().getCurrentTileId(), winnerTileId1)) {
                 nbCanWin++;
                 break;
             }
         }
         //we repeat for each player (easier to do here than in a function because we use global variables
-        for(String winnerTileId2: player2.getIdWinningTiles()) {
-            if(areConnected(player2.getCurrentTileId(), winnerTileId2)) {
+        for(String winnerTileId2: getPlayer2().getIdWinningTiles()) {
+            if(areConnected(getPlayer2().getCurrentTileId(), winnerTileId2)) {
                 nbCanWin++;
                 break;
             }
         }
 
         if(numberOfPlayers == 4) {
-            for(String winnerTileId3: player3.getIdWinningTiles()) {
-                if(areConnected(player3.getCurrentTileId(), winnerTileId3)) {
+            for(String winnerTileId3: getPlayer3().getIdWinningTiles()) {
+                if(areConnected(getPlayer3().getCurrentTileId(), winnerTileId3)) {
                     nbCanWin++;
                     break;
                 }
             }
 
-            for(String winnerTileId4: player4.getIdWinningTiles()) {
-                if(areConnected(player4.getCurrentTileId(), winnerTileId4)) {
+            for(String winnerTileId4: getPlayer4().getIdWinningTiles()) {
+                if(areConnected(getPlayer4().getCurrentTileId(), winnerTileId4)) {
                     nbCanWin++;
                     break;
                 }
@@ -1752,4 +1757,24 @@ public class Board extends Region {
 
         return false;
     }
+
+
+	public Player getPlayer2() {
+		return player2;
+	}
+
+
+	public Player getPlayer3() {
+		return player3;
+	}
+
+
+	public void setPlayer3(Player player3) {
+		this.player3 = player3;
+	}
+
+
+	public Player getPlayer4() {
+		return player4;
+	}
 }

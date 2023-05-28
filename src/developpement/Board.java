@@ -1438,7 +1438,6 @@ public class Board extends Region {
 			System.exit(3);
 		}
 
-
 		for(String vertexName : vertexNeighbors) {
 			if(!visited.contains(vertexName) && !stack.contains(vertexName)) {
 				notVisited.add(vertexName);
@@ -1620,7 +1619,8 @@ public class Board extends Region {
 					System.out.println();
 					System.out.println("WINNER"+ player.getId());
 					System.out.println();
-					System.exit(1);
+					//Label labelWin = new Label("WINNNER"+player.getId());
+					System.exit(2);
 				}
 				// If player1 is NOT on a winner tile :
 				else {

@@ -96,7 +96,9 @@ public class Board extends Region {
 	 * @param nbPlayer
 	 */
 	public void resetBoard(ChoiceBox<String> nbPlayer) {
-		setNumberOfPlayers(Integer.parseInt(nbPlayer.getValue()));
+		if(nbPlayer.getValue() != null) {
+			setNumberOfPlayers(Integer.parseInt(nbPlayer.getValue()));
+		}
 
 		listPlayer = new ArrayList<Player>();
 		hideAllBarrier();
@@ -1770,6 +1772,7 @@ public class Board extends Region {
 			        // Now print the ArrayList
 			        for (String s : strListArray) {
 			        	showBarrier(s, Color.RED);
+			        	numberTotalBarriers++;
 			        }
 			        
 					System.out.println("player4Name " + player4Name + " player4CurrentTile " + player4CurrentTile + " player4Turn " + player4TurnString);

@@ -4,6 +4,9 @@ package developpement;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.google.common.base.Splitter;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -24,50 +27,32 @@ public class Main extends Application{
 		
 		root.setId("root");
 		
-		Board board = new Board(300,10,9,9,2);
+		Board board = new Board(300,10,9,9);
 		root.getChildren().add(board);
-		
-		
-		//Player adrien = new Player(4,"Adrien", 20, Color.CHARTREUSE);
-
-		//System.out.println(adrien.getIdStartTile());
-		
-		
-		
-		// Demo show and impact adjacency list  
+		  
 		GridPane boardGrid = (GridPane) board.getChildrenUnmodifiable().get(0);
 		
-		
-		
-		//
 		ChoiceBox<String> nbPlayer = new ChoiceBox<>();
 		String[] players = {"2","4"};
 		nbPlayer.getItems().addAll(players);
 		Button button = new Button("Select the number of players");
 		
 		button.setOnAction(event ->{
-			board.getNbPlayers(nbPlayer);
+			board.resetGame(nbPlayer);
 		});
-		
-		
 		
 		root.getChildren().addAll(nbPlayer,button);
 		
 		
         AnchorPane.setTopAnchor(nbPlayer, 40.0);
         AnchorPane.setLeftAnchor(nbPlayer, 10.0);
-
        
         AnchorPane.setTopAnchor(button, 10.0);
         AnchorPane.setLeftAnchor(button, 10.0);
-		
-		
-		
+
 		board.updateAdjacencyList(boardGrid, true);
 		
-		
-		
-		Scene scene = new Scene(root, 1500, 750);
+		Scene scene = new Scene(root, 1200, 750);
 		
         primaryStage.setScene(scene);
         primaryStage.show();

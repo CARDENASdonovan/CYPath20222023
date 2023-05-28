@@ -85,7 +85,7 @@ public class Board extends Region {
 	private final Player[] ArrayConstantOfInitialPlayer = {getPlayer1(), getPlayer2(), getPlayer3(), getPlayer4()};
 	//tableau de joueurs actif dans la partie
 	public ArrayList<Player> listPlayer = new ArrayList<Player>();
-	public ArrayList<Player> listBarrierActive = new ArrayList<Player>();
+	public ArrayList<Barrier> listBarrierActive = new ArrayList<Barrier>();
 
 	/**
 	 * This method is used to restart a game 
@@ -835,6 +835,7 @@ public class Board extends Region {
 	/**
 	 * Sets barrier's opacity to 0 to hide every barrier on the board.
 	 */
+	// TODO
 	public void loadBarrier() {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
@@ -865,6 +866,7 @@ public class Board extends Region {
 		node.setOpacity(1);
 		Barrier barrier = (Barrier) node;
 		barrier.setFill(color);
+		listBarrierActive.add(barrier);
 	}
 
 	/**

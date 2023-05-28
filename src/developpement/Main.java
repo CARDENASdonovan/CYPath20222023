@@ -292,6 +292,9 @@ public class Main extends Application{
 		// ChoiceBox.
 		ChoiceBox<String> nbPlayer = new ChoiceBox<>();
 		String[] players = {"2","4"};
+		ArrayList<Player> a = new ArrayList<>();
+		a.add(newPlayer4);
+		System.out.println(a);
 		nbPlayer.getItems().addAll(players);
 		// Button.
 		Button buttonReset = new Button("Select the number of players");

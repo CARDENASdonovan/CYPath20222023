@@ -182,7 +182,7 @@ public class Main extends Application{
 		Button button = new Button("Select the number of players");
 		
 		button.setOnAction(event ->{
-			board.resetGame(nbPlayer);
+			board.resetBoard(nbPlayer);
 		});
 		
 		VBox nbPlayerBox = new VBox(nbPlayer, button);

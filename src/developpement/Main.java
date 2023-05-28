@@ -51,6 +51,13 @@ public class Main extends Application{
 		mainMenu(500,400, primaryStage);
     }
 	
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+	
 	public void mainMenu(double width, double height, Stage stage) throws IOException {
 	// Logo
 		ImageView imgCyLogo = new ImageView("H:\\Documents\\GitHub\\CYPath20222023\\images\\CY_Tech.png");
@@ -199,7 +206,7 @@ public class Main extends Application{
 		Player player3 = new Player("Player 3", "Tile 5", false);
 		Player player4 = new Player("Player 4", "Tile 5", false);
 		
-		Board board = new Board(10,10,9,9,player1,player2,player3,player4);
+		Board board = new Board(10,10,9,9);
 		VBox boardBox = new VBox(board);
 		// ChoiceBox.
 		ChoiceBox<String> nbPlayer = new ChoiceBox<>();
@@ -240,12 +247,15 @@ public class Main extends Application{
 		Player player3 = new Player("Player 3", "", false);
 		Player player4 = new Player("Player 4", "", false);
 		
-		Board board = new Board(10,10,9,9,player1,player2,player3,player4);
+		Board board = new Board(10,10,9,9);
 
 		String path = "H:\\Documents\\GitHub\\CYPath20222023\\read.txt";
 		
 		ArrayList<String> savedText = board.readSavedGame(path);
 		System.out.println(savedText.get(2));
+		
+		int numberOfPlayers = Integer.parseInt(savedText.get(0));
+		board.setNumberOfPlayers(numberOfPlayers);
 		
 		int startPlayer1Data = 1;
 		Boolean player1Turn = Boolean.valueOf(savedText.get(startPlayer1Data+2));
@@ -263,10 +273,21 @@ public class Main extends Application{
 		Boolean player4Turn = Boolean.valueOf(savedText.get(startPlayer4Data+2));
 		Player newPlayer4 = new Player(savedText.get(startPlayer4Data), savedText.get(startPlayer4Data+1), player4Turn);
 		
-		board = null;
-		Board board2 = new Board(10,10,9,9,newPlayer1,newPlayer2,newPlayer3,newPlayer4,true);
+		board.removePlayerTile(player1);
+		board.removePlayerTile(player2);
+		board.removePlayerTile(player3);
+		board.removePlayerTile(player4);
+		board.setPlayers(newPlayer1, newPlayer2, newPlayer3, newPlayer4);
+		board.addPlayerTile(Integer.parseInt(board.listPlayer.get(0).getCurrentTileId().substring(5)), player1);
+		board.addPlayerTile(Integer.parseInt(board.listPlayer.get(1).getCurrentTileId().substring(5)), player2);
+		board.addPlayerTile(Integer.parseInt(board.listPlayer.get(2).getCurrentTileId().substring(5)), player3);
+		board.addPlayerTile(Integer.parseInt(board.listPlayer.get(3).getCurrentTileId().substring(5)), player4);
+
+		if(!board.testDFS()) {
+			System.exit(0);
+		}
 		
-		VBox boardBox = new VBox(board2);
+		VBox boardBox = new VBox(board);
 		// ChoiceBox.
 		ChoiceBox<String> nbPlayer = new ChoiceBox<>();
 		String[] players = {"2","4"};
@@ -282,9 +303,9 @@ public class Main extends Application{
 		gamePane.add(boardBox, 0, 0);
 		gamePane.add(nbPlayerBox, 1, 0);
 
-		GridPane boardGrid = (GridPane) board2.getChildrenUnmodifiable().get(0);
+		GridPane boardGrid = (GridPane) board.getChildrenUnmodifiable().get(0);
 
-		board2.updateAdjacencyList(boardGrid);
+		board.updateAdjacencyList(boardGrid);
 
 		Scene mainMenuScene = new Scene(gamePane, 1000, 750);
 		stage.setX(250);
@@ -292,13 +313,4 @@ public class Main extends Application{
 		stage.setScene(mainMenuScene);
 		stage.show();
 	}
-	
-	
-	
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
 }

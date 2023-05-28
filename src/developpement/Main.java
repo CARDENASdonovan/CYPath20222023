@@ -230,7 +230,9 @@ public class Main extends Application{
 		Button buttonReset = new Button("Select the number of players");
 
 		buttonReset.setOnAction(event ->{
-			board.resetBoard(nbPlayer);
+			if(nbPlayer != null) {
+				board.resetBoard(nbPlayer);
+			}
 		});
 		
 		Button buttonLoad = new Button("Save game");
@@ -319,7 +321,9 @@ public class Main extends Application{
 		Button buttonReset = new Button("Select the number of players");
 
 		buttonReset.setOnAction(event ->{
-			board.resetBoard(nbPlayer);
+			if(nbPlayer != null) {
+				board.resetBoard(nbPlayer);
+			}
 		});
 
 		Button buttonLoad = new Button("Save Game");

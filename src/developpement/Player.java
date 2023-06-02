@@ -30,6 +30,15 @@ public class Player extends Circle {
 	 * @param double radius
 	 * @param Color color
 	 */
+	private boolean doubleTurn = true;
+	
+	public boolean getDoubleTurn() {
+	    return this.doubleTurn;
+	}
+
+	public void setDoubleTurn(boolean x) {
+	    this.doubleTurn = x;
+	}
 
 	public Player(String playerName, String currentTileid, boolean isTurn) {
 		super(-1000,-1000, 25);

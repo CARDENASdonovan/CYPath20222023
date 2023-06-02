@@ -26,16 +26,12 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
@@ -52,23 +48,7 @@ public class Board extends Region {
 	private Player player2 = new Player("Player 2", "Tile 77", false);
 	private Player player3=new Player("Player 3", "Tile 45", false);
 	private Player player4=new Player("Player 4", "Tile 37", false);
-	
-	public Player getPlayer1() {
-		return player1;
-	}
 
-
-	public void setPlayers(Player player1, Player player2, Player player3, Player player4) {
-		this.player1 = player1;
-		this.player2 = player2;
-		this.setPlayer3(player3);
-		this.player4 = player4;
-		this.listPlayer = new ArrayList<Player>();
-		listPlayer.add(this.getPlayer1());
-		listPlayer.add(this.getPlayer2());
-		listPlayer.add(this.getPlayer3());
-		listPlayer.add(this.getPlayer4());
-	}
 	private int numberOfPlayers = 0; 
 
 	private int numberTotalBarriers = 0;
@@ -95,6 +75,40 @@ public class Board extends Region {
 	 * This method is used to restart a game 
 	 * @param nbPlayer
 	 */
+	
+	public void replay(Player p1,Player p2,Player p3,Player p4) {
+        System.out.println("on rentre dedans"+p1.getDoubleTurn()+p2.isTurn());
+        if(p1.getDoubleTurn() == true && p2.isTurn() == true) {
+            p1.setTurn(true);
+            p2.setTurn(false);
+            p1.setDoubleTurn(false);
+        }
+        else if(p2.getDoubleTurn() == true && p3.isTurn() == true && numberOfPlayers == 4) {
+            p2.setTurn(true);
+            p3.setTurn(false);
+            p2.setDoubleTurn(false);
+        }
+        else if(p2.getDoubleTurn() == true && p1.isTurn() == true && numberOfPlayers == 2) {
+            p2.setTurn(true);
+            p1.setTurn(false);
+            p2.setDoubleTurn(false);
+        }
+        else if(p3.getDoubleTurn() == true && p4.isTurn() == true) {
+            p3.setTurn(true);
+            p4.setTurn(false);
+            p3.setDoubleTurn(false);
+        }
+        else if(p4.getDoubleTurn() == true && p1.isTurn() == true) {
+            p4.setTurn(true);
+            p1.setTurn(false);
+            p4.setDoubleTurn(false);
+        }
+        this.player1=p1;
+        this.player2=p2;
+        this.player3=p3;
+        this.player4=p4;
+    }
+	
 	public void resetBoard(ChoiceBox<String> nbPlayer) {
 		if(nbPlayer.getValue() != null) {
 			setNumberOfPlayers(Integer.parseInt(nbPlayer.getValue()));
@@ -118,9 +132,18 @@ public class Board extends Region {
 			ArrayConstantOfInitialPlayer[i].setCurrentTileId(ArrayConstantOfInitialPlayer[i].getIdStartTile());
 			addPlayerTile(Integer.parseInt(listPlayer.get(i).getIdStartTile().substring(5)), listPlayer.get(i));
 		}
+		needSecondBarrierHorizontal = false ;
+		needSecondBarrierVertical = false ;
+		needSecondClickToJump = false;
 	}		
 
-
+	/** 
+	 * Constructor of Board class.
+	 * @param int initialX
+	 * @param int initialY
+	 * @param int tileRowsQuantity
+	 * @param int tileColumnsQuantity
+	 */
 	public Board(int initialX, int initialY, int tileRowsQuantity, int tileColumnsQuantity) {
 
 		// Initialization of this instance attributes.
@@ -167,6 +190,8 @@ public class Board extends Region {
 
 		// Set the columns of the grid.
 		// Create all the columns needed.
+		
+		
 		for(int columnNumber = 0; columnNumber < columnsTotalQuantity; columnNumber++) {
 			// If even column :
 			if(columnNumber % 2 == 0) {
@@ -274,8 +299,8 @@ public class Board extends Region {
 											if(barrierHorizontal.getFill() != barrierHorizontalColor && barrierHorizontal.getFill() != temporaryBarrierColor && barrierHorizontal.getFill() != Color.WHITE && barrierHorizontal.getFill() != Color.BLACK) {
 												// If the temporary barrier has an adjacent barrier at it's right AND at it's left:
 												if(temporaryBarrierHorizontalNumber%9 - 1 != 0  && temporaryBarrierHorizontalNumber%9 != 0) {
-													// Temporarily activate this barrier to allow dfs with the potential new adjacency list. 
-													showBarrier(barrierHorizontal.getId(), temporaryBarrierColor);
+													// Temporarily activate this barrier to allow dfs with the potential new adjacency list.
+													barrierHorizontal.setFill(temporaryBarrierColor);
 													updateAdjacencyList(boardGrid);
 													// Initialization of collections where booleans will we saved referring to the connectivity between a player current tile and one of his win condition tile.
 													ArrayList<Boolean> resultAreConnected1 = new ArrayList<>();
@@ -311,9 +336,16 @@ public class Board extends Region {
 													if(resultAreConnected1.contains(true) && resultAreConnected2.contains(true) && resultAreConnected3.contains(true) && resultAreConnected4.contains(true)) {
 														// Get temporary horizontal barrier NUMBER from it's id for later.
 														temporaryBarrierHorizontalNumber = Integer.parseInt(barrierHorizontal.getId().substring(19));
+														
 														// Save the id of the temporary selected barrier for later.
 														temporaryBarrierId = barrierHorizontal.getId();
 														// Notify that the player who just activated a barrier has to activate another one.
+														if(getNodeById("Barrier Horizontal "+(temporaryBarrierHorizontalNumber+1)).getOpacity() == 1 && getNodeById("Barrier Horizontal "+(temporaryBarrierHorizontalNumber-1)).getOpacity() == 1 ) {
+															hideBarrier(barrierHorizontal.getId());
+															updateAdjacencyList(boardGrid);
+															needSecondBarrierHorizontal = false;
+															return;
+														}
 														needSecondBarrierHorizontal = true;
 														// End event.
 														return;
@@ -338,9 +370,27 @@ public class Board extends Region {
 											// If clicked horizontal barrier is adjacent to the temporary barrier :
 											if(barrierHorizontalNumber == temporaryBarrierHorizontalNumber+1 || barrierHorizontalNumber == temporaryBarrierHorizontalNumber-1) {
 												// If the barrier is not active (red), temporarily selected (yellow) or hovered (gray) :
+												
+												/*
+												String idBarrierId = barrierHorizontal.getId();
+												Node nodeTemporaryV1 = getNodeById("Barrier Vertical "+temporaryBarrierHorizontalNumber+6);
+												Node nodeTemporaryV2 = getNodeById("Barrier Vertical "+temporaryBarrierHorizontalNumber+4);
+												if(nodeTemporary
+												
+												int numberBarrierId = 0;
+												if(listBarrierActive.size() != 0) {
+													for(String barrierId : listBarrierActive) {
+														if(barrierId.contains("Barrier Vertical ")) {
+															numberBarrierId = Integer.parseInt(barrierId.substring(17));
+														
+															if(numberBarrierId != temporaryBarrierHorizontalNumber+6)
+														}
+													}
+												}
+												*/
 												if(barrierHorizontal.getFill() != barrierHorizontalColor && barrierHorizontal.getFill() != temporaryBarrierColor && barrierHorizontal.getFill() != Color.WHITE) {
 													// Temporarily activate this barrier to allow dfs with the potential new adjacency list. 
-													showBarrier(barrierHorizontal.getId(), temporaryBarrierColor);
+													barrierHorizontal.setFill(temporaryBarrierColor);
 													updateAdjacencyList(boardGrid);
 													// Initialization of collections where booleans will we saved referring to the connectivity between a player current tile and one of his win condition tile.
 													ArrayList<Boolean> resultAreConnected1 = new ArrayList<>();
@@ -488,7 +538,7 @@ public class Board extends Region {
 												// If the temporary barrier has an adjacent barrier above AND under it:
 												if(temporaryBarrierVerticalNumber + 10 < 91 && temporaryBarrierVerticalNumber - 10 > 0) {
 													// Temporarily activate this barrier to allow dfs with the potential new adjacency list. 
-													showBarrier(barrierVertical.getId(), temporaryBarrierColor);
+													barrierVertical.setFill(temporaryBarrierColor);
 													updateAdjacencyList(boardGrid);
 													// Initialization of collections where booleans will we saved referring to the connectivity between a player current tile and one of his win condition tile.
 													ArrayList<Boolean> resultAreConnected1 = new ArrayList<>();
@@ -527,6 +577,12 @@ public class Board extends Region {
 														// Save the id of the temporary selected barrier for later.
 														temporaryBarrierId = barrierVertical.getId();
 														// Notify that the player who just activated a barrier has to activate another one.
+														if(getNodeById("Barrier Vertical "+(temporaryBarrierVerticalNumber+10)).getOpacity() == 1 && getNodeById("Barrier Vertical "+(temporaryBarrierVerticalNumber-10)).getOpacity() == 1 ) {
+															hideBarrier(barrierVertical.getId());
+															updateAdjacencyList(boardGrid);
+															needSecondBarrierVertical = false;
+															return;
+														}
 														needSecondBarrierVertical = true;
 														// End event.
 														return;
@@ -553,7 +609,7 @@ public class Board extends Region {
 												// If the barrier is not active (red), temporarily selected (yellow) or hovered (gray) :
 												if(barrierVertical.getFill() != barrierVerticalColor && barrierVertical.getFill() != temporaryBarrierColor && barrierVertical.getFill() != Color.WHITE) {
 													// Temporarily activate this barrier to allow dfs with the potential new adjacency list. 
-													showBarrier(barrierVertical.getId(), temporaryBarrierColor);
+													barrierVertical.setFill(temporaryBarrierColor);
 													updateAdjacencyList(boardGrid);
 													// Initialization of collections where booleans will we saved referring to the connectivity between a player current tile and one of his win condition tile.
 													ArrayList<Boolean> resultAreConnected1 = new ArrayList<>();
@@ -828,9 +884,36 @@ public class Board extends Region {
 	}
 
 	/**
-	 * 
-	 * @param id
-	 * @return
+	 * Getter of player1.
+	 * @return Player player1
+	 */
+	public Player getPlayer1() {
+		return player1;
+	}
+
+	/**
+	 * Setter of all player at once.
+	 * @param Player player1
+	 * @param Player player2
+	 * @param Player player3
+	 * @param Player player4
+	 */
+	public void setPlayers(Player player1, Player player2, Player player3, Player player4) {
+		this.player1 = player1;
+		this.player2 = player2;
+		this.setPlayer3(player3);
+		this.player4 = player4;
+		this.listPlayer = new ArrayList<Player>();
+		listPlayer.add(this.getPlayer1());
+		listPlayer.add(this.getPlayer2());
+		listPlayer.add(this.getPlayer3());
+		listPlayer.add(this.getPlayer4());
+	}
+	
+	/**
+	 * Getter of any node added to boardGrid.
+	 * @param String id
+	 * @return Node
 	 */
 	public Node getNodeById(String id) {
 		// Get the board grid.
@@ -876,7 +959,6 @@ public class Board extends Region {
 	/**
 	 * Sets barrier's opacity to 0 to hide every barrier on the board.
 	 */
-	// TODO
 	public void loadBarrier() {
 		// Get the board grid.
 		GridPane boardGrid = (GridPane) this.getChildrenUnmodifiable().get(0);
@@ -914,6 +996,7 @@ public class Board extends Region {
 		Barrier barrier = (Barrier) node;
 		barrier.setFill(color);
 		listBarrierActive.add(barrier.getId());
+		
 	}
 
 	/**
@@ -1165,8 +1248,7 @@ public class Board extends Region {
 	}
 
 	public ArrayList<String> tilesAvailableThroughPlayer(int newTileNumber, int actualTileNumber) {
-		ArrayList<String> adjNewTile = getAdjacencyList().get("Tile "+newTileNumber);
-		adjNewTile.remove("Tile "+actualTileNumber);
+		ArrayList<String> adjNewTile = (ArrayList<String>) getAdjacencyList().get("Tile "+newTileNumber).clone();
 		ArrayList<String> TilesAvailable = new ArrayList<>();
 				
 		for(String x: adjNewTile) {
@@ -1592,6 +1674,7 @@ public class Board extends Region {
 
 		System.out.println();
 		System.out.println(player.getId()+ "turn");
+		System.out.println(player.toString());
 		// If player is not on board :
 
 		String currentTile = null;
@@ -1635,6 +1718,7 @@ public class Board extends Region {
 			if(needSecondClickToJump == false) {
 				changeTurn();
 			}
+			System.out.println(player.toString());
 			return true;
 		}
 		else {
@@ -1763,17 +1847,20 @@ public class Board extends Region {
 					savedText.add(player4TurnString);
 					
 					listBarrierString = read.next();
-					savedText.add(listBarrierString);
-
-					String[] strSplit2 = listBarrierString.split(", ");
-					// Now convert string into ArrayList
-			        ArrayList<String> strListArray = new ArrayList<String>(Arrays.asList(strSplit2));
-			  
-			        // Now print the ArrayList
-			        for (String s : strListArray) {
-			        	showBarrier(s, Color.RED);
-			        	numberTotalBarriers++;
-			        }
+					if(listBarrierString.contains("Barrier")) {
+						savedText.add(listBarrierString);
+						
+						String[] strSplit2 = listBarrierString.split(", ");
+						// Now convert string into ArrayList
+				        ArrayList<String> strListArray = new ArrayList<String>(Arrays.asList(strSplit2));
+				  
+				        // Now print the ArrayList
+				        for (String s : strListArray) {
+				        	showBarrier(s, Color.RED);
+				        	numberTotalBarriers++;
+				        }
+				        numberTotalBarriers=numberTotalBarriers/2;
+					}
 			        
 					System.out.println("player4Name " + player4Name + " player4CurrentTile " + player4CurrentTile + " player4Turn " + player4TurnString);
 					System.out.println();

@@ -117,7 +117,7 @@ public class Main extends Application{
 		    @Override
 		    public void handle(ActionEvent event) {
 		        System.out.println("This link is clicked");
-		        File file = new File("H:\\Documents\\GitHub\\CYPath20222023\\doc\\sujetCypath.pdf");
+		        File file = new File("H:\\Documents\\GitHub\\CYPath20222023\\sujetCypath.pdf");
 		        Desktop desktop = Desktop.getDesktop();
 		        try {
 					desktop.open(file);
@@ -208,6 +208,8 @@ public class Main extends Application{
 		mainMenuPane.add(linkJavadocBox, 2, 2);
 		
 		Scene mainMenuScene = new Scene(mainMenuPane, width, height);
+		stage.setMinHeight(400);
+		stage.setMinWidth(500);
 		stage.setScene(mainMenuScene);
 		stage.show();
 	}
@@ -215,7 +217,6 @@ public class Main extends Application{
 	public void newGame(Stage stage) {
 		// Create main view pane.
 		GridPane gamePane = new GridPane();
-		gamePane.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
 		gamePane.setId("gamePane");
 		gamePane.setLayoutX(0);
 		gamePane.setLayoutY(0);
@@ -241,7 +242,14 @@ public class Main extends Application{
 			board.saveGame(board.getPlayer1(), board.getPlayer2(), board.getPlayer3(), board.getPlayer4());
 		});
 		
-		VBox nbPlayerBox = new VBox(nbPlayer, buttonReset, buttonLoad);
+		Button buttonReplay = new Button("replay");
+
+
+		buttonReplay.setOnAction(event ->{
+		    board.replay(board.getPlayer1(), board.getPlayer2(), board.getPlayer3(), board.getPlayer4());
+		});
+
+		VBox nbPlayerBox = new VBox(nbPlayer, buttonReset, buttonLoad,buttonReplay);
 		nbPlayerBox.setSpacing(10.0);
 		gamePane.add(boardBox, 0, 0);
 		gamePane.add(nbPlayerBox, 1, 0);
@@ -332,7 +340,14 @@ public class Main extends Application{
 			board.saveGame(board.getPlayer1(), board.getPlayer2(), board.getPlayer3(), board.getPlayer4());
 		});
 		
-		VBox nbPlayerBox = new VBox(nbPlayer, buttonReset, buttonLoad);
+		Button buttonReplay = new Button("replay");
+
+
+		buttonReplay.setOnAction(event ->{
+		    board.replay(board.getPlayer1(), board.getPlayer2(), board.getPlayer3(), board.getPlayer4());
+		});
+
+		VBox nbPlayerBox = new VBox(nbPlayer, buttonReset, buttonLoad,buttonReplay);
 		nbPlayerBox.setSpacing(10.0);
 		gamePane.add(boardBox, 0, 0);
 		gamePane.add(nbPlayerBox, 1, 0);
